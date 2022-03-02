@@ -1,0 +1,117 @@
+.App {
+    text-align: center;
+}
+
+.features-list-group {
+    max-height: 70vh;
+}
+
+.list-group {
+    margin-bottom: 10px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.no-user-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    /*-khtml-user-select: none;*/
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#root {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    /*-khtml-user-select: none;*/
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.main {
+    height: calc(100vh - 1rem - 40px);
+    margin-top: calc(1rem + 40px);
+}
+
+table.table-hover tbody tr {
+    cursor: pointer;
+}
+
+
+/* https://www.w3docs.com/snippets/html/how-to-create-a-table-with-a-fixed-header-and-scrollable-body.html */
+
+.table-fixed {
+    font-size: small;
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-bottom: 2px solid black;
+}
+
+.table-fixed tbody {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    height: 300px;
+    /* TODO adjust height somewhere else */
+}
+
+.table-fixed thead tr {
+    display: block;
+}
+
+.table-fixed th,
+.table-fixed td {
+    padding: 5px;
+    text-align: left;
+    /* width: 300px; */
+}
+
+.accordion-button.collapsed {
+    background-color: #e9ecef;
+}
+
+
+/* tr.selected{
+    background-color: ,
+    cursor: pointer;
+} */
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+.App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
