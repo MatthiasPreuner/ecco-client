@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { CommunicationService } from "../../../services/CommunicationService";
 import { FeatureResponse } from "../../../model/FeatureResponse";
 import { FeatureList } from "./Feature.List";
-import { RevisionPerFeature } from "../../../old/Charts/Home.RevisionPerFeature";
+/* import { RevisionPerFeature } from "../../../old/Charts/Home.RevisionPerFeature"; */
 
 import { Container, Col } from 'react-bootstrap';
 

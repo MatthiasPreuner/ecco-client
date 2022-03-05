@@ -1,10 +1,10 @@
-import { OperationContainer } from "../Domain/Model/Frontend/OperationContainer";
-import { RequestConfig } from "../Domain/Model/Backend/RequestConfig";
+/* import { OperationContainer } from "../Domain/Model/Frontend/OperationContainer";  */
+import { RequestConfig } from "../model/RequestConfig";
 import { FeatureModel } from "../model/FeatureModel";
 import {FeatureRevisionModel} from "../model/FeatureRevisionModel";
-import {AssociationModel} from "../Domain/Model/Backend/AssociationModel";
+/* import {AssociationModel} from "../Domain/Model/Backend/AssociationModel";
 import {AssociationInspection} from "../Domain/Model/Frontend/AssociationInspection";
-import {ArtefactgraphFilter} from "../Domain/Model/Backend/ChartArtefactgraph/ArtefactgraphFilter";
+import {ArtefactgraphFilter} from "../Domain/Model/Backend/ChartArtefactgraph/ArtefactgraphFilter"; */
 
 const axios = require("axios");
 
@@ -45,7 +45,7 @@ export class CommunicationService {
         )
     }
 
-    public updateArtifactgraphOnNodeID(nodeID: string, maxChildCount: number) : Promise<any> {
+  /*   public updateArtifactgraphOnNodeID(nodeID: string, maxChildCount: number) : Promise<any> {
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'application/json',
@@ -57,8 +57,8 @@ export class CommunicationService {
             config
         )
     }
-
-    public getArtifactgraph(artefactgraphFilter: ArtefactgraphFilter) : Promise<any> {
+ */
+ /*    public getArtifactgraph(artefactgraphFilter: ArtefactgraphFilter) : Promise<any> {
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export class CommunicationService {
             JSON.stringify(artefactgraphFilter),
             config
         )
-    }
+    } */
 
     public getNumberOfModules() : Promise<any> {
         return axios.get(
@@ -148,7 +148,7 @@ export class CommunicationService {
         );
     }
 
-    public doOpenCloseRepositoryWithDirectory(baseDirectory: string, openCloseRepositoryOperation: string) : Promise<any> {
+/*     public doOpenCloseRepositoryWithDirectory(baseDirectory: string, openCloseRepositoryOperation: string) : Promise<any> {
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'application/json',
@@ -162,8 +162,8 @@ export class CommunicationService {
             config
         );
     }
-
-    public getArtifactsByAssociation(association: AssociationModel[]) : Promise<any> {
+ */
+/*     public getArtifactsByAssociation(association: AssociationModel[]) : Promise<any> {
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ export class CommunicationService {
             JSON.stringify(association),
             config
         )
-    }
+    } */
 
     public corsTest() : Promise<any> {
         let config = new RequestConfig();

@@ -1,33 +1,33 @@
 import * as React from "react";
-import {ReducedArtifactPlugin} from "../Domain/Model/Backend/ReducedArtifactPlugin";
+/* import {ReducedArtifactPlugin} from "../Domain/Model/Backend/ReducedArtifactPlugin"; */
 
 interface AccordionProperties {
-    artifactPlugin: ReducedArtifactPlugin,
+/*     artifactPlugin: ReducedArtifactPlugin, */
     parentID: string
 }
 
 interface AccordionBody {
     //wird das Elternelement darstellen, in dem diese Components enthalten sind
     parentID: string,
-    artifactPlugin: ReducedArtifactPlugin
+/*     artifactPlugin: ReducedArtifactPlugin */
 }
 
 interface AccordionButton {
     //Wird die ID sein, die der Button triggern wird, damit der Inhalt darin angezeigt werden kann
-    artifactPlugin: ReducedArtifactPlugin
+/*     artifactPlugin: ReducedArtifactPlugin */
 }
-
+/* 
 export const StatusInformationPlugin : React.FC<AccordionProperties> = ({parentID , artifactPlugin}) => {
 
     return (
         <div className="card">
-            <CollapseTriggerButton artifactPlugin={artifactPlugin} />
+     {/*        <CollapseTriggerButton artifactPlugin={artifactPlugin} />
             <CollapseBody artifactPlugin={artifactPlugin} parentID={parentID} />
         </div>
     );
-}
+} */
 
-const CollapseTriggerButton : React.FC<AccordionButton> = ({artifactPlugin}) => {
+/* const CollapseTriggerButton : React.FC<AccordionButton> = ({artifactPlugin}) => {
 
     const validArtifactID = artifactPlugin.pluginID.replace(/[^a-zA-Z0-9]/g, '');
 
@@ -60,6 +60,6 @@ const CollapseBody : React.FC<AccordionBody> = ({parentID, artifactPlugin }) => 
                           onChange={changesInDescription}
                 />
             </div>
-        </div>
-    )
-}
+        </div> */
+/*     )
+} */
