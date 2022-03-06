@@ -107,9 +107,8 @@ export const Dropzone: React.FC = () => {
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div> */}
-          {/*   <input type="file" id="folder" webkitdirectory multiple/> */}
             <Row {...getRootProps()}>
-                <input {...getInputProps()} />  {/* directory="" webkitdirectory="" type="file" */}
+                <input {...getInputProps()} />
                 <Row className="mb-3">
                     <Col style={{ height: "100px", border: "1px solid #d8d8d8", backgroundColor: "#ececec" }} className="mx-2 d-flex rounded align-items-center align-content-center justify-content-around">
                         {
@@ -129,7 +128,7 @@ export const Dropzone: React.FC = () => {
                     </Col>
                 </Row>
             </Row>
-            <Row>
+            <Row  style={{ minHeight: "45vh" }}>
                 <Col xs={6}>
                     <Row>
                         <Col xs={8}><h4>Files</h4></Col>
