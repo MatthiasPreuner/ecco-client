@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import { FeatureModel } from "../../../model/FeatureModel";
 import {CommunicationService} from "../../../services/CommunicationService";
 import {FeatureResponse} from "../../../model/FeatureResponse";
-import {FeatureSpecificRevisionList} from "./Feature.Detail.RevisionList";
+import {FeatureRevisionList} from "./Feature.Detail.RevisionList";
 
 import { Container, Col, Row, InputGroup, FormControl, Button, Card, Accordion, Form, ListGroup } from 'react-bootstrap';
 
@@ -12,18 +12,19 @@ interface DetailViewProps {
     currentSelectedFeatureModel: FeatureModel
 }
 
-export const FeatureDetail : React.FC<DetailViewProps> = ({currentSelectedFeatureModel}) => {
+export const FeatureDetail : React.FC<DetailViewProps> = ({currentSelectedFeatureModel: selectedFeature}) => {
 
     const [successButtonDisabled, setSuccessButtonDisabled] = useState<boolean>(true);
     const [resetButtonDisabled, setResetButtonDisabled] = useState<boolean>(true);
     const [appState, setAppState] = useSharedState();
+    const [tmpFeatureDescription, setTmpFeatureDescription] = useState<string>(selectedFeature?.description);
 
-    const [tmpCurrentFeatureModel, setTmpCurrentFeatureModel] = useState<FeatureModel>({
-        id: currentSelectedFeatureModel?.id,
-        name: currentSelectedFeatureModel?.name,
-        description: currentSelectedFeatureModel?.description,
-        revisions: currentSelectedFeatureModel?.revisions
-    });
+/*     const [tmpCurrentFeatureModel, setTmpCurrentFeatureModel] = useState<FeatureModel>({
+        id: selectedFeature?.id,
+        name: selectedFeature?.name,
+        description: selectedFeature?.description,
+        revisions: selectedFeature?.revisions
+    }); */
 
   /*   useEffect(() => {
         //...dann wurde eine Kopie von tmpCurrentFeature gemacht und die neue Description aus dem Textarea
@@ -46,12 +47,9 @@ export const FeatureDetail : React.FC<DetailViewProps> = ({currentSelectedFeatur
 
     const changeFeatureDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         event.persist();
-        setSuccessButtonDisabled(currentSelectedFeatureModel.description == event.target.value)
-        setResetButtonDisabled(currentSelectedFeatureModel.description == event.target.value)
-        setTmpCurrentFeatureModel((previousState: FeatureModel) => ({
-            ...previousState,
-            description: event.target.value
-        }));
+        setSuccessButtonDisabled(selectedFeature.description == event.target.value)
+        setResetButtonDisabled(selectedFeature.description == event.target.value)
+        setTmpFeatureDescription(event.target.value);
     }
 
     const saveChangesInAppState = () => {
@@ -64,28 +62,28 @@ export const FeatureDetail : React.FC<DetailViewProps> = ({currentSelectedFeatur
         // }));
         setAppState((previousState: AppState) => ({
             ...previousState,
-            currentFeature: currentSelectedFeatureModel
+            currentFeature: selectedFeature
         }));
         setSuccessButtonDisabled(true);
         setResetButtonDisabled(true);
     }
 
     const resetChangesToInitialState = () => {
-/*         setTmpCurrentFeatureModel(currentSelectedFeatureModel); */
+        setTmpFeatureDescription(selectedFeature?.description);
         setSuccessButtonDisabled(true);
         setResetButtonDisabled(true);
     }
 
     return (
-        currentSelectedFeatureModel != null &&
+        selectedFeature != null &&
 
       <>
           {/*   <Col> */}
-                <h4>Feature: {currentSelectedFeatureModel.name}</h4>
+                <h4>Feature: {selectedFeature.name}</h4>
                 <div className="m-2">
-                    <label htmlFor={currentSelectedFeatureModel.name}>Description of {currentSelectedFeatureModel.name}</label>
-                    <textarea id={currentSelectedFeatureModel.name}
-                              value={(currentSelectedFeatureModel.description == null ? "" : currentSelectedFeatureModel.description)}
+                    <label htmlFor={selectedFeature.name}>Description of {selectedFeature.name}</label>
+                    <textarea id={selectedFeature.name}
+                              value={(tmpFeatureDescription == null ? "" : tmpFeatureDescription)}
                               className={"form-control"}
                               onChange={changeFeatureDescription} />
                 </div>
@@ -94,7 +92,7 @@ export const FeatureDetail : React.FC<DetailViewProps> = ({currentSelectedFeatur
                     <Button size='sm' variant="primary" disabled={successButtonDisabled} onClick={saveChangesInAppState}>Save</Button>
                 </div>
          {/*    </Col> */}
-            <FeatureSpecificRevisionList currentFeature={currentSelectedFeatureModel} />
+            <FeatureRevisionList feature={selectedFeature} />
  
           </>
     );

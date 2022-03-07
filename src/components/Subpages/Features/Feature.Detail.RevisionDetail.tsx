@@ -8,28 +8,26 @@ import { FeatureRevisionResponse } from "../../../model/FeatureRevisionResponse"
 import { Container, Col, Row, InputGroup, FormControl, Button, Card, Accordion, Form, ListGroup, ButtonGroup } from 'react-bootstrap';
 
 interface FeatureDetailRevisionDetailProps {
-    currentFeatureRevision: FeatureRevisionModel
-    currentFeature: FeatureModel
+    featureRevision: FeatureRevisionModel
+    feature: FeatureModel
 }
 
-export const FeatureSpecificRevisionDetail: React.FC<FeatureDetailRevisionDetailProps> = ({ currentFeatureRevision, currentFeature }) => {
+export const FeatureRevisionDetail: React.FC<FeatureDetailRevisionDetailProps> = ({ featureRevision, feature }) => {
 
     const [successButtonDisabled, setSuccessButtonDisabled] = useState<boolean>(true);
     const [resetButtonDisabled, setResetButtonDisabled] = useState<boolean>(true);
-    const [tmpCurrentFeatureModel, setTmpCurrentFeatureModel] = useState<FeatureRevisionModel>({
-        id: currentFeatureRevision.id,
-        description: currentFeatureRevision.description,
-        featureRevisionString: currentFeatureRevision.featureRevisionString
-    });
+    const [tmpFeatureRevisionDescription, setTmpFeatureRevisionDescription] = useState<string>(featureRevision.description);
 
     const changeFeatureDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         event.persist();
-        setSuccessButtonDisabled(currentFeatureRevision.description == event.target.value)
-        setResetButtonDisabled(currentFeatureRevision.description == event.target.value)
-        setTmpCurrentFeatureModel((previousState: FeatureRevisionModel) => ({
+        setSuccessButtonDisabled(featureRevision.description == event.target.value)
+        setResetButtonDisabled(featureRevision.description == event.target.value)
+
+        setTmpFeatureRevisionDescription(event.target.value);
+ /*        setTmpCurrentFeatureModel((previousState: FeatureRevisionModel) => ({
             ...previousState,
             description: event.target.value
-        }));
+        })); */
     }
 
     const saveChangesInAppState = () => {
@@ -40,7 +38,7 @@ export const FeatureSpecificRevisionDetail: React.FC<FeatureDetailRevisionDetail
     }
 
     const resetChangesToInitialState = () => {
-        setTmpCurrentFeatureModel(currentFeatureRevision);
+        setTmpFeatureRevisionDescription(featureRevision.description);
         setSuccessButtonDisabled(true);
         setResetButtonDisabled(true);
     }
@@ -48,14 +46,14 @@ export const FeatureSpecificRevisionDetail: React.FC<FeatureDetailRevisionDetail
     return (
         <>
             <div className="mx-2">
-                <label htmlFor={tmpCurrentFeatureModel.id}>Description of Featurerevision {tmpCurrentFeatureModel.id}</label>
-                <textarea id={tmpCurrentFeatureModel.id}
-                    value={(tmpCurrentFeatureModel.description == null ? "" : tmpCurrentFeatureModel.description)}
+                <label htmlFor={featureRevision.id}>Description of Featurerevision {featureRevision.id}</label>
+                <textarea id={featureRevision.id}
+                    value={(tmpFeatureRevisionDescription == null ? "" : tmpFeatureRevisionDescription)}
                     className={"form-control"}
                     onChange={changeFeatureDescription} />
             </div>
             <div className="m-2 d-flex justify-content-between">
-                <Button size='sm' variant='danger' disabled={resetButtonDisabled} onClick={resetChangesToInitialState}>Reset</Button>
+                <Button size='sm' variant='secondary' disabled={resetButtonDisabled} onClick={resetChangesToInitialState}>Reset</Button>
                 <Button size='sm' variant='primary' disabled={successButtonDisabled} onClick={saveChangesInAppState}>Save</Button>
             </div>
         </>

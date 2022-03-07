@@ -4,27 +4,13 @@ import { useEffect, useState } from "react";
 
 import { Container, Col, Row, InputGroup, FormControl, Button, Card, Accordion, Form, ListGroup } from 'react-bootstrap';
 
-import { CommunicationService } from "../../../services/CommunicationService";
-import { FeatureResponse } from "../../../model/FeatureResponse";
-
 import { FeatureModel } from "../../../model/FeatureModel";
 import { FeatureDetail } from "./Feature.Detail";
 
-
 export const Feature: React.FC = () => {
-
-    /*     useEffect(() => {
-            CommunicationService.getInstance().getFeatures().then((apiData: FeatureResponse) => {
-                setAppState((previousState) => ({
-                    ...previousState,
-                    features: apiData.data
-                }));
-            });
-        }, []); */
 
     const [appState, setAppState] = useSharedState();
     const [featureFilterText, setFeatureFilterText] = useState<string>("");
-    /*    const [tmpCurrentFeature, setTmpCurrentFeature] = useState<FeatureModel>(null); */
     const [tmpCurrentFeature, setTmpCurrentFeature] = useState<FeatureModel>(null);
 
     const getCurrentFeatureExpression = (): JSX.Element[] => {
@@ -58,7 +44,9 @@ export const Feature: React.FC = () => {
                 <Row className="my-4">
                     <Col>
                         <ListGroup className="features-list-group">
-                            {features.length > 0 ? features : <p>Please consider using a different featurename to filter all features! There are no results!</p>}
+                            {/* TODO TEST */}
+                            {appState.repository.features.length == 0 ? <p>This Repository has no Features yet. Features are added with new Commits.</p> : null}
+                            {features.length > 0 ? features : <p>Please consider using a different feature condition. There are no results.</p>}
                         </ListGroup>
                     </Col>
                 </Row>
@@ -66,7 +54,6 @@ export const Feature: React.FC = () => {
             <Col className="px-3">
                 <FeatureDetail currentSelectedFeatureModel={tmpCurrentFeature} />
             </Col>
-
         </Container>
     )
 }

@@ -5,64 +5,44 @@ import { useEffect, useState } from "react";
 import { FeatureRevisionModel as FeatureRevisionModel } from "../../../model/FeatureRevisionModel";
 import { CommunicationService } from "../../../services/CommunicationService";
 import { FeatureRevisionResponse } from "../../../model/FeatureRevisionResponse";
-import { FeatureSpecificRevisionDetail } from "./Feature.Detail.RevisionDetail";
+import { FeatureRevisionDetail } from "./Feature.Detail.RevisionDetail";
 
 import { FeatureDetail } from "./Feature.Detail";
 
 import { Container, Col, Row, InputGroup, FormControl, Button, Card, Accordion, Form, ListGroup, ButtonGroup } from 'react-bootstrap';
 
-interface FeatureSpecificRevisionProps {
-    currentFeature: FeatureModel
+interface FeatureRevisionProps {
+    feature: FeatureModel
 }
 
-export const FeatureSpecificRevisionList: React.FC<FeatureSpecificRevisionProps> = ({ currentFeature }) => {
+export const FeatureRevisionList: React.FC<FeatureRevisionProps> = ({ feature: feat }) => {
 
-    /* const [featureRevisions, setFeatureRevisions] = useState<FeatureRevisionModel[]>(currentFeature.revisions); */
-    /*  const [currentFeatureRevision, setCurrentFeatureRevision] = useState<FeatureRevisionModel>(null); */
+    const [currentFeatureRevision, setCurrentFeatureRevision] = useState<FeatureRevisionModel>(feat.revisions[feat.revisions.length - 1]);
+    const [currentFeatureRevisionIndex, setCurrentFeatureRevisionIndex] = useState<number>(feat.revisions.length - 1);
 
-/*     static getDerivedStateFromProps(props, current_state) {
-        if (current_state.value !== props.value) {
-          return {
-            value: props.value,
-            computed_prop: heavy_computation(props.value)
-          }
-        }
-        return null
-      }
- */
-    const [currentFeatureRevisionIndex, setCurrentFeatureRevisionIndex] = useState<number>(currentFeature.revisions.length - 1);
     useEffect(() => {
-        /*       CommunicationService.getInstance().getFeatureversionsFromFeature(currentFeature).then((featureRevisionResponse: FeatureRevisionResponse) => {
-                  setFeatureRevisions(featureRevisionResponse.data);
-              }); */
-              console.log(currentFeature.revisions.length)
-        setCurrentFeatureRevisionIndex(currentFeature.revisions.length - 1);
-        /*       setCurrentFeatureRevision(null); */
-    }, [currentFeature]);
+        maxIndex();
+    }, [feat]);
 
-    /*     const featureRevisionsComponent = currentFeature.revisions.map((featureRevision: FeatureRevisionModel) => {
-            let setCurrentFeatureRevisionCallback = () => {
-                setCurrentFeatureRevision(featureRevision);
-            }
-    
-            let validHTMLID = "validid" + featureRevision.id;
-    
-            return (
-                <Card key={validHTMLID}>
-                    <Card.Header id="headingThree">
-                        <h2 className="mb-0">
-                            <button onClick={setCurrentFeatureRevisionCallback} className="btn btn-link btn-block text-center collapsed" type="button"
-                                data-toggle="collapse" data-target={"#" + validHTMLID}>
-                                {featureRevision.id}
-                            </button>
-                        </h2>
-                    </Card.Header>
-                    <div id={validHTMLID} className="collapse" data-parent="#featureVersionAccordionList">
-                        {currentFeatureRevision == null ? "" : <FeatureSpecificRevisionDetail currentFeature={currentFeature} currentFeatureRevision={currentFeatureRevision} />}
-                    </div>
-                </Card>
-            );
-        }); */
+    let minIndex = () => {
+        setCurrentFeatureRevision(feat.revisions[0]);
+        setCurrentFeatureRevisionIndex(0);
+    }
+
+    let incrIndex = () => {
+        setCurrentFeatureRevision(feat.revisions[currentFeatureRevisionIndex + 1]);
+        setCurrentFeatureRevisionIndex(currentFeatureRevisionIndex + 1);
+    }
+
+    let decrIndex = () => {
+        setCurrentFeatureRevision(feat.revisions[currentFeatureRevisionIndex - 1]);
+        setCurrentFeatureRevisionIndex(currentFeatureRevisionIndex - 1);
+    }
+
+    let maxIndex = () => {
+        setCurrentFeatureRevision(feat.revisions[feat.revisions.length - 1]);
+        setCurrentFeatureRevisionIndex(feat.revisions.length - 1);
+    }
 
     const btnVariant = 'primary';
 
@@ -74,27 +54,22 @@ export const FeatureSpecificRevisionList: React.FC<FeatureSpecificRevisionProps>
                 <ButtonGroup className="m-2 d-flex justify-content-between">
                     <Button variant={btnVariant}
                         disabled={currentFeatureRevisionIndex == 0}
-                        onClick={() => setCurrentFeatureRevisionIndex(0)}>&lt;&lt;</Button>
+                        onClick={minIndex}>&lt;&lt;</Button>
                     <Button variant={btnVariant}
                         disabled={currentFeatureRevisionIndex == 0}
-                        onClick={() => setCurrentFeatureRevisionIndex(currentFeatureRevisionIndex - 1)}>&lt;</Button>
-                    <Button variant={btnVariant} style={{ width: '50px' }}>
-                        
-                        {currentFeature.revisions[currentFeatureRevisionIndex]?.id || currentFeature.revisions[currentFeature.revisions.length - 1].id }
-                        </Button>
+                        onClick={decrIndex}>&lt;</Button>
+                    <Button variant={btnVariant} style={{ width: '50px' }}>{currentFeatureRevision.id}</Button>
                     <Button variant={btnVariant}
-                        disabled={currentFeatureRevisionIndex == currentFeature.revisions.length - 1}
-                        onClick={() => setCurrentFeatureRevisionIndex(currentFeatureRevisionIndex + 1)}>&gt;</Button>
+                        disabled={currentFeatureRevisionIndex == feat.revisions.length - 1}
+                        onClick={incrIndex}>&gt;</Button>
                     <Button variant={btnVariant}
-                        disabled={currentFeatureRevisionIndex == currentFeature.revisions.length - 1}
-                        onClick={() => setCurrentFeatureRevisionIndex(currentFeature.revisions.length - 1)}>&gt;&gt;</Button>
+                        disabled={currentFeatureRevisionIndex == feat.revisions.length - 1}
+                        onClick={maxIndex}>&gt;&gt;</Button>
                 </ButtonGroup>
-                <FeatureSpecificRevisionDetail
-                    currentFeature={currentFeature} 
-                    currentFeatureRevision={
-                        currentFeature.revisions[currentFeatureRevisionIndex] || currentFeature.revisions[currentFeature.revisions.length - 1]                     
-                        }
-                    />
+                <FeatureRevisionDetail
+                    feature={feat}
+                    featureRevision={currentFeatureRevision}
+                />
             </Col>
         </Row>
     );
