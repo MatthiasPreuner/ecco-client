@@ -20,7 +20,8 @@ export const FeatureDetail : React.FC<DetailViewProps> = ({currentSelectedFeatur
     const [tmpCurrentFeatureModel, setTmpCurrentFeatureModel] = useState<FeatureModel>({
         id: currentSelectedFeatureModel.id,
         name: currentSelectedFeatureModel.name,
-        description: currentSelectedFeatureModel.description
+        description: currentSelectedFeatureModel.description,
+        revisions: currentSelectedFeatureModel.revisions
     });
 
     useEffect(() => {

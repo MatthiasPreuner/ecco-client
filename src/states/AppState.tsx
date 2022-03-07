@@ -7,10 +7,12 @@ import { FeatureModel, FeatureModelDefault } from "../model/FeatureModel";
 import { AssociationInspection } from "../Domain/Model/Frontend/AssociationInspection";
 import { ArtefactTreeModel } from "../Domain/Model/Backend/ArtefactTreeModel"; */
 import { CommitModel, CommitModelDefault } from "../model/CommitModel";
+import { RepositoryModel } from "../model/RepositoryModel";
 
 export interface AppState {
   directory: string, // TODO nullable, rename to repository
   repository: string,
+  currentRepository: RepositoryModel,
   availableRepositories: string[],
   repoOperation: string,
   commits: CommitModel[],
@@ -26,6 +28,7 @@ export interface AppState {
 const useValue = () => useState<AppState>({
   directory: "",
   repository: "null",
+  currentRepository: null,
   availableRepositories: ["test1", "test2"],
   repoOperation: "",
   commits: CommitModelDefault,
@@ -37,7 +40,8 @@ const useValue = () => useState<AppState>({
   currentFeature: {
     id: null,
     description: null,
-    name: null
+    name: null,
+    revisions: []
   },
   userIsLoggedIn: false
 });

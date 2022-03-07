@@ -16,7 +16,8 @@ export const FeatureSpecificRevisionDetail : React.FC<FeatureDetailRevisionDetai
     const [resetButtonDisabled, setResetButtonDisabled] = useState<boolean>(true);
     const [tmpCurrentFeatureModel, setTmpCurrentFeatureModel] = useState<FeatureRevisionModel>({
         id: currentFeatureRevision.id,
-        description: currentFeatureRevision.description
+        description: currentFeatureRevision.description,
+        featureRevisionString: currentFeatureRevision.featureRevisionString
     });
 
     const changeFeatureDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {

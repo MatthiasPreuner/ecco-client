@@ -4,32 +4,38 @@ export interface FeatureModel {
     id: string,
     name: string,
     description: string,
-    /* featureRevisions: FeatureRevisionModel[], */
+    revisions: FeatureRevisionModel[],
+/*     latestRevision: FeatureRevisionModel */
 }
 
 export const FeatureModelDefault: FeatureModel[] = [{
     id: '1',
     description: "desc",
-    name: "person"
+    name: "person",
+    revisions: []
 },
 {
     id: '2',
     description: "desc",
-    name: "purpleshirt"
+    name: "purpleshirt",
+    revisions: []
 },
 {
     id: '3',
     description: "desc",
-    name: "stripedshirt"
+    name: "stripedshirt",
+    revisions: []
 },
 {
     id: '4',
     description: "desc",
-    name: "jacket"
+    name: "jacket",
+    revisions: []
 },
 {
     id: '5',
     description: "desc",
-    name: "glasses"
+    name: "glasses",
+    revisions: []
 }
 ];

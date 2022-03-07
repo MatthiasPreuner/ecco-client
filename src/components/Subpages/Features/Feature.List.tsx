@@ -17,7 +17,7 @@ export const FeatureList: React.FC = () => {
     const [tmpCurrentFeature, setTmpCurrentFeature] = useState<FeatureModel>(appState.features[0]);
 
     const getCurrentFeatureExpression = (): JSX.Element[] => {
-        return appState.features.map((feature: FeatureModel, i) => {
+        return appState.currentRepository.features.map((feature: FeatureModel, i) => {
             if (feature.name.includes(featureFilterText)) {
                 return (
                     <ListGroup.Item action variant="light" active={feature == tmpCurrentFeature} onClick={() => setTmpCurrentFeature(feature)}>{feature.name}</ListGroup.Item>

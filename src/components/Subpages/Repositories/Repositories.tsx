@@ -8,6 +8,7 @@ import { Form, Button, ButtonToolbar, ButtonGroup, Container, Row, Col, Table, L
 
 import { CreateRepoModal } from "./Repositories.CreateRepoModal";
 import { DeleteRepoModal } from "./Repositories.DeleteRepoModal";
+import { RepositoryResponse } from "../../../model/RepositoryResponse";
 
 export const Repositories: React.FC = () => {
 
@@ -15,10 +16,18 @@ export const Repositories: React.FC = () => {
     const [selectedRepo, setSelectedRepo] = useState<string>(null);
 
     let chooseRepo = () => {
+        CommunicationService.getInstance().getDefaultRepo().then((apiData: RepositoryResponse) => {
+            setAppState((previousState) => ({
+                ...previousState,
+                currentRepository: apiData.data
+            }));
+        });
+
         setAppState((prevState: AppState) => ({
             ...prevState,
             directory: selectedRepo
         }));
+        console.log(appState.currentRepository);
     }
 
     let deleteRepo = () => {
@@ -56,7 +65,7 @@ export const Repositories: React.FC = () => {
                     <ButtonGroup vertical>
                         <ButtonGroup className="me-2 mb-2" vertical>
                             <DeleteRepoModal btnDisabled={selectedRepo == null} repo={null} />
-                            <CreateRepoModal/>
+                            <CreateRepoModal />
                         </ButtonGroup>
                         <ButtonGroup vertical>
                             <Button variant="primary" type="submit" disabled={selectedRepo == null} onClick={chooseRepo}>Choose</Button>
@@ -64,7 +73,7 @@ export const Repositories: React.FC = () => {
                     </ButtonGroup>
                 </Col>
             </Row>
-       </Container>
+        </Container>
     );
 }
 
