@@ -24,7 +24,7 @@ export const AppRouter: React.FC = () => {
         }));
     }
 
-    let chooseRepo = (repo : string) => {
+    let chooseRepo = (repo: string) => {
         setAppState((prevState: AppState) => ({
             ...prevState,
             directory: repo
@@ -43,19 +43,19 @@ export const AppRouter: React.FC = () => {
                             <Nav.Link as={Link} to="features" disabled={!appState.eccoServiceIsInitialized}>Features</Nav.Link>
                             <Nav.Link as={Link} to="commits" disabled={!appState.eccoServiceIsInitialized}>Commits</Nav.Link>
                             <Nav.Link as={Link} to="variants" disabled={!appState.eccoServiceIsInitialized}>Variants</Nav.Link>
-                           {/*  <Nav.Link as={Link} to="artifacts" disabled={!appState.eccoServiceIsInitialized}>Artifacts</Nav.Link>
+                            {/*  <Nav.Link as={Link} to="artifacts" disabled={!appState.eccoServiceIsInitialized}>Artifacts</Nav.Link>
                             <Nav.Link as={Link} to="associations" disabled={!appState.eccoServiceIsInitialized}>Associations</Nav.Link> */}
                         </Nav>
                         <Nav>
-                            {appState.currentRepository != null && appState.userIsLoggedIn &&
-                                <NavDropdown title={'Repository: ' + appState.currentRepository.name} id="basic-nav-dropdown">
-                                    {appState.availableRepositories.filter(e => e != appState.currentRepository.name).map((element, i) => {
+                            {appState.repository != null && appState.userIsLoggedIn &&
+                                <NavDropdown title={'Repository: ' + appState.repository.name} id="basic-nav-dropdown">
+                                    {appState.availableRepositories.filter(e => e != appState.repository.name).map((element, i) => {
                                         return (
                                             <NavDropdown.Item key={i} as={Link} to="" onClick={() => chooseRepo(element)}>{element}</NavDropdown.Item>
                                         )
                                     })
                                     }
-                                    <NavDropdown.Divider />
+                                    {(appState.availableRepositories.length > 1) && < NavDropdown.Divider />}
                                     <NavDropdown.Item as={Link} to="repositories">Repository Settings</NavDropdown.Item>
                                 </NavDropdown>
                             }
@@ -75,7 +75,7 @@ export const AppRouter: React.FC = () => {
                 <Route path="/features" element={<Feature />} />
                 <Route path="/repositories" element={<Repositories />} />
                 <Route path="/commits" element={<Commits />} />
-{/*                 <Route path="/artifacts" element={<Artifact />} />
+                {/*                 <Route path="/artifacts" element={<Artifact />} />
                 <Route path="/associations" element={<Association />} /> */}
                 <Route path="/variants" element={<Variants />} />
             </Routes>

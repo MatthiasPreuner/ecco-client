@@ -10,12 +10,12 @@ export const Variants: React.FC = () => {
 
     const [appState, setAppState] = useSharedState();
     useEffect(() => {
-        CommunicationService.getInstance().getFeatures().then((apiData: FeatureResponse) => {
+      /*   CommunicationService.getInstance().getFeatures().then((apiData: FeatureResponse) => {
             setAppState((previousState) => ({
                 ...previousState,
                 features: apiData.data
             }));
-        });
+        }); */
     }, []);
 
     return (
@@ -35,12 +35,12 @@ export const Variants: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {appState.commits.map((commit, i) => {
+                        {appState.repository.commits.map((commit, i) => {
                             return (
                                 <tr key={i}>
-                                    <td width="500px">{commit.message}</td>
+                                    <td width="500px">{commit.commitMessage}</td>
                                     <td>{commit.username}</td>
-                                    <td>{commit.date.toDateString()}</td>
+                                    <td>{commit.date}</td>
                                 </tr>
                             )
                         })}

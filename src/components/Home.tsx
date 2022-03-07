@@ -29,7 +29,7 @@ export const Home: React.FC = () => {
         <Container className="vh-100 d-flex align-items-center justify-content-center">
            {/*  <Col> */}
             {!appState.userIsLoggedIn && <Login />}
-            {appState.userIsLoggedIn && appState.currentRepository == null && <Repositories />}
+            {appState.userIsLoggedIn && appState.repository == null && <Repositories />}
       {/*       </Col> */}
         </Container>
     );

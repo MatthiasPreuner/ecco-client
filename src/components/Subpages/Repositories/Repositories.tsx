@@ -19,14 +19,10 @@ export const Repositories: React.FC = () => {
         CommunicationService.getInstance().getDefaultRepo().then((apiData: RepositoryResponse) => {
             setAppState((previousState) => ({
                 ...previousState,
-                currentRepository: apiData.data
+                repository: apiData.data
             }));
+            console.log(apiData.data);
         });
-
-        setAppState((prevState: AppState) => ({
-            ...prevState,
-            directory: selectedRepo
-        }));
     }
 
     let deleteRepo = () => {
@@ -42,13 +38,12 @@ export const Repositories: React.FC = () => {
     }
 
     return (
-        <Container>
+        <Container className="main d-flex pt-4 justify-content-center">
             <Row>
                 <legend>Choose Repository</legend>
             </Row>
-
             <Row>
-                <Col>
+                <Col xs={6}>
                     <ListGroup>
                         {appState.availableRepositories.map((element, i) => {
                             return (

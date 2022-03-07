@@ -6,13 +6,11 @@ import { FeatureModel, FeatureModelDefault } from "../model/FeatureModel";
 /* import { ReducedArtifactPlugin } from "../Domain/Model/Backend/ReducedArtifactPlugin";
 import { AssociationInspection } from "../Domain/Model/Frontend/AssociationInspection";
 import { ArtefactTreeModel } from "../Domain/Model/Backend/ArtefactTreeModel"; */
-import { CommitModel, CommitModelDefault } from "../model/CommitModel";
+import { CommitModel } from "../model/CommitModel";
 import { RepositoryModel } from "../model/RepositoryModel";
 
 export interface AppState {
- /*  directory: string, */ // TODO nullable, rename to repository
-  repository: string,
-  currentRepository: RepositoryModel,
+  repository: RepositoryModel,
   availableRepositories: string[],
   repoOperation: string,
   commits: CommitModel[],
@@ -26,12 +24,10 @@ export interface AppState {
 }
 
 const useValue = () => useState<AppState>({
- /*  directory: "", */
-  repository: "null",
-  currentRepository: null,
+  repository: null,
   availableRepositories: ["test1", "test2"],
   repoOperation: "",
-  commits: CommitModelDefault,
+  commits: null,
   /*   artifactTree: null, */
   features: FeatureModelDefault.concat([...FeatureModelDefault]).concat([...FeatureModelDefault]).concat([...FeatureModelDefault]),
   /*    associations: [], */

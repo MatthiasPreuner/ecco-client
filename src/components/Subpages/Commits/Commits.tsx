@@ -14,14 +14,14 @@ export const Commits: React.FC = () => {
     const [appState, setAppState] = useSharedState();
     const [selectedCommit, setSelectedCommit] = useState<CommitModel>(null);
 
-    useEffect(() => {
-        CommunicationService.getInstance().getFeatures().then((apiData: FeatureResponse) => {
-            setAppState((previousState) => ({
-                ...previousState,
-                features: apiData.data
-            }));
-        });
-    }, []);
+    /*     useEffect(() => {
+            CommunicationService.getInstance().getFeatures().then((apiData: FeatureResponse) => {
+                setAppState((previousState) => ({
+                    ...previousState,
+                    features: apiData.data
+                }));
+            });
+        }, []); */
 
     function printDate(date: Date): string {
         return [date.getDay(), date.getMonth(), date.getFullYear()].join('.') + ' ' +
@@ -40,18 +40,18 @@ export const Commits: React.FC = () => {
                 <Table hover size='sm' className="table-fixed table-responsive">
                     <thead>
                         <tr>
-                            <th style={{width: '400px'}}>Commit Message</th>
+                            <th style={{ width: '400px' }}>Commit Message</th>
                             <th >Commiter</th>
                             <th >Date</th>
                         </tr>
                     </thead>
                     <tbody className="scrollable">
-                        {appState.commits.map((commit, i) => {
+                        {appState.repository.commits.map((commit, i) => {
                             return (
                                 <tr onClick={() => setSelectedCommit(commit)} className={selectedCommit == commit ? "btn-primary" : null} key={i}>
-                                    <td style={{width: '400px'}}>{commit.message}</td> {/* TODO max string length */}
+                                    <td style={{ width: '400px' }}>{commit.commitMessage}</td> {/* TODO max string length */}
                                     <td >{commit.username}</td>
-                                    <td>{printDate(commit.date)}</td>
+                                    <td>{commit.date}</td>
 
                                 </tr>
                             )
@@ -61,14 +61,15 @@ export const Commits: React.FC = () => {
                 <Row>
                     {selectedCommit != null &&
                         <>
-
                             <Col xs={3} className="mr-auto mb-3">
                                 <h4>Configuration</h4>
                                 <Card style={{ width: '18rem' }}>
                                     <ListGroup variant="flush">
-                                        <ListGroup.Item>Cras justo odio</ListGroup.Item>
-                                        <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-                                        <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+                                        {selectedCommit.configuration.featureRevisions.map((rev, i) => {
+                                            return (
+                                                <ListGroup.Item key={i}>{rev.featureRevisionString}</ListGroup.Item>
+                                            )
+                                        })}
                                     </ListGroup>
                                 </Card>
                             </Col>
@@ -84,11 +85,6 @@ export const Commits: React.FC = () => {
                         </>
                     }
                 </Row>
-
-
-
-
-
             </Col >
         </Container >
     )
