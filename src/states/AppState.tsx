@@ -10,7 +10,7 @@ import { CommitModel, CommitModelDefault } from "../model/CommitModel";
 import { RepositoryModel } from "../model/RepositoryModel";
 
 export interface AppState {
-  directory: string, // TODO nullable, rename to repository
+ /*  directory: string, */ // TODO nullable, rename to repository
   repository: string,
   currentRepository: RepositoryModel,
   availableRepositories: string[],
@@ -26,7 +26,7 @@ export interface AppState {
 }
 
 const useValue = () => useState<AppState>({
-  directory: "",
+ /*  directory: "", */
   repository: "null",
   currentRepository: null,
   availableRepositories: ["test1", "test2"],

@@ -47,9 +47,9 @@ export const AppRouter: React.FC = () => {
                             <Nav.Link as={Link} to="associations" disabled={!appState.eccoServiceIsInitialized}>Associations</Nav.Link> */}
                         </Nav>
                         <Nav>
-                            {appState.directory != "" && appState.userIsLoggedIn &&
-                                <NavDropdown title={appState.directory} id="basic-nav-dropdown">
-                                    {appState.availableRepositories.filter(e => e != appState.directory).map((element, i) => {
+                            {appState.currentRepository != null && appState.userIsLoggedIn &&
+                                <NavDropdown title={'Repository: ' + appState.currentRepository.name} id="basic-nav-dropdown">
+                                    {appState.availableRepositories.filter(e => e != appState.currentRepository.name).map((element, i) => {
                                         return (
                                             <NavDropdown.Item key={i} as={Link} to="" onClick={() => chooseRepo(element)}>{element}</NavDropdown.Item>
                                         )

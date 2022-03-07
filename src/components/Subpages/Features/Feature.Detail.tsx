@@ -17,17 +17,18 @@ export const FeatureDetail : React.FC<DetailViewProps> = ({currentSelectedFeatur
     const [successButtonDisabled, setSuccessButtonDisabled] = useState<boolean>(true);
     const [resetButtonDisabled, setResetButtonDisabled] = useState<boolean>(true);
     const [appState, setAppState] = useSharedState();
+
     const [tmpCurrentFeatureModel, setTmpCurrentFeatureModel] = useState<FeatureModel>({
-        id: currentSelectedFeatureModel.id,
-        name: currentSelectedFeatureModel.name,
-        description: currentSelectedFeatureModel.description,
-        revisions: currentSelectedFeatureModel.revisions
+        id: currentSelectedFeatureModel?.id,
+        name: currentSelectedFeatureModel?.name,
+        description: currentSelectedFeatureModel?.description,
+        revisions: currentSelectedFeatureModel?.revisions
     });
 
-    useEffect(() => {
+  /*   useEffect(() => {
         //...dann wurde eine Kopie von tmpCurrentFeature gemacht und die neue Description aus dem Textarea
         // wird in das neue Objekt reingeschrieben, erst dann will ich den Request raussenden...
-        CommunicationService.getInstance().updateFeatureInBackend(tmpCurrentFeatureModel).then((apiData: FeatureResponse) => {
+        CommunicationService.getInstance().updateFeatureInBackend(currentSelectedFeatureModel).then((apiData: FeatureResponse) => {
             setAppState((previousState: AppState) => ({
                 ...previousState,
                 features: apiData.data
@@ -37,11 +38,11 @@ export const FeatureDetail : React.FC<DetailViewProps> = ({currentSelectedFeatur
         }).finally(() => {
 
         });
-    }, [appState.currentFeature.description]);
+    }, [appState.currentFeature.description]); */
 
-    useEffect(() => {
+    /* useEffect(() => {
         setTmpCurrentFeatureModel(currentSelectedFeatureModel);
-    }, [currentSelectedFeatureModel]);
+    }, [currentSelectedFeatureModel]); */
 
     const changeFeatureDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         event.persist();
@@ -63,33 +64,38 @@ export const FeatureDetail : React.FC<DetailViewProps> = ({currentSelectedFeatur
         // }));
         setAppState((previousState: AppState) => ({
             ...previousState,
-            currentFeature: tmpCurrentFeatureModel
+            currentFeature: currentSelectedFeatureModel
         }));
         setSuccessButtonDisabled(true);
         setResetButtonDisabled(true);
     }
 
     const resetChangesToInitialState = () => {
-        setTmpCurrentFeatureModel(currentSelectedFeatureModel);
+/*         setTmpCurrentFeatureModel(currentSelectedFeatureModel); */
         setSuccessButtonDisabled(true);
         setResetButtonDisabled(true);
     }
 
     return (
-        <div className="row">
-            <div className="col-12">
-                <div className="m-3">
-                    <label htmlFor={tmpCurrentFeatureModel.name}>Description of {tmpCurrentFeatureModel.name}</label>
-                    <textarea id={tmpCurrentFeatureModel.name}
-                              value={(tmpCurrentFeatureModel.description == null ? "" : tmpCurrentFeatureModel.description)}
+        currentSelectedFeatureModel != null &&
+
+      <>
+          {/*   <Col> */}
+                <h4>Feature: {currentSelectedFeatureModel.name}</h4>
+                <div className="m-2">
+                    <label htmlFor={currentSelectedFeatureModel.name}>Description of {currentSelectedFeatureModel.name}</label>
+                    <textarea id={currentSelectedFeatureModel.name}
+                              value={(currentSelectedFeatureModel.description == null ? "" : currentSelectedFeatureModel.description)}
                               className={"form-control"}
                               onChange={changeFeatureDescription} />
                 </div>
-                <div className="m-3 d-flex justify-content-between">
-                    <Button variant="danger" disabled={resetButtonDisabled} onClick={resetChangesToInitialState}>Reset to Initial State</Button>
-                    <Button variant="success" disabled={successButtonDisabled} onClick={saveChangesInAppState}>Save Changes</Button>
+                <div className="m-2 d-flex justify-content-between">
+                    <Button size='sm' variant="secondary" disabled={resetButtonDisabled} onClick={resetChangesToInitialState}>Reset</Button>
+                    <Button size='sm' variant="primary" disabled={successButtonDisabled} onClick={saveChangesInAppState}>Save</Button>
                 </div>
-            </div>
-        </div>
+         {/*    </Col> */}
+            <FeatureSpecificRevisionList currentFeature={currentSelectedFeatureModel} />
+ 
+          </>
     );
  };

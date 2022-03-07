@@ -27,7 +27,6 @@ export const Repositories: React.FC = () => {
             ...prevState,
             directory: selectedRepo
         }));
-        console.log(appState.currentRepository);
     }
 
     let deleteRepo = () => {

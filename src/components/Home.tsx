@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { AppState, useSharedState } from "../states/AppState";
 
 import { CommunicationService } from "../services/CommunicationService";
-/* import { OperationResponse } from "../Domain/Model/Backend/OperationResponse"; */
 
 import { Login } from "./Home.Login";
 import { Repositories } from "./Subpages/Repositories/Repositories";
@@ -30,7 +29,7 @@ export const Home: React.FC = () => {
         <Container className="vh-100 d-flex align-items-center justify-content-center">
            {/*  <Col> */}
             {!appState.userIsLoggedIn && <Login />}
-            {appState.userIsLoggedIn && appState.directory == "" && <Repositories />}
+            {appState.userIsLoggedIn && appState.currentRepository == null && <Repositories />}
       {/*       </Col> */}
         </Container>
     );
