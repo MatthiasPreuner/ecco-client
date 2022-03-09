@@ -39,34 +39,36 @@ export const Repositories: React.FC = () => {
 
     return (
         <Container className="main d-flex pt-4 justify-content-center">
-            <Row>
-                <legend>Choose Repository</legend>
-            </Row>
-            <Row>
-                <Col xs={6}>
-                    <ListGroup>
-                        {appState.availableRepositories.map((element, i) => {
-                            return (
-                                <ListGroup.Item key={i} action active={element == selectedRepo} onClick={() => setSelectedRepo(element)}>
-                                    {element}
-                                </ListGroup.Item>
-                            )
-                        })
-                        }
-                    </ListGroup>
-                </Col>
-                <Col>
-                    <ButtonGroup vertical>
-                        <ButtonGroup className="me-2 mb-2" vertical>
-                            <DeleteRepoModal btnDisabled={selectedRepo == null} repo={null} />
-                            <CreateRepoModal />
-                        </ButtonGroup>
+            <Col>
+                <Row>
+                    <legend>Choose Repository</legend>
+                </Row>
+                <Row>
+                    <Col xs={6}>
+                        <ListGroup>
+                            {appState.availableRepositories.map((element, i) => {
+                                return (
+                                    <ListGroup.Item key={i} action active={element == selectedRepo} onClick={() => setSelectedRepo(element)}>
+                                        {element}
+                                    </ListGroup.Item>
+                                )
+                            })
+                            }
+                        </ListGroup>
+                    </Col>
+                    <Col>
                         <ButtonGroup vertical>
-                            <Button variant="primary" type="submit" disabled={selectedRepo == null} onClick={chooseRepo}>Choose</Button>
+                            <ButtonGroup className="me-2 mb-2" vertical>
+                                <DeleteRepoModal btnDisabled={selectedRepo == null} repo={null} />
+                                <CreateRepoModal />
+                            </ButtonGroup>
+                            <ButtonGroup vertical>
+                                <Button variant="primary" type="submit" disabled={selectedRepo == null} onClick={chooseRepo}>Choose</Button>
+                            </ButtonGroup>
                         </ButtonGroup>
-                    </ButtonGroup>
-                </Col>
-            </Row>
+                    </Col>
+                </Row>
+            </Col>
         </Container>
     );
 }
