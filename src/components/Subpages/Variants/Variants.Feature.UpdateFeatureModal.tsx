@@ -3,11 +3,7 @@ import { useState } from "react";
 import { Button, Modal, Row, Col, Form } from 'react-bootstrap';
 import { AppState, useSharedState } from "../../../states/AppState";
 
-import { VariantModel } from "../../../model/VariantModel";
-import { CommunicationService } from "../../../services/CommunicationService";
-import { RepositoryResponse } from "../../../model/RepositoryResponse";
-
-export const CreateVariant: React.FC = () => {
+export const UpdateFeature: React.FC = () => {
 
   const [show, setShow] = useState(false);
 
@@ -19,30 +15,21 @@ export const CreateVariant: React.FC = () => {
 
   let onModalDismiss = () => {
     setName('');
-    setValidated(false);
     handleClose();
   }
 
-  const [validated, setValidated] = useState(false);
-
-  const handleSubmit = (event : React.FormEvent<HTMLFormElement>) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    setValidated(true);
-  };
-
-
   let createVariant = () => {
-    CommunicationService.getInstance().createVariant(name, null).then((apiData: RepositoryResponse) => {
-      setAppState((previousState) => ({
-        ...previousState,
-        repository: apiData.data
-      }));
-    });
+
+
+    // TODO checks empty, exists, spacebar?
+    // name not empty, name not exists
+    // at least one feature??
+
+
+/*     setAppState((prevState: AppState) => ({
+      ...prevState,
+      availableRepositories: [...appState.availableRepositories, name]
+    })); */
     setName('');
     handleClose();
   }
@@ -62,13 +49,11 @@ export const CreateVariant: React.FC = () => {
         <Modal.Header closeButton>
           <Modal.Title>New Variant</Modal.Title>
         </Modal.Header>
-        <Form noValidate validated={validated}  onSubmit={handleSubmit}>
         <Modal.Body>
-        
+          <Form>
             <Form.Group className='mb-3'>
               <Form.Label>Variant Name</Form.Label>
-              <Form.Control type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value) } required/>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              <Form.Control type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} />
             </Form.Group>
             <Form.Group>
               <Form.Label>Features</Form.Label>
@@ -107,7 +92,7 @@ export const CreateVariant: React.FC = () => {
               }
             </Form.Group>
 
-          
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Col className="d-flex justify-content-between align-items-center">
@@ -115,7 +100,6 @@ export const CreateVariant: React.FC = () => {
             <Button variant="primary" type="submit">Create</Button>
           </Col>
         </Modal.Footer>
-        </Form>
       </Modal>
     </>
   );

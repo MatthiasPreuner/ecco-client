@@ -173,7 +173,7 @@ export const Dropzone: React.FC = () => {
                                             type='number'
                                             className='form-control form-control-sm'
                                             min={1}
-                                            max={100} // TODO current + 1
+                                            max={999} // TODO current + 1 or skipping enabled?
                                             value={ft.version}
                                             disabled={!ft.enabled}
                                             onChange={event => {

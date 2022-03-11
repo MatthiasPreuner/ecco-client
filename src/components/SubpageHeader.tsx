@@ -6,7 +6,7 @@ import { Container, Col, Row, InputGroup, FormControl, Button, Card, Accordion, 
 
 interface SubpageHeaderProps {
     title?: string,
-/*     children?: React.ReactNode */
+    /*     children?: React.ReactNode */
 }
 
 export const SubpageHeader: React.FC<SubpageHeaderProps> = props => {
@@ -20,7 +20,7 @@ export const SubpageHeader: React.FC<SubpageHeaderProps> = props => {
                 {appState.repository == null ?
                     <Row><p>No Repository selected.</p></Row> :
 
-                    { props.children }
+                    props.children
                 }
             </Col>
         </Container >)

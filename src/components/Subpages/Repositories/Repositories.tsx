@@ -28,7 +28,7 @@ export const Repositories: React.FC = () => {
     let deleteRepo = () => {
         console.log("deleting " + selectedRepo);
         // TODO Allert Modal
-        let newArray = [...appState.availableRepositories].filter(el => el != selectedRepo)
+        let newArray = [...appState.availableRepositories].filter(el => el !== selectedRepo)
 
         setAppState((prevState: AppState) => ({
             ...prevState,
@@ -48,7 +48,7 @@ export const Repositories: React.FC = () => {
                         <ListGroup>
                             {appState.availableRepositories.map((element, i) => {
                                 return (
-                                    <ListGroup.Item key={i} action active={element == selectedRepo} onClick={() => setSelectedRepo(element)}>
+                                    <ListGroup.Item key={i} action active={element === selectedRepo} onClick={() => setSelectedRepo(element)}>
                                         {element}
                                     </ListGroup.Item>
                                 )
@@ -59,8 +59,11 @@ export const Repositories: React.FC = () => {
                     <Col>
                         <ButtonGroup vertical>
                             <ButtonGroup className="me-2 mb-2" vertical>
-                                <DeleteRepoModal btnDisabled={selectedRepo == null} repo={null} />
+                                <DeleteRepoModal repo={null} />
                                 <CreateRepoModal />
+                            </ButtonGroup>
+                            <ButtonGroup className="me-2 mb-2" vertical>
+                                <Button variant="primary" type="submit" disabled={selectedRepo == null} onClick={chooseRepo}>Clone Repository</Button>
                             </ButtonGroup>
                             <ButtonGroup vertical>
                                 <Button variant="primary" type="submit" disabled={selectedRepo == null} onClick={chooseRepo}>Choose</Button>

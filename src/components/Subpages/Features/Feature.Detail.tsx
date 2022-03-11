@@ -1,10 +1,10 @@
 import * as React from "react";
 import { AppState, useSharedState } from "../../../states/AppState";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { FeatureModel } from "../../../model/FeatureModel";
-import {CommunicationService} from "../../../services/CommunicationService";
-import {FeatureResponse} from "../../../model/FeatureResponse";
-import {FeatureRevisionList} from "./Feature.Detail.RevisionList";
+import { CommunicationService } from "../../../services/CommunicationService";
+import { FeatureResponse } from "../../../model/FeatureResponse";
+import { FeatureRevisionList } from "./Feature.Detail.RevisionList";
 
 import { Container, Col, Row, InputGroup, FormControl, Button, Card, Accordion, Form, ListGroup } from 'react-bootstrap';
 
@@ -12,34 +12,34 @@ interface DetailViewProps {
     currentSelectedFeatureModel: FeatureModel
 }
 
-export const FeatureDetail : React.FC<DetailViewProps> = ({currentSelectedFeatureModel: selectedFeature}) => {
+export const FeatureDetail: React.FC<DetailViewProps> = ({ currentSelectedFeatureModel: selectedFeature }) => {
 
     const [successButtonDisabled, setSuccessButtonDisabled] = useState<boolean>(true);
     const [resetButtonDisabled, setResetButtonDisabled] = useState<boolean>(true);
     const [appState, setAppState] = useSharedState();
     const [tmpFeatureDescription, setTmpFeatureDescription] = useState<string>(selectedFeature?.description);
 
-/*     const [tmpCurrentFeatureModel, setTmpCurrentFeatureModel] = useState<FeatureModel>({
-        id: selectedFeature?.id,
-        name: selectedFeature?.name,
-        description: selectedFeature?.description,
-        revisions: selectedFeature?.revisions
-    }); */
+    /*     const [tmpCurrentFeatureModel, setTmpCurrentFeatureModel] = useState<FeatureModel>({
+            id: selectedFeature?.id,
+            name: selectedFeature?.name,
+            description: selectedFeature?.description,
+            revisions: selectedFeature?.revisions
+        }); */
 
-  /*   useEffect(() => {
-        //...dann wurde eine Kopie von tmpCurrentFeature gemacht und die neue Description aus dem Textarea
-        // wird in das neue Objekt reingeschrieben, erst dann will ich den Request raussenden...
-        CommunicationService.getInstance().updateFeatureInBackend(currentSelectedFeatureModel).then((apiData: FeatureResponse) => {
-            setAppState((previousState: AppState) => ({
-                ...previousState,
-                features: apiData.data
-            }));
-        }).catch((error) => {
-            console.log(error);
-        }).finally(() => {
-
-        });
-    }, [appState.currentFeature.description]); */
+    /*   useEffect(() => {
+          //...dann wurde eine Kopie von tmpCurrentFeature gemacht und die neue Description aus dem Textarea
+          // wird in das neue Objekt reingeschrieben, erst dann will ich den Request raussenden...
+          CommunicationService.getInstance().updateFeatureInBackend(currentSelectedFeatureModel).then((apiData: FeatureResponse) => {
+              setAppState((previousState: AppState) => ({
+                  ...previousState,
+                  features: apiData.data
+              }));
+          }).catch((error) => {
+              console.log(error);
+          }).finally(() => {
+  
+          });
+      }, [appState.currentFeature.description]); */
 
     /* useEffect(() => {
         setTmpCurrentFeatureModel(currentSelectedFeatureModel);
@@ -77,23 +77,20 @@ export const FeatureDetail : React.FC<DetailViewProps> = ({currentSelectedFeatur
     return (
         selectedFeature != null &&
 
-      <>
-          {/*   <Col> */}
-                <h4>Feature: {selectedFeature.name}</h4>
-                <div className="m-2">
-                    <label htmlFor={selectedFeature.name}>Description of {selectedFeature.name}</label>
-                    <textarea id={selectedFeature.name}
-                              value={(tmpFeatureDescription == null ? "" : tmpFeatureDescription)}
-                              className={"form-control"}
-                              onChange={changeFeatureDescription} />
-                </div>
-                <div className="m-2 d-flex justify-content-between">
-                    <Button size='sm' variant="secondary" disabled={resetButtonDisabled} onClick={resetChangesToInitialState}>Reset</Button>
-                    <Button size='sm' variant="primary" disabled={successButtonDisabled} onClick={saveChangesInAppState}>Save</Button>
-                </div>
-         {/*    </Col> */}
+        <>
+            <h4>Feature: {selectedFeature.name}</h4>
+            <div className="m-2">
+                <label htmlFor={selectedFeature.name}>Description of {selectedFeature.name}</label>
+                <textarea id={selectedFeature.name}
+                    value={(tmpFeatureDescription == null ? "" : tmpFeatureDescription)}
+                    className={"form-control"}
+                    onChange={changeFeatureDescription} />
+            </div>
+            <div className="m-2 d-flex justify-content-between">
+                <Button size='sm' variant="secondary" disabled={resetButtonDisabled} onClick={resetChangesToInitialState}>Reset <i className="bi bi-trash3-fill"></i></Button>
+                <Button size='sm' variant="primary" disabled={successButtonDisabled} onClick={saveChangesInAppState}>Save <i className="bi bi-save2-fill"></i></Button>
+            </div>
             <FeatureRevisionList feature={selectedFeature} />
- 
-          </>
+        </>
     );
- };
+};

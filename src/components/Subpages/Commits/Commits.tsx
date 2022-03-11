@@ -6,7 +6,7 @@ import { CommunicationService } from "../../../services/CommunicationService";
 import { FeatureResponse } from "../../../model/FeatureResponse";
 import { CommitModel } from "../../../model/CommitModel";
 
-import { Container, Col, Row, InputGroup, Form, Table, Button, ListGroup, Card } from 'react-bootstrap';
+import { Container, Col, Row, InputGroup, Form, Table, Button, ListGroup, Card, Badge } from 'react-bootstrap';
 import { MakeCommit } from "./Commits.MakeCommitModal";
 
 export const Commits: React.FC = () => {
@@ -32,55 +32,63 @@ export const Commits: React.FC = () => {
     return (
         <Container className="main d-flex pt-4 justify-content-center">
             <Col>
+                <Row>                   <h3>Commits</h3>                </Row>
                 <Row>
-                    <Col xs={8}><h3>Commits</h3></Col>
-                    <Col xs={2}><Button className="w-100">Compare</Button></Col>
-                    <Col xs={2}><MakeCommit /></Col>
-                </Row>
-                <Table hover size='sm' className="table-fixed table-responsive">
-                    <thead>
-                        <tr>
-                            <th style={{ width: '400px' }}>Commit Message</th>
-                            <th >Commiter</th>
-                            <th >Date</th>
-                        </tr>
-                    </thead>
-                    <tbody className="scrollable">
-                        {appState.repository.commits.map((commit, i) => {
-                            return (
-                                <tr onClick={() => setSelectedCommit(commit)} className={selectedCommit == commit ? "btn-primary" : null} key={i}>
-                                    <td style={{ width: '400px' }}>{commit.commitMessage}</td> {/* TODO max string length */}
-                                    <td >{commit.username}</td>
-                                    <td>{commit.date}</td>
+                    <Col xs={10}>
 
+                        <Table hover size='sm' className="table-fixed table-responsive">
+                            <thead>
+                                <tr>
+                                    <th style={{ width: '400px' }}>Commit Message</th>
+                                    <th style={{ width: '200px' }}>Commiter</th>
+                                    <th style={{ width: '200px' }}>Date</th>
                                 </tr>
-                            )
-                        })}
-                    </tbody>
-                </Table>
+                            </thead>
+                            <tbody className="scrollable">
+                                {appState.repository.commits.map((commit, i) => {
+                                    return (
+                                        <tr onClick={() => setSelectedCommit(commit)} className={selectedCommit == commit ? "btn-primary" : null} key={i}>
+                                            <td style={{ width: '400px' }}>{commit.commitMessage}</td> {/* TODO max string length */}
+                                            <td style={{ width: '200px' }}>{commit.username}</td>
+                                            <td style={{ width: '200px' }}>{commit.date}</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </Table>
+
+                    </Col>
+                    <Col>
+                        <Row className='mb-2'><Button className="w-100">Compare</Button></Row>
+                        <Row className='mb-2'><MakeCommit /></Row>
+                    </Col>
+                </Row>
+
                 <Row>
                     {selectedCommit != null &&
                         <>
                             <Col xs={3} className="mr-auto mb-3">
-                                <h4>Configuration</h4>
-                                <Card style={{ width: '18rem' }}>
-                                    <ListGroup variant="flush">
+                                <h5>Configuration</h5>
+                                <Card>
+                                    <ListGroup variant="flush" className='mb-0' style={{ maxHeight: '30vh' }}>
                                         {selectedCommit.configuration.featureRevisions.map((rev, i) => {
                                             return (
-                                                <ListGroup.Item key={i}>{rev.featureRevisionString}</ListGroup.Item>
+                                                <ListGroup.Item key={i}>{rev.featureRevisionString.split('.')[0]}
+                                                    <Badge className="float-end" bg="primary" pill>{rev.featureRevisionString.split('.')[1]}</Badge>
+                                                </ListGroup.Item>
                                             )
                                         })}
                                     </ListGroup>
                                 </Card>
                             </Col>
                             <Col xs={3} className="mr-auto mb-3">
-                                <h4>Associations</h4>
+                                <h5>Associations</h5>
                             </Col>
                             <Col xs={3} className="mr-auto mb-3">
-                                <h4>Details View</h4>
+                                <h5>Details View</h5>
                             </Col>
                             <Col xs={3} className="mr-auto mb-3">
-                                <h4>Image?</h4>
+                                <h5>Image?</h5>
                             </Col>
                         </>
                     }

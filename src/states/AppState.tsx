@@ -16,7 +16,6 @@ export interface AppState {
   commits: CommitModel[],
   /*     plugins: ReducedArtifactPlugin[] */
   /*   artifactTree: ArtefactTreeModel, */
-  features: FeatureModel[],
   /*   associations: AssociationInspection[], */
   eccoServiceIsInitialized: boolean,
   currentFeature: FeatureModel,
@@ -29,7 +28,6 @@ const useValue = () => useState<AppState>({
   repoOperation: "",
   commits: null,
   /*   artifactTree: null, */
-  features: FeatureModelDefault.concat([...FeatureModelDefault]).concat([...FeatureModelDefault]).concat([...FeatureModelDefault]),
   /*    associations: [], */
   /*    plugins: [], */
   eccoServiceIsInitialized: true,

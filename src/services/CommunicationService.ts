@@ -2,6 +2,7 @@
 import { RequestConfig } from "../model/RequestConfig";
 import { FeatureModel } from "../model/FeatureModel";
 import { FeatureRevisionModel } from "../model/FeatureRevisionModel";
+import { VariantModel } from "../model/VariantModel";
 /* import {AssociationModel} from "../Domain/Model/Backend/AssociationModel";
 import {AssociationInspection} from "../Domain/Model/Frontend/AssociationInspection";
 import {ArtefactgraphFilter} from "../Domain/Model/Backend/ChartArtefactgraph/ArtefactgraphFilter"; */
@@ -12,6 +13,7 @@ export class CommunicationService {
 
     private static readonly BASE_URI = "http://localhost:8080/api";
     private static readonly FEATURE_ENDPOINT = "/features";
+    private static readonly VARIANT_ENDPOINT = "/variants";
     private static readonly ARTIFACT_ENDPOINT = "/artefacts";
     private static readonly ARTIFACT_GRAPH_ENDPOINT = "/graph";
     private static readonly ARTIFACT_UPDATED_GRAPH_ENDPOINT = "/updatedgraph";
@@ -43,6 +45,19 @@ export class CommunicationService {
         /* axios.post() */
         return axios.post(
             `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + '/initBig'}`, 'Access-Control-Allow-Origin'
+        )
+    }
+
+    // VARIANTS
+    public createVariant(name: string, config: string): Promise<any> { // TODO config
+        return axios.put(
+            `${CommunicationService.BASE_URI + CommunicationService.VARIANT_ENDPOINT}/${name}`,
+        )
+    }
+
+    public deleteVariant(variant: VariantModel): Promise<any> {
+        return axios.delete(
+            `${CommunicationService.BASE_URI + CommunicationService.VARIANT_ENDPOINT}/${variant.name}`,
         )
     }
 
