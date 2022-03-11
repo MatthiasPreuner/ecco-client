@@ -1,0 +1,179 @@
+{
+    "features": [{
+            "id": "6f246b4a-d6e7-449b-897d-798aa0818ef8",
+            "name": "RSS",
+            "description": "",
+            "revisions": [{
+                "id": "3",
+                "description": null,
+                "featureRevisionString": "RSS.3"
+            }]
+        },
+        {
+            "id": "5a4efe8c-655d-4193-8fcb-e3811369ef37",
+            "name": "I18N",
+            "description": "",
+            "revisions": [{
+                "id": "2",
+                "description": null,
+                "featureRevisionString": "I18N.2"
+            }]
+        },
+        {
+            "id": "f44e210d-1980-48ce-8490-d6e87fb054ed",
+            "name": "BASE",
+            "description": "",
+            "revisions": [{
+                    "id": "1",
+                    "description": null,
+                    "featureRevisionString": "BASE.1"
+                },
+                {
+                    "id": "15",
+                    "description": null,
+                    "featureRevisionString": "BASE.15"
+                }
+            ]
+        },
+        {
+            "id": "d58728e8-2455-4c21-95fb-251ad5d9a8e4",
+            "name": "SETTINGS",
+            "description": "",
+            "revisions": [{
+                "id": "2",
+                "description": null,
+                "featureRevisionString": "SETTINGS.2"
+            }]
+        },
+        {
+            "id": "afb4d48d-a5a3-4ace-a75e-c966e9584082",
+            "name": "TRAFFIC",
+            "description": "",
+            "revisions": [{
+                "id": "8",
+                "description": null,
+                "featureRevisionString": "TRAFFIC.8"
+            }]
+        },
+        {
+            "id": "4bb481b5-a8de-41c3-9d1a-f35618f803a6",
+            "name": "WEATHER",
+            "description": "",
+            "revisions": [{
+                "id": "10",
+                "description": null,
+                "featureRevisionString": "WEATHER.10"
+            }]
+        }
+    ],
+    "variants": [{
+            "name": "",
+            "description": null,
+            "configuration": {
+                "featureRevisions": [{
+                    "id": "1",
+                    "description": null,
+                    "featureRevisionString": "BASE.1"
+                }],
+                "configurationString": "BASE.1"
+            },
+            "id": "0f064651-db68-4c94-8b4c-4151387f46f4"
+        },
+        {
+            "name": "",
+            "description": null,
+            "configuration": {
+                "featureRevisions": [{
+                        "id": "15",
+                        "description": null,
+                        "featureRevisionString": "BASE.15"
+                    },
+                    {
+                        "id": "8",
+                        "description": null,
+                        "featureRevisionString": "TRAFFIC.8"
+                    },
+                    {
+                        "id": "3",
+                        "description": null,
+                        "featureRevisionString": "RSS.3"
+                    },
+                    {
+                        "id": "10",
+                        "description": null,
+                        "featureRevisionString": "WEATHER.10"
+                    },
+                    {
+                        "id": "2",
+                        "description": null,
+                        "featureRevisionString": "SETTINGS.2"
+                    },
+                    {
+                        "id": "2",
+                        "description": null,
+                        "featureRevisionString": "I18N.2"
+                    }
+                ],
+                "configurationString": "BASE.15, TRAFFIC.8, RSS.3, WEATHER.10, SETTINGS.2, I18N.2"
+            },
+            "id": "7a51c5a6-195d-47b7-b4ad-3992fc6c12ff"
+        }
+    ],
+    "commits": [{
+            "id": "9f756b7f-e228-416a-9604-fb89712f88f8",
+            "configuration": {
+                "featureRevisions": [{
+                    "id": "1",
+                    "description": null,
+                    "featureRevisionString": "BASE.1"
+                }],
+                "configurationString": "BASE.1"
+            },
+            "commitMessage": "1. Commit: mirror-ecco_base",
+            "date": "2022-03-09T18:49:46.888+00:00",
+            "username": "preun"
+        },
+        {
+            "id": "85930b7d-dd16-4743-aa34-3cabd71b179e",
+            "configuration": {
+                "featureRevisions": [{
+                        "id": "15",
+                        "description": null,
+                        "featureRevisionString": "BASE.15"
+                    },
+                    {
+                        "id": "8",
+                        "description": null,
+                        "featureRevisionString": "TRAFFIC.8"
+                    },
+                    {
+                        "id": "3",
+                        "description": null,
+                        "featureRevisionString": "RSS.3"
+                    },
+                    {
+                        "id": "10",
+                        "description": null,
+                        "featureRevisionString": "WEATHER.10"
+                    },
+                    {
+                        "id": "2",
+                        "description": null,
+                        "featureRevisionString": "SETTINGS.2"
+                    },
+                    {
+                        "id": "2",
+                        "description": null,
+                        "featureRevisionString": "I18N.2"
+                    }
+                ],
+                "configurationString": "BASE.15, TRAFFIC.8, RSS.3, WEATHER.10, SETTINGS.2, I18N.2"
+            },
+            "commitMessage": "2. Commit: mirror-ecco_base-5",
+            "date": "2022-03-09T18:49:46.953+00:00",
+            "username": "preun"
+        }
+    ],
+    "maxOrder": 2,
+    "name": "BigInit"
+}
