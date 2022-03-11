@@ -2,15 +2,8 @@ import React from 'react';
 import { SharedStateProvider } from "./states/AppState";
 import { AppRouter } from "./AppRouter";
 
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-/* 
-const App = () => (
-  <SharedStateProvider>
-    <AppRouter />
-  </SharedStateProvider>
-);
- */
+import './App.scss';
+
 export default class App extends React.Component {
   render() {
     return (
@@ -20,6 +13,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-/* export default App;
- */

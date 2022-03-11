@@ -1,0 +1,24 @@
+// https://getbootstrap.com/docs/5.0/customize/sass/
+// https://react-bootstrap.github.io/getting-started/introduction/
+
+/* make the customizations */
+
+$secondary: #e9ecef;
+// Create your own map
+$custom-colors: ( "custom-color": #e9ecef);
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
+// $theme-colors: ( */
+// "primary": tomato,  */
+// "secondary": #e9ecef */
+
+/* // ); */
+
+.dropdown-btn-primary {
+    border: 1px solid #ced4da !important;
+    background-color: $secondary !important;
+    width: 42px !important;
+}
+
+//import bootstrap to set changes
+@import "~bootstrap/scss/bootstrap";
