@@ -1,9 +1,10 @@
 import * as React from "react";
 import { useState } from "react";
 import { Button, Modal, Row, Col, Form } from 'react-bootstrap';
+import { CommunicationService } from "../../../services/CommunicationService";
 import { AppState, useSharedState } from "../../../states/AppState";
 
-export const CreateVariant: React.FC = () => {
+export const AddVariantFeatureModal: React.FC = () => {
 
   const [show, setShow] = useState(false);
 
@@ -18,9 +19,18 @@ export const CreateVariant: React.FC = () => {
     handleClose();
   }
 
-  let createVariant = () => {
+  let addVariantFeature = () => {
+/*     CommunicationService.getInstance().addVariantFeature(variant, feature).then((apiData: RepositoryResponse) => {
+      setAppState((previousState) => ({
+        ...previousState,
+        repository: apiData.data
+      }));
+    });
+    setName('');
+    handleClose(); */
+  
 
-
+    addVariantFeature
     // TODO checks empty, exists, spacebar?
     // name not empty, name not exists
     // at least one feature??

@@ -1,0 +1,85 @@
+import * as React from "react";
+import { useDropzone, FileWithPath } from 'react-dropzone'
+import { useCallback, useState, useEffect } from "react";
+import { CommunicationService } from "../../../services/CommunicationService";
+import { AppState, useSharedState } from "../../../states/AppState";
+
+import { Col, Row, Form, Button, } from 'react-bootstrap';
+import { RepositoryResponse } from "../../../model/RepositoryResponse";
+import {CommitFeature} from "../Commits/Commits.MakeCommitModal"
+
+interface FeatureRowProps {
+    features: CommitFeature[],
+    setConfigFeatures: React.Dispatch<React.SetStateAction<CommitFeature[]>>,
+}
+
+export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) => {
+
+    const { features, setConfigFeatures } = props;
+
+    /*  const getCurrentVariantExpression = (): JSX.Element[] => {
+ 
+         var filteredByFeatures = appState.repository?.variants.filter(vari => featureFilter.map(f => f.name).every(e => vari.configuration.featureRevisions.map(r => r.featureRevisionString.split('.')[0]).includes(e)));
+ 
+         return filteredByFeatures.filter(variant => variant.name.toLowerCase().includes(variantFilterText.toLowerCase()))
+             .map((variant: VariantModel, i) => {
+                 return (
+                     <tr style={{ width: '100%' }} onClick={() => setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
+                         <td width="20%">TODO {variant.name}</td>
+                         <td style={{ width: '80%' }}>{variant.description}</td>
+                     </tr>
+                 );
+             }).filter((singleJSXElement: JSX.Element) => {
+                 return singleJSXElement !== undefined || singleJSXElement !== null;
+             });
+     }
+     let filteredVariants = getCurrentVariantExpression(); */
+
+    const getRows = (): JSX.Element[] => {
+
+        return features.map((ft, i) => {
+            return (
+                <Row>
+                    <Col xs={10}>
+                        <Form.Check
+                            className='my-1'
+                            // id={i.toString()}
+                            label={ft.name}
+                            checked={ft.enabled}
+                            onChange={event => {
+                                /*         props.ft.enabled = !props.ft.enabled; */
+                                var newConfigFeatures = [...props.features]
+                                newConfigFeatures[i].enabled = !ft.enabled;
+                                props.setConfigFeatures(newConfigFeatures);
+                            }}
+                        />
+                    </Col>
+                    <Col xs={2}>
+                        {ft.enabled &&
+                            <input
+                                type='number'
+                                className='form-control form-control-sm'
+                                min={1}
+                                max={999} // TODO current + 1 or skipping enabled?
+                                value={ft.revision}
+                                disabled={!ft.enabled}
+                                onChange={event => {
+                                    //props.ft.revision = parseInt(event.target.value);
+
+                                    var newConfigFeatures = [...props.features]
+                                    newConfigFeatures[i].revision = parseInt(event.target.value);
+                                    props.setConfigFeatures(newConfigFeatures);
+                                }}
+                            />}
+                    </Col>
+                </Row>)
+        }
+        );
+    }
+
+    let rows = getRows();
+
+    return (
+        <div>test</div>)
+      /*   { rows }) */
+};

@@ -1,7 +1,9 @@
 import * as React from "react";
 import { useState } from "react";
 import { Button, Modal, Form } from 'react-bootstrap';
-import { AppState, useSharedState } from "../../../states/AppState";
+import { RepositoryHeaderResponse } from "../../../model/AvailableRepositoryResponse";
+import { CommunicationService } from "../../../services/CommunicationService";
+import { useSharedState } from "../../../states/AppState";
 
 export const CreateRepoModal: React.FC = () => {
 
@@ -23,13 +25,13 @@ export const CreateRepoModal: React.FC = () => {
   }
 
   let createRepo = () => {
-
-    // TODO checks empty, exists, spacebar?
-
-    setAppState((prevState: AppState) => ({
-      ...prevState,
-      availableRepositories: [...appState.availableRepositories, inputValue]
-    }));
+      CommunicationService.getInstance().createRepository(inputValue).then((apiData: RepositoryHeaderResponse) => {
+          console.log(apiData.data);
+          setAppState((previousState) => ({
+              ...previousState,
+              availableRepositories: apiData.data
+          }));
+      });
     setInputValue(null);
     handleClose();
   }
@@ -37,7 +39,7 @@ export const CreateRepoModal: React.FC = () => {
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        Create new Repository
+        Create <i className="bi bi-folder-plus"></i>
       </Button>
 
       <Modal
@@ -48,14 +50,14 @@ export const CreateRepoModal: React.FC = () => {
         className="no-user-select"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Create new Repository</Modal.Title>
+          <Modal.Title>Create Repository</Modal.Title>
         </Modal.Header>
         <Modal.Body>
 
           <Form className="w-80">
             <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Name</Form.Label>
-              <Form.Control type="text" placeholder="Name of the new Repository..."  value={inputValue} onChange={setValueInAppState}/>
+              <Form.Label>A new empty Repository will be created. Please enter a name:</Form.Label>
+              <Form.Control type="text" placeholder="Name of the new Repository..." pattern="[A-Za-z0-9_]{1,}" value={inputValue} onChange={setValueInAppState}/>
             </Form.Group>
           </Form>
         </Modal.Body>

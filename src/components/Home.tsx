@@ -6,7 +6,7 @@ import { CommunicationService } from "../services/CommunicationService";
 
 import { Login } from "./Home.Login";
 import { Repositories } from "./Subpages/Repositories/Repositories";
-import { Container, Col } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 export const Home: React.FC = () => {
 

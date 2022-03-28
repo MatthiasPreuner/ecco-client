@@ -1,11 +1,9 @@
 import * as React from "react";
 import { useState } from "react";
 import { Button, Modal, Form } from 'react-bootstrap';
-import { AppState, useSharedState } from "../../../states/AppState";
-
 import { RepositoryHeaderModel } from "../../../model/RepositoryModel";
 
-export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) => {
+export const CloneRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) => {
 
   const [show, setShow] = useState(false);
 
@@ -13,21 +11,23 @@ export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props
   const handleShow = () => setShow(true);
 
   let [inputValue, setInputValue] = useState<string>(null);
-  let [appState, setAppState] = useSharedState();
+
+  const setValueInAppState = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
 
   let onModalDismiss = () => {
     setInputValue(null);
     handleClose();
   }
 
-  let deleteRepo = () => {
-    if (inputValue !== "DELETE") return;
+  let cloneRepo = () => {
 
-  /*   let newArray = [...appState.availableRepositories].filter(el => el.name != props.repo.name)
+    // TODO checks empty, exists, spacebar?
 
-    setAppState((prevState: AppState) => ({
+   /*  setAppState((prevState: AppState) => ({
       ...prevState,
-      availableRepositories: newArray
+      availableRepositories: [...appState.availableRepositories, inputValue]
     })); */
     setInputValue(null);
     handleClose();
@@ -35,7 +35,9 @@ export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props
 
   return (
     <>
-      <Button variant="secondary" disabled={props.repo == null} onClick={handleShow}>Delete <i className="bi bi-trash3-fill"></i></Button>
+      <Button variant="primary" onClick={handleShow} className="w-100" disabled={props.repo === null}>
+        Clone <i className="bi bi-files"></i>
+      </Button>
 
       <Modal
         show={show}
@@ -45,20 +47,20 @@ export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props
         className="no-user-select"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Delete Repository</Modal.Title>
+          <Modal.Title>Clone Repository</Modal.Title>
         </Modal.Header>
         <Modal.Body>
 
           <Form className="w-80">
             <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Repository '{props.repo?.name}' will be permanently removed!</Form.Label>
-              <Form.Control type="text" placeholder="Type 'DELETE' to confirm" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+              <Form.Label>A new copy of '{props.repo?.name}' will be created. Please enter a name for the copy:</Form.Label>
+              <Form.Control type="text" placeholder="Name of the new Repository..."  value={inputValue} onChange={setValueInAppState}/>
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={onModalDismiss}>Close</Button>
-          <Button variant="primary" onClick={deleteRepo}>Delete Repository</Button>
+          <Button variant="primary" type="submit" onClick={cloneRepo}>Create Repository</Button>
         </Modal.Footer>
       </Modal>
     </>

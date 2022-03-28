@@ -2,11 +2,10 @@ import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
 import { useEffect, useState } from "react";
 
-import { Container, Col, Row, InputGroup, FormControl, Button, Card, Accordion, Form, ListGroup } from 'react-bootstrap';
+import { Container, Col, Row, InputGroup, FormControl, Button, ListGroup } from 'react-bootstrap';
 
 import { FeatureModel } from "../../../model/FeatureModel";
 import { FeatureDetail } from "./Feature.Detail";
-import { SubpageHeader } from "../../SubpageHeader";
 
 export const Feature: React.FC = () => {
 
@@ -18,14 +17,18 @@ export const Feature: React.FC = () => {
         return appState.repository?.features.map((feature: FeatureModel, i) => {
             if (feature.name.toLowerCase().includes(featureFilterText.toLowerCase())) {
                 return (
-                    <ListGroup.Item key={i} action variant="light" active={feature == tmpCurrentFeature} onClick={() => setTmpCurrentFeature(feature)}>{feature.name}</ListGroup.Item>
+                    <ListGroup.Item key={i} action variant="light" active={feature === tmpCurrentFeature} onClick={() => setTmpCurrentFeature(feature)}>{feature.name}</ListGroup.Item>
                 );
             }
         }).filter((singleJSXElement: JSX.Element) => {
-            return singleJSXElement != undefined || singleJSXElement != null;
+            return singleJSXElement !== undefined || singleJSXElement != null;
         });
     }
     let features = getCurrentFeatureExpression();
+
+    useEffect(() => {
+        setTmpCurrentFeature(appState.repository.features.find(f => f.id === tmpCurrentFeature?.id)) // update, when new repository is received after changing smtg
+    }, [appState.repository]);
 
     return (
         <Container className="main d-flex pt-4 justify-content-center">

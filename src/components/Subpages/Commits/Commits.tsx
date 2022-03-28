@@ -1,33 +1,26 @@
 import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { CommunicationService } from "../../../services/CommunicationService";
-import { FeatureResponse } from "../../../model/FeatureResponse";
 import { CommitModel } from "../../../model/CommitModel";
-
-import { Container, Col, Row, InputGroup, Form, Table, Button, ListGroup, Card, Badge } from 'react-bootstrap';
+import { Container, Col, Row, Table, Button, ListGroup, Card, Badge } from 'react-bootstrap';
 import { MakeCommit } from "./Commits.MakeCommitModal";
 
 export const Commits: React.FC = () => {
 
     const [appState, setAppState] = useSharedState();
+    const [compareCommit, setCompareCommit] = useState<CommitModel>(null);
     const [selectedCommit, setSelectedCommit] = useState<CommitModel>(null);
-
-    /*     useEffect(() => {
-            CommunicationService.getInstance().getFeatures().then((apiData: FeatureResponse) => {
-                setAppState((previousState) => ({
-                    ...previousState,
-                    features: apiData.data
-                }));
-            });
-        }, []); */
 
     function printDate(date: Date): string {
         return [date.getDay(), date.getMonth(), date.getFullYear()].join('.') + ' ' +
             [date.getHours(), date.getMinutes(), date.getSeconds()].join(':');;
     }
 
+    let selectCommit = (event: React.MouseEvent, commit: CommitModel) => {
+        setCompareCommit(event.ctrlKey ? selectedCommit : null);
+        setSelectedCommit(commit);
+    }
 
     return (
         <Container className="main d-flex pt-4 justify-content-center">
@@ -35,7 +28,6 @@ export const Commits: React.FC = () => {
                 <Row>                   <h3>Commits</h3>                </Row>
                 <Row>
                     <Col xs={10}>
-
                         <Table hover size='sm' className="table-fixed table-responsive">
                             <thead>
                                 <tr>
@@ -47,7 +39,7 @@ export const Commits: React.FC = () => {
                             <tbody className="scrollable">
                                 {appState.repository.commits.map((commit, i) => {
                                     return (
-                                        <tr onClick={() => setSelectedCommit(commit)} className={selectedCommit == commit ? "btn-primary" : null} key={i}>
+                                        <tr onClick={(e) => selectCommit(e, commit)} className={selectedCommit === commit ? "btn-primary" : null} key={i}>
                                             <td style={{ width: '400px' }}>{commit.commitMessage}</td> {/* TODO max string length */}
                                             <td style={{ width: '200px' }}>{commit.username}</td>
                                             <td style={{ width: '200px' }}>{commit.date}</td>
@@ -59,7 +51,7 @@ export const Commits: React.FC = () => {
 
                     </Col>
                     <Col>
-                        <Row className='mb-2'><Button className="w-100">Compare</Button></Row>
+                        <Row className='mb-2'><Button className="w-100" disabled={compareCommit === null}>Compare</Button></Row>
                         <Row className='mb-2'><MakeCommit /></Row>
                     </Col>
                 </Row>
@@ -74,7 +66,7 @@ export const Commits: React.FC = () => {
                                         {selectedCommit.configuration.featureRevisions.map((rev, i) => {
                                             return (
                                                 <ListGroup.Item key={i}>{rev.featureRevisionString.split('.')[0]}
-                                                    <Badge className="float-end" bg="primary" pill>{rev.featureRevisionString.split('.')[1]}</Badge>
+                                                    <Badge className="float-end" bg="primary">{rev.featureRevisionString.split('.')[1]}</Badge>
                                                 </ListGroup.Item>
                                             )
                                         })}

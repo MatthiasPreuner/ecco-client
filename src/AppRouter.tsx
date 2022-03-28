@@ -1,7 +1,7 @@
 import * as React from "react";
 import { AppState, useSharedState } from "./states/AppState";
 import { BrowserRouter as Router, Link, Routes, Route } from "react-router-dom";
-import { Nav, Navbar, Container, NavDropdown, Modal, Button } from 'react-bootstrap';
+import { Nav, Navbar, Container, NavDropdown} from 'react-bootstrap';
 
 import { Home } from "./components/Home";
 import { Repositories } from "./components/Subpages/Repositories/Repositories";
@@ -10,6 +10,7 @@ import { Commits } from "./components/Subpages/Commits/Commits";
 /* import { Artifact } from "./old/Artifact";
 import { Association } from "./old/Association"; */
 import { Variants } from "./components/Subpages/Variants/Variants";
+import { RepositoryHeaderModel } from "./model/RepositoryModel";
 
 
 export const AppRouter: React.FC = () => {
@@ -24,10 +25,10 @@ export const AppRouter: React.FC = () => {
         }));
     }
 
-    let chooseRepo = (repo: string) => {
+    let chooseRepo = (repo: RepositoryHeaderModel) => {
         setAppState((prevState: AppState) => ({
             ...prevState,
-            directory: repo
+            directory: repo.name
         }));
     }
 
@@ -40,18 +41,18 @@ export const AppRouter: React.FC = () => {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link as={Link} to="/">Home</Nav.Link>
-                            <Nav.Link as={Link} to="features" disabled={!appState.eccoServiceIsInitialized}>Features</Nav.Link>
-                            <Nav.Link as={Link} to="commits" disabled={!appState.eccoServiceIsInitialized}>Commits</Nav.Link>
-                            <Nav.Link as={Link} to="variants" disabled={!appState.eccoServiceIsInitialized}>Variants</Nav.Link>
-                            {/*  <Nav.Link as={Link} to="artifacts" disabled={!appState.eccoServiceIsInitialized}>Artifacts</Nav.Link>
+                            <Nav.Link as={Link} to="features" disabled={appState.repository === null}>Features</Nav.Link>
+                            <Nav.Link as={Link} to="commits" disabled={appState.repository === null}>Commits</Nav.Link>
+                            <Nav.Link as={Link} to="variants" disabled={appState.repository === null}>Variants</Nav.Link>
+                            {/*  <Nav.Link as={Link} to="artifacts" disabled={!appState.eccoServiceIsInitialized}>Artif acts</Nav.Link>
                             <Nav.Link as={Link} to="associations" disabled={!appState.eccoServiceIsInitialized}>Associations</Nav.Link> */}
                         </Nav>
                         <Nav>
                             {appState.repository != null && appState.userIsLoggedIn &&
                                 <NavDropdown title={'Repository: ' + appState.repository.name} id="basic-nav-dropdown">
-                                    {appState.availableRepositories.filter(e => e != appState.repository.name).map((element, i) => {
+                                    {appState.availableRepositories.filter(e => e.name !== appState.repository.name).map((element, i) => {
                                         return (
-                                            <NavDropdown.Item key={i} as={Link} to="" onClick={() => chooseRepo(element)}>{element}</NavDropdown.Item>
+                                            <NavDropdown.Item key={i} as={Link} to="" onClick={() => chooseRepo(element)}>{element.name}</NavDropdown.Item>
                                         )
                                     })
                                     }

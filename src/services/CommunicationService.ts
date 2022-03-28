@@ -3,6 +3,7 @@ import { RequestConfig } from "../model/RequestConfig";
 import { FeatureModel } from "../model/FeatureModel";
 import { FeatureRevisionModel } from "../model/FeatureRevisionModel";
 import { VariantModel } from "../model/VariantModel";
+import { FileWithPath } from "react-dropzone";
 /* import {AssociationModel} from "../Domain/Model/Backend/AssociationModel";
 import {AssociationInspection} from "../Domain/Model/Frontend/AssociationInspection";
 import {ArtefactgraphFilter} from "../Domain/Model/Backend/ChartArtefactgraph/ArtefactgraphFilter"; */
@@ -12,14 +13,14 @@ const axios = require("axios");
 export class CommunicationService {
 
     private static readonly BASE_URI = "http://localhost:8080/api";
-    private static readonly FEATURE_ENDPOINT = "/features";
-    private static readonly VARIANT_ENDPOINT = "/variants";
-    private static readonly ARTIFACT_ENDPOINT = "/artefacts";
+    private static readonly FEATURE_ENDPOINT = "/feature";
+    private static readonly VARIANT_ENDPOINT = "/variant";
+    /* private static readonly ARTIFACT_ENDPOINT = "/artefact";
     private static readonly ARTIFACT_GRAPH_ENDPOINT = "/graph";
-    private static readonly ARTIFACT_UPDATED_GRAPH_ENDPOINT = "/updatedgraph";
+    private static readonly ARTIFACT_UPDATED_GRAPH_ENDPOINT = "/updatedgraph"; */
     private static readonly REPOSITORY_ENDPOINT = "/repository";
     private static readonly ASSOCIATIONS_ENDPOINT = "/associations";
-    private static readonly COMMIT_FILES_INSIDE_ZIP_FILE = "/commit";
+    private static readonly COMMIT_ENDPOINT = "/commit";
     private static readonly NUMBER_OF_ARTIFACTS_PER_ASSOCIATION_IN_ASSOCIATION_ENDPOINT = "/numberofartifacts";
     private static readonly NUMBER_OF_ARTIFACTS_PER_DEPTH_IN_ASSOCIATION_ENDPOINT = "/artifactsperdepth";
     private static readonly NUMBER_OF_REVISIONS_PER_FEATURE_IN_FEATURE_ENDPOINT = "/numberofrevisions";
@@ -39,28 +40,119 @@ export class CommunicationService {
             'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
             /*  'Content-Type': 'multipart/form-data' */
         }
-        const instance = axios.create({
-            headers: config.headers
-        })
+        /*    const instance = axios.create({
+               headers: config.headers
+           }) */
         /* axios.post() */
         return axios.post(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + '/initBig'}`, 'Access-Control-Allow-Origin'
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + '/initBig'}`
+        )
+        /* , 'Access-Control-Allow-Origin' */
+    }
+
+
+    // Repository ======================================================================================
+    public getAllRepositories(): Promise<any> {
+        return axios.get(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + '/all'}`
         )
     }
 
-    // VARIANTS
-    public createVariant(name: string, config: string): Promise<any> { // TODO config
+    public createRepository(name: string): Promise<any> {
         return axios.put(
-            `${CommunicationService.BASE_URI + CommunicationService.VARIANT_ENDPOINT}/${name}`,
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${name}`
+        )
+    }
+
+    // Feature ========================================================================================
+    public updateFeatureDescription(currentFeatureModel: FeatureModel, description: string): Promise<any> {
+        let config = new RequestConfig();
+        config.headers = {
+            'Content-Type': 'text/plain',
+        };
+        return axios.post(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + "/" + currentFeatureModel.id + "/description"}`,
+            description,
+            config
+        )
+    }
+
+    public updateFeatureRevisionDescription(currentFeatureModel: FeatureModel, featureRevision: FeatureRevisionModel, description: string): Promise<any> {
+        let config = new RequestConfig();
+        config.headers = {
+            'Content-Type': 'text/plain',
+        };
+        return axios.post(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${currentFeatureModel.id}/${featureRevision.id + '/description'}`,
+            description,
+            config
+        )
+    }
+
+    // Commits ========================================================================================
+    public makeCommit = (message: string, configuration: string, acceptedFiles: FileWithPath[]) => {
+
+        let formData = new FormData();
+        let config = new RequestConfig();
+        acceptedFiles.forEach((tmpFile: FileWithPath) => {
+            formData.append("file", tmpFile, tmpFile.path);
+        });
+        formData.append("message", message)
+        formData.append("config", configuration)
+        config.headers = {
+            'Content-Type': 'multipart/form-data'
+        }
+        return axios.post(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.COMMIT_ENDPOINT}`,
+            formData,
+            config
+        )
+    }
+    // Variants ========================================================================================
+    public createVariant(name: string, configuration: string): Promise<any> {
+        let config = new RequestConfig();
+        config.headers = {
+            'Content-Type': 'text/plain',
+        };
+        return axios.put(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.VARIANT_ENDPOINT}/${name}`,
+            configuration,
+            config
         )
     }
 
     public deleteVariant(variant: VariantModel): Promise<any> {
         return axios.delete(
-            `${CommunicationService.BASE_URI + CommunicationService.VARIANT_ENDPOINT}/${variant.name}`,
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
         )
     }
 
+    // Variants / Features ========================================================================================
+    public variantAddFeature(variant: VariantModel, feature: FeatureModel): Promise<any> {
+        return axios.put(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/feature/${feature.id}`,
+        )
+    }
+
+    public variantUpdateFeature(variant: VariantModel, featureName: string, id :string): Promise<any> {
+        let config = new RequestConfig();
+        config.headers = {
+            'Content-Type': 'text/plain',
+        };
+        return axios.post(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/feature/${featureName}`,
+            id,
+            config
+        )
+    }
+
+    public variantRemoveFeature(variant: VariantModel, featureName: string): Promise<any> {
+        return axios.delete(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/feature/${featureName}`,
+        )
+    }
+
+    // Other ========================================================================================
     public commitFilesInsideZIPFile = (acceptedFiles: File[]) => {
         let formData = new FormData();
         let config = new RequestConfig();
@@ -71,7 +163,7 @@ export class CommunicationService {
             'Content-Type': 'multipart/form-data'
         }
         return axios.post(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.COMMIT_FILES_INSIDE_ZIP_FILE}`,
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.COMMIT_ENDPOINT}`,
             formData,
             config
         )
@@ -136,18 +228,6 @@ export class CommunicationService {
     public getAssociations(): Promise<any> {
         return axios.get(
             `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT}`,
-        )
-    }
-
-    public updateFeatureversionFromFeature(currentFeatureModel: FeatureModel, updatedFeatureVersionModel: FeatureRevisionModel): Promise<any> {
-        let config = new RequestConfig();
-        config.headers = {
-            'Content-Type': 'application/json',
-        };
-        return axios.post(
-            `${CommunicationService.BASE_URI + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.name}/version`,
-            JSON.stringify(updatedFeatureVersionModel),
-            config
         )
     }
 

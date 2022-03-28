@@ -1,14 +1,13 @@
 import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CreateVariant } from "./Variants.CreateVariantModal";
 
-import { Container, Col, Row, InputGroup, Table, Button, ListGroup, Card, DropdownButton, Dropdown, Badge, FormControl } from 'react-bootstrap';
+import { Container, Col, Row, InputGroup, Table, Button, DropdownButton, Dropdown, FormControl } from 'react-bootstrap';
 
 import { VariantModel } from "../../../model/VariantModel";
 import { DeleteVariantModal } from "./Variants.DeleteVariantModal";
 import { FeatureModel } from "../../../model/FeatureModel";
-import { RemoveFeatureModal } from "./Variants.Feature.RemoveFeatureModal";
 import { Features } from "./Variants.Feature";
 
 
@@ -19,22 +18,25 @@ export const Variants: React.FC = () => {
     const [variantFilterText, setVariantFilterText] = useState<string>("");
     const [featureFilter, setFeatureFilter] = useState<FeatureModel[]>([]);
 
+    useEffect(() => {
+        setSelectedVariant(appState.repository.variants.find(v => v.id === selectedVariant?.id)) // update, when new repository is received after changing smtg
+    }, [appState.repository]);
+
     const getCurrentVariantExpression = (): JSX.Element[] => {
 
         var filteredByFeatures = appState.repository?.variants.filter(vari => featureFilter.map(f => f.name).every(e => vari.configuration.featureRevisions.map(r => r.featureRevisionString.split('.')[0]).includes(e)));
 
-        return filteredByFeatures.map((variant: VariantModel, i) => {
-            if (variant.name.toLowerCase().includes(variantFilterText.toLowerCase())) {
+        return filteredByFeatures.filter(variant => variant.name.toLowerCase().includes(variantFilterText.toLowerCase()))
+            .map((variant: VariantModel, i) => {
                 return (
-                    <tr style={{ width: '100%' }} onClick={() => setSelectedVariant(variant)} className={selectedVariant == variant ? "btn-primary" : null} key={i}>
+                    <tr style={{ width: '100%' }} onClick={() => setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
                         <td width="20%">TODO {variant.name}</td>
                         <td style={{ width: '80%' }}>{variant.description}</td>
                     </tr>
                 );
-            }
-        }).filter((singleJSXElement: JSX.Element) => {
-            return singleJSXElement != undefined || singleJSXElement != null;
-        });
+            }).filter((singleJSXElement: JSX.Element) => {
+                return singleJSXElement !== undefined || singleJSXElement !== null;
+            });
     }
     let filteredVariants = getCurrentVariantExpression();
 
@@ -43,11 +45,11 @@ export const Variants: React.FC = () => {
     }
 
     let removeFeatureFilter = (name: FeatureModel) => {
-        setFeatureFilter([...featureFilter].filter(n => n != name));
+        setFeatureFilter([...featureFilter].filter(n => n !== name));
     }
 
     let featureFilterDropdown = appState.repository.features.filter(
-        f => featureFilter.indexOf(f) == -1
+        f => featureFilter.indexOf(f) === -1
     )
 
     return (
@@ -76,7 +78,6 @@ export const Variants: React.FC = () => {
                             <Col xs={6}>
                                 <DeleteVariantModal variant={selectedVariant} />
                             </Col>
-
                         </Row>
                         <Row>
                             <InputGroup className="mb-3">
@@ -91,7 +92,7 @@ export const Variants: React.FC = () => {
                         </Row>
                         <Row>
                             <InputGroup className="mb-3">
-                                <DropdownButton bsPrefix="dropdown-toggle btn btn-custom-color dropdown-btn" style={{border: '1px solid #ced4da'}} disabled={featureFilterDropdown.length == 0} title="">
+                                <DropdownButton bsPrefix="dropdown-toggle btn btn-custom-color dropdown-btn" style={{ border: '1px solid #ced4da' }} disabled={featureFilterDropdown.length === 0} title="">
                                     {featureFilterDropdown.map((feature, i) => {
                                         return (
                                             <Dropdown.Item key={i} onClick={() => addFeatureFilter(feature)}>{feature.name}</Dropdown.Item>

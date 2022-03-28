@@ -7,6 +7,7 @@ import { FeatureResponse } from "../../../model/FeatureResponse";
 import { FeatureRevisionList } from "./Feature.Detail.RevisionList";
 
 import { Container, Col, Row, InputGroup, FormControl, Button, Card, Accordion, Form, ListGroup } from 'react-bootstrap';
+import { RepositoryResponse } from "../../../model/RepositoryResponse";
 
 interface DetailViewProps {
     currentSelectedFeatureModel: FeatureModel
@@ -19,12 +20,25 @@ export const FeatureDetail: React.FC<DetailViewProps> = ({ currentSelectedFeatur
     const [appState, setAppState] = useSharedState();
     const [tmpFeatureDescription, setTmpFeatureDescription] = useState<string>(selectedFeature?.description);
 
-    /*     const [tmpCurrentFeatureModel, setTmpCurrentFeatureModel] = useState<FeatureModel>({
-            id: selectedFeature?.id,
-            name: selectedFeature?.name,
-            description: selectedFeature?.description,
-            revisions: selectedFeature?.revisions
-        }); */
+    useEffect(() => {
+        setTmpFeatureDescription(selectedFeature?.description);
+    }, [selectedFeature]);
+
+
+    const saveChanges = () => {
+        setSuccessButtonDisabled(true);
+        setResetButtonDisabled(true);
+
+        CommunicationService.getInstance().updateFeatureDescription(selectedFeature, tmpFeatureDescription)
+            .then((apiData: RepositoryResponse) => {
+                console.log(apiData.data);
+                setAppState((previousState) => ({
+                    ...previousState,
+                    repository: apiData.data
+                }));
+            });
+    }
+
 
     /*   useEffect(() => {
           //...dann wurde eine Kopie von tmpCurrentFeature gemacht und die neue Description aus dem Textarea
@@ -52,22 +66,6 @@ export const FeatureDetail: React.FC<DetailViewProps> = ({ currentSelectedFeatur
         setTmpFeatureDescription(event.target.value);
     }
 
-    const saveChangesInAppState = () => {
-        // setAppState((previousState: AppState) => ({
-        //     ...previousState,
-        //     features: previousState.features.map(walkerFeature => (walkerFeature.name == tmpCurrentFeature.name) ?
-        //         {...walkerFeature, description: tmpCurrentFeature.description} :
-        //         walkerFeature
-        //     )
-        // }));
-        setAppState((previousState: AppState) => ({
-            ...previousState,
-            currentFeature: selectedFeature
-        }));
-        setSuccessButtonDisabled(true);
-        setResetButtonDisabled(true);
-    }
-
     const resetChangesToInitialState = () => {
         setTmpFeatureDescription(selectedFeature?.description);
         setSuccessButtonDisabled(true);
@@ -88,7 +86,7 @@ export const FeatureDetail: React.FC<DetailViewProps> = ({ currentSelectedFeatur
             </div>
             <div className="m-2 d-flex justify-content-between">
                 <Button size='sm' variant="secondary" disabled={resetButtonDisabled} onClick={resetChangesToInitialState}>Reset <i className="bi bi-trash3-fill"></i></Button>
-                <Button size='sm' variant="primary" disabled={successButtonDisabled} onClick={saveChangesInAppState}>Save <i className="bi bi-save2-fill"></i></Button>
+                <Button size='sm' variant="primary" disabled={successButtonDisabled} onClick={saveChanges}>Save <i className="bi bi-save2-fill"></i></Button>
             </div>
             <FeatureRevisionList feature={selectedFeature} />
         </>
