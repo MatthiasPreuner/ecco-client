@@ -41,7 +41,7 @@ export const Repositories: React.FC = () => {
     }
 
     let chooseRepo = () => {
-        CommunicationService.getInstance().getDefaultRepo().then((apiData: RepositoryResponse) => {
+        CommunicationService.getInstance().getRepository(selectedRepo.rid).then((apiData: RepositoryResponse) => {
             setAppState((previousState) => ({
                 ...previousState,
                 repository: apiData.data

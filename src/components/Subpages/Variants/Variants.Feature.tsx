@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
 import { useState, useEffect } from "react";
-
-import { Col, Row, ListGroup, Card, Dropdown, Badge, Stack } from 'react-bootstrap';
+import $ from 'jquery'
+import { Col, Row, ListGroup, Card, Dropdown, Badge, Stack, Button } from 'react-bootstrap';
 
 import { VariantModel } from "../../../model/VariantModel";
 import { FeatureModel } from "../../../model/FeatureModel";
@@ -16,7 +16,7 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
     const [appState, setAppState] = useSharedState();
 
     let variantAddFeature = (variant: VariantModel, feature: FeatureModel) => {
-        CommunicationService.getInstance().variantAddFeature(variant, feature)
+        CommunicationService.getInstance().variantAddFeature(appState.repository, variant, feature)
             .then((apiData: RepositoryResponse) => {
                 setAppState((previousState) => ({
                     ...previousState,
@@ -27,7 +27,7 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
     }
 
     let variantRemoveFeature = (featureRevision: FeatureRevisionModel) => {
-        CommunicationService.getInstance().variantRemoveFeature(props.variant, featureRevision.featureRevisionString.split('.')[0])
+        CommunicationService.getInstance().variantRemoveFeature(appState.repository, props.variant, featureRevision.featureRevisionString.split('.')[0])
             .then((apiData: RepositoryResponse) => {
                 setAppState((previousState) => ({
                     ...previousState,
@@ -37,7 +37,7 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
     }
 
     let variantUpdateFeature = (variant: VariantModel, featureName: string, revision: string) => {
-        CommunicationService.getInstance().variantUpdateFeature(variant, featureName, revision)
+        CommunicationService.getInstance().variantUpdateFeature(appState.repository, variant, featureName, revision)
             .then((apiData: RepositoryResponse) => {
                 setAppState((previousState) => ({
                     ...previousState,
@@ -57,14 +57,48 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
 
     let AddableFeatures = addableFeatures();
 
-    /*   $('.dropdown').on('show.bs.dropdown', function() {
-          $('body').append($('.dropdown').css({
-            position: 'absolute',
-            left: $('.dropdown').offset().left,
-            top: $('.dropdown').offset().top
-          }).detach());
+    let testen = () => {
+        //$('.xyz').toggle(); //dropdown();
+
+
+        document.getElementById("xyz0").addEventListener("show.bs.dropdown", (e) => console.log(e))
+        document.getElementById("xyz0").firstChild.addEventListener("click", () => console.log("click"))
+    }
+
+    useEffect(() => {
+        console.log("test")
+        $("dropdown").each(function () {
+            $(this).on("show.bs.dropdown", function () {
+                console.log("show")
+                var $btnDropDown = $(this).find(".dropdown-toggle");
+                var $listHolder = $(this).find(".dropdown-menu");
+                //reset position property for DD container
+                $(this).css("position", "static");
+                $listHolder.css({
+                    "top": ($btnDropDown.offset().top + $btnDropDown.outerHeight(true)) + "px",
+                    "left": $btnDropDown.offset().left + "px"
+                });
+                $listHolder.data("open", true);
+            });
         });
-   */
+
+        /*     $('.dropdown').on('show.bs.dropdown', function () {
+                $('body').append($('.dropdown').css({
+                    position: 'absolute',
+                    left: $('.dropdown').offset().left,
+                    top: $('.dropdown').offset().top
+                }).detach());
+            }); */
+    }, [props.variant]);
+
+    let test = () => {
+        console.log("test")
+
+    }
+    // React.UIEvent<HTMLElement>
+    let scroll = (e: React.UIEvent<HTMLElement>) => {
+        console.log(e.currentTarget.scrollTop);
+    }
 
     return (
         <Col xs={3} className="mr-auto mb-3">
@@ -85,23 +119,28 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
             </Row>
 
             <Card>
-                <ListGroup variant="flush" className='mb-0' style={{ maxHeight: '200px' }}>
+                <ListGroup variant="flush"
+                    className='mb-0'
+                    onScroll={e => scroll(e)}
+                    >
                     {props.variant.configuration.featureRevisions.sort((a, b) => a.featureRevisionString.localeCompare(b.featureRevisionString)).map((rev, i) => {
 
                         let possibleFeatureRevisions = appState.repository.features.find(f => f.name === rev.featureRevisionString.split('.')[0]).revisions
-                            .filter(r => r.id !== rev.id).sort((a, b) => Number(a.id) - Number(b.id));
+                            .sort((a, b) => Number(a.id) - Number(b.id));
 
                         return (
                             <ListGroup.Item key={i}>{rev.featureRevisionString.split('.')[0]}
                                 <Stack gap={1} direction="horizontal" className="float-end ">
-                                    <Dropdown>
-                                        <Dropdown.Toggle disabled={possibleFeatureRevisions.length < 1} variant="primary" bsPrefix="btn ms-1 badge bg-primary">
+                                    <Dropdown className="xyz" data-bs-boundary="body" >
+                                        <Dropdown.Toggle data-bs-boundary="body" data-toggle="dropdown" disabled={possibleFeatureRevisions.length <= 1} variant="primary" bsPrefix="btn ms-1 badge bg-primary">
                                             {rev.featureRevisionString.split('.')[1]}
                                         </Dropdown.Toggle>
 
-                                        <Dropdown.Menu>
+                                        <Dropdown.Menu id={"xyz" + i}>
                                             {possibleFeatureRevisions.map((revision, i) =>
-                                                (<Dropdown.Item key={i} onClick={() => variantUpdateFeature(props.variant, revision.featureRevisionString.split('.')[0], revision.id)}>{revision.id}</Dropdown.Item>)
+                                            (revision.id === rev.id ?
+                                                <Dropdown.Item className="bg-secondary" key={i}>{revision.id}</Dropdown.Item> :
+                                                <Dropdown.Item className={(revision.id === rev.id ? "bg-secondary" : "")} key={i} onClick={() => variantUpdateFeature(props.variant, revision.featureRevisionString.split('.')[0], revision.id)}>{revision.id}</Dropdown.Item>)
                                             )}
                                         </Dropdown.Menu>
                                     </Dropdown>
@@ -114,8 +153,10 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
                         )
                     })}
                 </ListGroup >
+                <Button onClick={testen} style={{height: '10px'}}><i className="bi bi-caret-up-fill"></i></Button>
             </Card >
         </Col >
+
     )
 
 }

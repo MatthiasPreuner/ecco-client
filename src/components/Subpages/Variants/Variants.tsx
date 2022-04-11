@@ -26,7 +26,7 @@ export const Variants: React.FC = () => {
 
         var filteredByFeatures = appState.repository?.variants.filter(vari => featureFilter.map(f => f.name).every(e => vari.configuration.featureRevisions.map(r => r.featureRevisionString.split('.')[0]).includes(e)));
 
-        return filteredByFeatures.filter(variant => variant.name.toLowerCase().includes(variantFilterText.toLowerCase()))
+        return filteredByFeatures.filter(variant => variant.name?.toLowerCase().includes(variantFilterText.toLowerCase()))
             .map((variant: VariantModel, i) => {
                 return (
                     <tr style={{ width: '100%' }} onClick={() => setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>

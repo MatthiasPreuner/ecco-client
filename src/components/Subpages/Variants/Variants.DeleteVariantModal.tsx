@@ -14,14 +14,14 @@ export const DeleteVariantModal: React.FC<{ variant: VariantModel }> = (props) =
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  let [_, setAppState] = useSharedState();
+  let [appState, setAppState] = useSharedState();
 
   let onModalDismiss = () => {
     handleClose();
   }
 
   let deleteVariant = () => {
-    CommunicationService.getInstance().deleteVariant(props.variant).then((apiData: RepositoryResponse) => {
+    CommunicationService.getInstance().deleteVariant(appState.repository, props.variant).then((apiData: RepositoryResponse) => {
       setAppState((previousState) => ({
         ...previousState,
         repository: apiData.data

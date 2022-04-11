@@ -4,6 +4,7 @@ import { FeatureModel } from "../model/FeatureModel";
 import { FeatureRevisionModel } from "../model/FeatureRevisionModel";
 import { VariantModel } from "../model/VariantModel";
 import { FileWithPath } from "react-dropzone";
+import { RepositoryModel } from "../model/RepositoryModel";
 /* import {AssociationModel} from "../Domain/Model/Backend/AssociationModel";
 import {AssociationInspection} from "../Domain/Model/Frontend/AssociationInspection";
 import {ArtefactgraphFilter} from "../Domain/Model/Backend/ChartArtefactgraph/ArtefactgraphFilter"; */
@@ -45,10 +46,17 @@ export class CommunicationService {
            }) */
         /* axios.post() */
         return axios.post(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + '/initBig'}`
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + '/2'}`
         )
         /* , 'Access-Control-Allow-Origin' */
     }
+
+    public getRepository(id: string): Promise<any> {
+        return axios.get(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${id}`
+        )
+    }
+
 
 
     // Repository ======================================================================================
@@ -109,46 +117,46 @@ export class CommunicationService {
         )
     }
     // Variants ========================================================================================
-    public createVariant(name: string, configuration: string): Promise<any> {
+    public createVariant(repository: RepositoryModel, name: string, configuration: string): Promise<any> {
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'text/plain',
         };
         return axios.put(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.VARIANT_ENDPOINT}/${name}`,
+            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${name}`,
             configuration,
             config
         )
     }
 
-    public deleteVariant(variant: VariantModel): Promise<any> {
+    public deleteVariant(repository: RepositoryModel, variant: VariantModel): Promise<any> {
         return axios.delete(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
+            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
         )
     }
 
     // Variants / Features ========================================================================================
-    public variantAddFeature(variant: VariantModel, feature: FeatureModel): Promise<any> {
+    public variantAddFeature(repository: RepositoryModel, variant: VariantModel, feature: FeatureModel): Promise<any> {
         return axios.put(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/feature/${feature.id}`,
+            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${feature.id}`,
         )
     }
 
-    public variantUpdateFeature(variant: VariantModel, featureName: string, id :string): Promise<any> {
+    public variantUpdateFeature(repository: RepositoryModel, variant: VariantModel, featureName: string, id: string): Promise<any> {
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'text/plain',
         };
         return axios.post(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/feature/${featureName}`,
+            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${featureName}`,
             id,
             config
         )
     }
 
-    public variantRemoveFeature(variant: VariantModel, featureName: string): Promise<any> {
+    public variantRemoveFeature(repository: RepositoryModel, variant: VariantModel, featureName: string): Promise<any> {
         return axios.delete(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/feature/${featureName}`,
+            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${featureName}`,
         )
     }
 
