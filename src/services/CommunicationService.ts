@@ -98,7 +98,7 @@ export class CommunicationService {
     }
 
     // Commits ========================================================================================
-    public makeCommit = (message: string, configuration: string, acceptedFiles: FileWithPath[]) => {
+    public makeCommit = (repository: RepositoryModel, message: string, configuration: string, acceptedFiles: FileWithPath[]) => {
 
         let formData = new FormData();
         let config = new RequestConfig();
@@ -111,7 +111,7 @@ export class CommunicationService {
             'Content-Type': 'multipart/form-data'
         }
         return axios.post(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + CommunicationService.COMMIT_ENDPOINT}`,
+            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`,
             formData,
             config
         )

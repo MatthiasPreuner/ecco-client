@@ -128,7 +128,7 @@ export const MakeCommit: React.FC = () => {
     event.stopPropagation();
  
     if (form.checkValidity() && tmpAcceptedFiles.size !== 0 && config.length !== 0) {
-      CommunicationService.getInstance().makeCommit(commitMessage, config, Array.from(tmpAcceptedFiles.values())).
+      CommunicationService.getInstance().makeCommit(appState.repository, commitMessage, config, Array.from(tmpAcceptedFiles.values())).
         then((apiData: RepositoryResponse) => {
           console.log(apiData.data);
           setAppState((previousState) => ({
