@@ -11,6 +11,8 @@ import { Commits } from "./components/Subpages/Commits/Commits";
 import { Association } from "./old/Association"; */
 import { Variants } from "./components/Subpages/Variants/Variants";
 import { RepositoryHeaderModel } from "./model/RepositoryModel";
+import { CommunicationService } from "./services/CommunicationService";
+import { RepositoryResponse } from "./model/RepositoryResponse";
 
 
 export const AppRouter: React.FC = () => {
@@ -20,16 +22,18 @@ export const AppRouter: React.FC = () => {
     let logout = () => {
         setAppState((prevState: AppState) => ({
             ...prevState,
-            userIsLoggedIn: false,
-            directory: "",
+           userIsLoggedIn: false,
+           // directory: "",
         }));
     }
 
     let chooseRepo = (repo: RepositoryHeaderModel) => {
-        setAppState((prevState: AppState) => ({
-            ...prevState,
-            directory: repo.name
-        }));
+        CommunicationService.getInstance().getRepository(repo.rid).then((apiData: RepositoryResponse) => {
+            setAppState((previousState) => ({
+                ...previousState,
+                repository: apiData.data
+            }));
+        });
     }
 
     return (

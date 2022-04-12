@@ -28,18 +28,6 @@ export const Repositories: React.FC = () => {
         });
     }, []);
 
-    const getAvailableRepositoryExpression = (): JSX.Element[] => {
-        return appState.availableRepositories?.map((repo: RepositoryHeaderModel, i) => {
-            return (
-                <ListGroup.Item key={i} action active={repo === selectedRepo} onClick={() => setSelectedRepo(repo)}>
-                    {repo.name}
-                </ListGroup.Item>
-            )
-        }).filter((singleJSXElement: JSX.Element) => {
-            return singleJSXElement != undefined || singleJSXElement != null;
-        });
-    }
-
     let chooseRepo = () => {
         CommunicationService.getInstance().getRepository(selectedRepo.rid).then((apiData: RepositoryResponse) => {
             setAppState((previousState) => ({
@@ -47,18 +35,6 @@ export const Repositories: React.FC = () => {
                 repository: apiData.data
             }));
         });
-    }
-
-    let deleteRepo = () => {
-        console.log("deleting " + selectedRepo);
-        // TODO Allert Modal
-        let newArray = [...appState.availableRepositories].filter(el => el !== selectedRepo)
-
-        setAppState((prevState: AppState) => ({
-            ...prevState,
-            availableRepositories: newArray
-        }));
-        setSelectedRepo(null);
     }
 
     return (
@@ -70,18 +46,11 @@ export const Repositories: React.FC = () => {
                 <Row>
                     <Col xs={8}>
                         <ListGroup>
-                            {getAvailableRepositoryExpression()}
-
-                            {/*     {
-                                appState.availableRepositories.map((element, i) => {
-                                    return (
-                                        <ListGroup.Item key={i} action active={element === selectedRepo} onClick={() => setSelectedRepo(element)}>
-                                            {element.name}
-                                        </ListGroup.Item>
-                                    )
-                                })
-                            }
-                            } */}
+                            {appState.availableRepositories?.map((repo: RepositoryHeaderModel, i) => {
+                                return (
+                                    <ListGroup.Item key={i} action active={repo === selectedRepo} onClick={() => setSelectedRepo(repo)}>{repo.name}</ListGroup.Item>
+                                )
+                            })}
                         </ListGroup>
                     </Col>
                     <Col>
