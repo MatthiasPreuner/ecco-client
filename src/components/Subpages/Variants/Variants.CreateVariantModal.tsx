@@ -68,7 +68,9 @@ export const CreateVariant: React.FC = () => {
   };
 
   let config = features.filter(ft => ft.enabled).map(ft => ft.name + '.' + ft.version).join(', ');
+
   let nameIsValid = () => name.length > 0 &&  appState.repository.variants.filter(v => v.name === name).length < 1;
+
   console.log(nameIsValid())
   return (
     <>
@@ -89,8 +91,9 @@ export const CreateVariant: React.FC = () => {
           <Modal.Body>
             <Form.Group className='mb-3' key={1}>
               <Form.Label>Variant Name</Form.Label>
-              <Form.Control type="text" isInvalid={nameIsValid()} isValid={!nameIsValid()}placeholder="Name" value={name} onChange={e => setName(e.target.value)} required pattern="[A-Za-z0-9_]{1,}" />
-              {/* <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback> */}
+              <Form.Control type="text" isInvalid={!nameIsValid()} placeholder="Name" value={name} onChange={e => setName(e.target.value)} required pattern="[A-Za-z0-9_]{1,}" />
+             {/*  isValid={nameIsValid()}  */}
+           {/*    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback> */}
               {name.length < 1 ?
                 <Form.Control.Feedback type="invalid">Name must not be empty!</Form.Control.Feedback> :
                 <Form.Control.Feedback type="invalid">Name already exists!</Form.Control.Feedback>}
