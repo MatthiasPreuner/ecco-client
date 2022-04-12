@@ -3,10 +3,9 @@ import { AppState, useSharedState } from "../../../states/AppState";
 import { useEffect, useState } from "react";
 import { FeatureModel } from "../../../model/FeatureModel";
 import { CommunicationService } from "../../../services/CommunicationService";
-import { FeatureResponse } from "../../../model/FeatureResponse";
 import { FeatureRevisionList } from "./Feature.Detail.RevisionList";
 
-import { Container, Col, Row, InputGroup, FormControl, Button, Card, Accordion, Form, ListGroup } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 
 interface DetailViewProps {
@@ -23,7 +22,6 @@ export const FeatureDetail: React.FC<DetailViewProps> = ({ currentSelectedFeatur
     useEffect(() => {
         setTmpFeatureDescription(selectedFeature?.description);
     }, [selectedFeature]);
-
 
     const saveChanges = () => {
         setSuccessButtonDisabled(true);
