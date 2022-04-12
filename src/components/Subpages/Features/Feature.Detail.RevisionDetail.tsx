@@ -35,7 +35,7 @@ export const FeatureRevisionDetail: React.FC<FeatureDetailRevisionDetailProps> =
         setSuccessButtonDisabled(true);
         setResetButtonDisabled(true);
 
-        CommunicationService.getInstance().updateFeatureRevisionDescription(feature, featureRevision, tmpFeatureRevisionDescription)
+        CommunicationService.getInstance().updateFeatureRevisionDescription(appState.repository, feature, featureRevision, tmpFeatureRevisionDescription)
             .then((apiData: RepositoryResponse) => {
                 setAppState((previousState) => ({
                     ...previousState,

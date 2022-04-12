@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { FeatureRevisionModel as FeatureRevisionModel } from "../../../model/FeatureRevisionModel";
 import { FeatureRevisionDetail } from "./Feature.Detail.RevisionDetail";
 
-import { Col, Row, Button, ButtonGroup } from 'react-bootstrap';
+import { Col, Row, Dropdown } from 'react-bootstrap';
 
 interface FeatureRevisionProps {
     feature: FeatureModel
@@ -26,21 +26,6 @@ export const FeatureRevisionList: React.FC<FeatureRevisionProps> = ({ feature: f
 
     }, [feat]);
 
-    let minIndex = () => {
-        setCurrentFeatureRevision(feat.revisions[0]);
-        setCurrentFeatureRevisionIndex(0);
-    }
-
-    let incrIndex = () => {
-        setCurrentFeatureRevision(feat.revisions[currentFeatureRevisionIndex + 1]);
-        setCurrentFeatureRevisionIndex(currentFeatureRevisionIndex + 1);
-    }
-
-    let decrIndex = () => {
-        setCurrentFeatureRevision(feat.revisions[currentFeatureRevisionIndex - 1]);
-        setCurrentFeatureRevisionIndex(currentFeatureRevisionIndex - 1);
-    }
-
     let maxIndex = () => {
         setCurrentFeatureRevision(feat.revisions[feat.revisions.length - 1]);
         setCurrentFeatureRevisionIndex(feat.revisions.length - 1);
@@ -56,35 +41,21 @@ export const FeatureRevisionList: React.FC<FeatureRevisionProps> = ({ feature: f
     return (
         <Row>
             <Col>
-                <h5>Featurerevisions:</h5>
-                <ButtonGroup className="d-flex justify-content-between">
-                    <ButtonGroup className="m-2 d-flex justify-content-between">
-                        <Button variant={btnVariant}
-                            disabled={currentFeatureRevisionIndex === 0}
-                            onClick={minIndex}>&lt;&lt;</Button>
-                        <Button variant={btnVariant}
-                            disabled={currentFeatureRevisionIndex === 0}
-                            onClick={decrIndex}>&lt;</Button>
-                    </ButtonGroup>
-
-                    <ButtonGroup className="m-2">
-                        {[-2, -1, 0, 1, 2].map(i => {
-
-
-                            //let x = i;
-                            return (<Button key={i + 20} variant={btnVariant} style={{ width: '50px' }}>{currentFeatureRevision.id}</Button>)
-                        })
-                        }
-                    </ButtonGroup>
-                    <ButtonGroup className="m-2 d-flex justify-content-between">
-                        <Button variant={btnVariant}
-                            disabled={currentFeatureRevisionIndex === feat.revisions.length - 1}
-                            onClick={incrIndex}>&gt;</Button>
-                        <Button variant={btnVariant}
-                            disabled={currentFeatureRevisionIndex === feat.revisions.length - 1}
-                            onClick={maxIndex}>&gt;&gt;</Button>
-                    </ButtonGroup>
-                </ButtonGroup>
+                <Row className="d-flex justify-content-between">
+                    <Col xs={6}><h5>Featurerevisions:</h5></Col>
+                    <Col xs={6} className="d-flex justify-content-end">
+                        <Dropdown className="d-flex justify-content-end">
+                            <Dropdown.Toggle variant="primary" id="dropdown-basic">{currentFeatureRevision.id}</Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                {feat.revisions.map((r, i) =>
+                                    <Dropdown.Item key={i}
+                                        onClick={() => setIndex(i)}
+                                    >{r.id}</Dropdown.Item>
+                                )}
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Col>
+                </Row>
                 <FeatureRevisionDetail
                     feature={feat}
                     featureRevision={currentFeatureRevision}

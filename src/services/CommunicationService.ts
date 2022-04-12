@@ -73,25 +73,25 @@ export class CommunicationService {
     }
 
     // Feature ========================================================================================
-    public updateFeatureDescription(currentFeatureModel: FeatureModel, description: string): Promise<any> {
+    public updateFeatureDescription(repository: RepositoryModel, currentFeatureModel: FeatureModel, description: string): Promise<any> {
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'text/plain',
         };
         return axios.post(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + "/" + currentFeatureModel.id + "/description"}`,
+            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id + "/description"}`,
             description,
             config
         )
     }
 
-    public updateFeatureRevisionDescription(currentFeatureModel: FeatureModel, featureRevision: FeatureRevisionModel, description: string): Promise<any> {
+    public updateFeatureRevisionDescription(repository: RepositoryModel, currentFeatureModel: FeatureModel, featureRevision: FeatureRevisionModel, description: string): Promise<any> {
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'text/plain',
         };
         return axios.post(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${currentFeatureModel.id}/${featureRevision.id + '/description'}`,
+            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id}/${featureRevision.id + '/description'}`,
             description,
             config
         )

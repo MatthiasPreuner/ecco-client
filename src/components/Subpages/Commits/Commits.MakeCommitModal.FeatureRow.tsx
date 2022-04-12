@@ -102,6 +102,7 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
                                     isInvalid={config.length === 0}
                                     isValid={config.length > 0}
                                     formNoValidate // not working
+                                    
                                     onChange={event => {
                                         var newConfigFeatures = [...configFeatures]
                                         newConfigFeatures[i].enabled = !ft.enabled;

@@ -29,7 +29,7 @@ export const FeatureDetail: React.FC<DetailViewProps> = ({ currentSelectedFeatur
         setSuccessButtonDisabled(true);
         setResetButtonDisabled(true);
 
-        CommunicationService.getInstance().updateFeatureDescription(selectedFeature, tmpFeatureDescription)
+        CommunicationService.getInstance().updateFeatureDescription(appState.repository, selectedFeature, tmpFeatureDescription)
             .then((apiData: RepositoryResponse) => {
                 console.log(apiData.data);
                 setAppState((previousState) => ({
