@@ -3,12 +3,14 @@ import { useSharedState } from "../../../states/AppState";
 import { useState, useEffect } from "react";
 import { CreateVariant } from "./Variants.CreateVariantModal";
 
-import { Container, Col, Row, InputGroup, Table, Button, DropdownButton, Dropdown, FormControl } from 'react-bootstrap';
+import { Container, Col, Row, InputGroup, Table, Button, DropdownButton, Dropdown, FormControl, Badge, Stack } from 'react-bootstrap';
 
 import { VariantModel } from "../../../model/VariantModel";
 import { DeleteVariantModal } from "./Variants.DeleteVariantModal";
 import { FeatureModel } from "../../../model/FeatureModel";
 import { Features } from "./Variants.Feature";
+import { CommunicationService } from "../../../services/CommunicationService";
+import { RepositoryResponse } from "../../../model/RepositoryResponse";
 
 
 export const Variants: React.FC = () => {
@@ -17,10 +19,35 @@ export const Variants: React.FC = () => {
     const [selectedVariant, setSelectedVariant] = useState<VariantModel>(null);
     const [variantFilterText, setVariantFilterText] = useState<string>("");
     const [featureFilter, setFeatureFilter] = useState<FeatureModel[]>([]);
+    const [editVariant, setEditVariant] = useState<VariantModel>(null);
 
     useEffect(() => {
         setSelectedVariant(appState.repository.variants.find(v => v.id === selectedVariant?.id)) // update, when new repository is received after changing smtg
     }, [appState.repository]);
+
+    const updateVariant = () => {
+        CommunicationService.getInstance().updateVariant(appState.repository, editVariant).then((apiData: RepositoryResponse) => {
+            setAppState((previousState) => ({
+                ...previousState,
+                repository: apiData.data
+            }));
+        });
+        setEditVariant(null);
+    };
+
+    const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEditVariant((previousState) => ({
+            ...previousState,
+            name: e.target.value
+        }));
+    }
+
+    const changeDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEditVariant((previousState) => ({
+            ...previousState,
+            description: e.target.value
+        }));
+    }
 
     const getCurrentVariantExpression = (): JSX.Element[] => {
 
@@ -30,8 +57,43 @@ export const Variants: React.FC = () => {
             .map((variant: VariantModel, i) => {
                 return (
                     <tr style={{ width: '100%' }} onClick={() => setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
-                        <td width="20%">TODO {variant.name}</td>
-                        <td style={{ width: '80%' }}>{variant.description}</td>
+                        {editVariant?.id === variant.id ?
+                            <>
+                                <td width="20%">
+                                    <InputGroup size='sm' className="w-100">
+                                        <FormControl
+                                            type="text"
+                                            placeholder="Variant Name"
+                                            value={editVariant.name}
+                                            onChange={changeName}
+                                        />
+                                    </InputGroup>
+                                </td>
+                                <td style={{ width: '80%' }}>
+                                    <Stack gap={1} direction="horizontal" className="float-end w-100">
+                                        <InputGroup size='sm' className="w-100">
+                                            <FormControl
+                                                type="text"
+                                                placeholder="Variant Description"
+                                                value={editVariant.description}
+                                                onChange={changeDescription}
+                                            />
+                                        </InputGroup>
+                                        <Badge bg="primary" className='btn' onClick={() => updateVariant()}><i className="bi bi-check-lg"></i></Badge>
+                                        <Badge bg="primary" className='btn' onClick={() => setEditVariant(null)}><i className="bi bi-x-lg"></i></Badge>
+                                    </Stack>
+                                </td>
+                            </> :
+                            <>
+                                <td width="20%">{variant.name}</td>
+                                <td style={{ width: '80%' }}>{variant.description}
+                                    <Stack gap={1} direction="horizontal" className="float-end ">
+                                        <div></div>
+                                        <Badge bg="primary" className='btn' onClick={() => setEditVariant({ ...variant })}><i className="bi bi-pencil-square"></i></Badge>
+                                    </Stack>
+                                </td>
+                            </>
+                        }
                     </tr>
                 );
             }).filter((singleJSXElement: JSX.Element) => {

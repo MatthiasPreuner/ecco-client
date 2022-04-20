@@ -135,6 +135,17 @@ export class CommunicationService {
         )
     }
 
+    public updateVariant(repository: RepositoryModel, variant: VariantModel): Promise<any> {
+        let body = {name: variant.name, description: variant.description}
+        let config = new RequestConfig();
+        config.headers = {
+            'Content-Type': 'application/json',
+        };
+        return axios.post(
+            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
+            body
+        )
+    }
     // Variants / Features ========================================================================================
     public variantAddFeature(repository: RepositoryModel, variant: VariantModel, feature: FeatureModel): Promise<any> {
         return axios.put(
