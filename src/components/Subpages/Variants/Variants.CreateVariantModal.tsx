@@ -74,7 +74,7 @@ export const CreateVariant: React.FC = () => {
   console.log(nameIsValid())
   return (
     <>
-      <Button variant="primary" className="w-100" onClick={handleShow}>Create Variant</Button>
+      <Button variant="primary" className="w-100" disabled={appState.repository.features.length == 0} onClick={handleShow}>Create Variant</Button>
 
       <Modal
         show={show}
@@ -147,7 +147,6 @@ export const CreateVariant: React.FC = () => {
               <Form.Label>Configuration</Form.Label>
               <Form.Control type="text" disabled value={config} />
             </Form.Group>
-
           </Modal.Body>
           <Modal.Footer>
             <Col className="d-flex justify-content-between align-items-center">
