@@ -1,6 +1,6 @@
 import * as React from "react";
 import { AppState, useSharedState } from "./states/AppState";
-import { BrowserRouter as Router, Link, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
 import { Nav, Navbar, Container, NavDropdown} from 'react-bootstrap';
 
 import { Home } from "./components/Home";
@@ -37,7 +37,7 @@ export const AppRouter: React.FC = () => {
     }
 
     return (
-        <Router>
+        <BrowserRouter>
             <Navbar bg="light" expand="lg" fixed="top">
                 <Container>
                     <Navbar.Brand href="/">EccoHub</Navbar.Brand>
@@ -56,7 +56,7 @@ export const AppRouter: React.FC = () => {
                                 <NavDropdown title={'Repository: ' + appState.repository.name} id="basic-nav-dropdown">
                                     {appState.availableRepositories.filter(e => e.name !== appState.repository.name).map((element, i) => {
                                         return (
-                                            <NavDropdown.Item key={i} as={Link} to="" onClick={() => chooseRepo(element)}>{element.name}</NavDropdown.Item>
+                                            <NavDropdown.Item key={i} onClick={() => chooseRepo(element)}>{element.name}</NavDropdown.Item>
                                         )
                                     })
                                     }
@@ -84,7 +84,7 @@ export const AppRouter: React.FC = () => {
                 <Route path="/associations" element={<Association />} /> */}
                 <Route path="/variants" element={<Variants />} />
             </Routes>
-        </Router >
+        </BrowserRouter >
     );
 
 };
