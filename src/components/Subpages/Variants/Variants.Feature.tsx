@@ -57,47 +57,23 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
 
     let AddableFeatures = addableFeatures();
 
-    let testen = () => {
-        //$('.xyz').toggle(); //dropdown();
+    let showRows = 4;
+    const [startingRow, setStartingRow] = useState<number>(0);
 
-
-        document.getElementById("xyz0").addEventListener("show.bs.dropdown", (e) => console.log(e))
-        document.getElementById("xyz0").firstChild.addEventListener("click", () => console.log("click"))
+    let featureOnWheel = (e: React.WheelEvent<HTMLElement>) => {
+        let delta = e.deltaY < 0 ? -1 : 1;
+        scroll(delta);
     }
 
-    useEffect(() => {
-        console.log("test")
-        $("dropdown").each(function () {
-            $(this).on("show.bs.dropdown", function () {
-                console.log("show")
-                var $btnDropDown = $(this).find(".dropdown-toggle");
-                var $listHolder = $(this).find(".dropdown-menu");
-                //reset position property for DD container
-                $(this).css("position", "static");
-                $listHolder.css({
-                    "top": ($btnDropDown.offset().top + $btnDropDown.outerHeight(true)) + "px",
-                    "left": $btnDropDown.offset().left + "px"
-                });
-                $listHolder.data("open", true);
-            });
-        });
+    let myRef = React.createRef<HTMLDivElement>();
 
-        /*     $('.dropdown').on('show.bs.dropdown', function () {
-                $('body').append($('.dropdown').css({
-                    position: 'absolute',
-                    left: $('.dropdown').offset().left,
-                    top: $('.dropdown').offset().top
-                }).detach());
-            }); */
-    }, [props.variant]);
+    let scroll = (delta: number) => {
+        let newStartingRow = startingRow + delta;
 
-    let test = () => {
-        console.log("test")
-
-    }
-    // React.UIEvent<HTMLElement>
-    let scroll = (e: React.UIEvent<HTMLElement>) => {
-        console.log(e.currentTarget.scrollTop);
+        if (0 <= newStartingRow && newStartingRow + showRows < props.variant.configuration.featureRevisions.length) {
+            setStartingRow(startingRow + delta);
+        }
+        console.log(myRef.current?.clientHeight);
     }
 
     return (
@@ -117,43 +93,47 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
                     </Dropdown>
                 </Col>
             </Row>
-
-            <Card>
+            <Card ref={myRef}>
+                <div>{myRef.current?.clientHeight}</div>
+                <Button disabled={startingRow === 0} onClick={() => scroll(-1)} style={{ height: '10px' }}><i className="bi bi-caret-up-fill"></i></Button>
                 <ListGroup variant="flush"
                     className='mb-0'
-                    onScroll={e => scroll(e)}
-                    >
-                    {props.variant.configuration.featureRevisions.sort((a, b) => a.featureRevisionString.localeCompare(b.featureRevisionString)).map((rev, i) => {
+                    onWheel={e => featureOnWheel(e)}
+                >
+                    {props.variant.configuration.featureRevisions.sort((a, b) => a.featureRevisionString.localeCompare(b.featureRevisionString))
+                        .slice(startingRow, startingRow + showRows)
+                        .map((rev, i) => {
 
-                        let possibleFeatureRevisions = appState.repository.features.find(f => f.name === rev.featureRevisionString.split('.')[0]).revisions
-                            .sort((a, b) => Number(a.id) - Number(b.id));
+                            let possibleFeatureRevisions = appState.repository.features.find(f => f.name === rev.featureRevisionString.split('.')[0]).revisions
+                                .sort((a, b) => Number(a.id) - Number(b.id));
 
-                        return (
-                            <ListGroup.Item key={i}>{rev.featureRevisionString.split('.')[0]}
-                                <Stack gap={1} direction="horizontal" className="float-end ">
-                                    <Dropdown className="xyz" data-bs-boundary="body" >
-                                        <Dropdown.Toggle data-bs-boundary="body" data-toggle="dropdown" disabled={possibleFeatureRevisions.length <= 1} variant="primary" bsPrefix="btn ms-1 badge bg-primary">
-                                            {rev.featureRevisionString.split('.')[1]}
-                                        </Dropdown.Toggle>
+                            return (
+                                <ListGroup.Item key={i}>{rev.featureRevisionString.split('.')[0]}
 
-                                        <Dropdown.Menu id={"xyz" + i}>
-                                            {possibleFeatureRevisions.map((revision, i) =>
-                                            (revision.id === rev.id ?
-                                                <Dropdown.Item className="bg-secondary" key={i}>{revision.id}</Dropdown.Item> :
-                                                <Dropdown.Item className={(revision.id === rev.id ? "bg-secondary" : "")} key={i} onClick={() => variantUpdateFeature(props.variant, revision.featureRevisionString.split('.')[0], revision.id)}>{revision.id}</Dropdown.Item>)
-                                            )}
-                                        </Dropdown.Menu>
-                                    </Dropdown>
+                                    <Stack gap={1} direction="horizontal" className="float-end ">
+                                        <Dropdown className="xyz" data-bs-boundary="body" >
+                                            <Dropdown.Toggle data-bs-boundary="body" data-toggle="dropdown" disabled={possibleFeatureRevisions.length <= 1} variant="primary" bsPrefix="btn ms-1 badge bg-primary">
+                                                {rev.featureRevisionString.split('.')[1]}
+                                            </Dropdown.Toggle>
 
-                                    < div >
-                                        <Badge bg="primary" className='btn' onClick={() => variantRemoveFeature(rev)}><i className="bi bi-x-lg"></i></Badge>
-                                    </div>
-                                </Stack>
-                            </ListGroup.Item>
-                        )
-                    })}
+                                            <Dropdown.Menu id={"xyz" + i}>
+                                                {possibleFeatureRevisions.map((revision, i) =>
+                                                (revision.id === rev.id ?
+                                                    <Dropdown.Item className="bg-secondary" key={i}>{revision.id}</Dropdown.Item> :
+                                                    <Dropdown.Item className={(revision.id === rev.id ? "bg-secondary" : "")} key={i} onClick={() => variantUpdateFeature(props.variant, revision.featureRevisionString.split('.')[0], revision.id)}>{revision.id}</Dropdown.Item>)
+                                                )}
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+
+                                        < div >
+                                            <Badge bg="primary" className='btn' onClick={() => variantRemoveFeature(rev)}><i className="bi bi-x-lg"></i></Badge>
+                                        </div>
+                                    </Stack>
+                                </ListGroup.Item>
+                            )
+                        })}
                 </ListGroup >
-                <Button onClick={testen} style={{height: '10px'}}><i className="bi bi-caret-up-fill"></i></Button>
+                <Button disabled={startingRow + showRows + 1 >= props.variant.configuration.featureRevisions.length} onClick={() => scroll(+1)} style={{ height: '10px' }}><i className="bi bi-caret-up-fill"></i></Button>
             </Card >
         </Col >
 
