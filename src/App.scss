@@ -5,13 +5,13 @@
 }
 
 .features-list-group {
-    // max-height: 70vh;
+    max-height: 70vh;
 }
 
 .list-group {
-    // margin-bottom: 10px;
-    //overflow-y: auto;
-    //-webkit-overflow-scrolling: touch;
+    margin-bottom: 10px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .no-user-select {
@@ -90,6 +90,10 @@ table.table-hover tbody tr {
     padding: 5px;
     text-align: left;
     /* width: 300px; */
+}
+
+.table-fixed th {
+    border-bottom-width: 0px;
 }
 
 .accordion-button.collapsed {
