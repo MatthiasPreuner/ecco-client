@@ -25,7 +25,7 @@ export const Commits: React.FC = () => {
     return (
         <Container className="main d-flex pt-4 justify-content-center">
             <Col>
-                <Row>                   <h3>Commits</h3>                </Row>
+                <Row><h3>Commits</h3></Row>
                 <Row>
                     <Col xs={10}>
                         <Table hover size='sm' className="table-fixed table-responsive">
@@ -48,14 +48,12 @@ export const Commits: React.FC = () => {
                                 })}
                             </tbody>
                         </Table>
-
                     </Col>
                     <Col>
                         <Row className='mb-2'><Button className="w-100" disabled={compareCommit === null}>Compare</Button></Row>
                         <Row className='mb-2'><MakeCommit /></Row>
                     </Col>
                 </Row>
-
                 <Row>
                     {selectedCommit != null &&
                         <>
