@@ -12,11 +12,11 @@ export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  let [inputValue, setInputValue] = useState<string>(null);
+  let [inputValue, setInputValue] = useState<string>('');
   let [appState, setAppState] = useSharedState();
 
   let onModalDismiss = () => {
-    setInputValue(null);
+    setInputValue('');
     handleClose();
   }
 
@@ -48,7 +48,6 @@ export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props
           <Modal.Title>Delete Repository</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-
           <Form className="w-80">
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Repository '{props.repo?.name}' will be permanently removed!</Form.Label>
