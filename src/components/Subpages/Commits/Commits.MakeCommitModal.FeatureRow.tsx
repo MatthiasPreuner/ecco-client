@@ -118,7 +118,7 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
                                 {ft.enabled &&
                                     <input
                                         type='number'
-                                        className='form-control no-validation form-control form-control-sm'
+                                        className='form-control form-control-sm no-validation'
                                         min={1}
                                         max={999} // TODO current + 1 or skipping enabled?
                                         /*    isInvalid={config.length === 0}
