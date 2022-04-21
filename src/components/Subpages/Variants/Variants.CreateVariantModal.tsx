@@ -69,7 +69,7 @@ export const CreateVariant: React.FC = () => {
 
   let config = features.filter(ft => ft.enabled).map(ft => ft.name + '.' + ft.version).join(', ');
 
-  let nameIsValid = () => name.length > 0 &&  appState.repository.variants.filter(v => v.name === name).length < 1;
+  let nameIsValid = () => name.length > 0 &&  appState.repository.variants.filter(v => v.name.toLowerCase() === name.toLowerCase()).length < 1;
 
   console.log(nameIsValid())
   return (
@@ -96,7 +96,7 @@ export const CreateVariant: React.FC = () => {
            {/*    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback> */}
               {name.length < 1 ?
                 <Form.Control.Feedback type="invalid">Name must not be empty!</Form.Control.Feedback> :
-                <Form.Control.Feedback type="invalid">Name already exists!</Form.Control.Feedback>}
+                <Form.Control.Feedback type="invalid">A Variant with that Name already exists!</Form.Control.Feedback>}
             </Form.Group>
             <Form.Group key={2}>
               <Form.Label>Features</Form.Label>
@@ -120,7 +120,7 @@ export const CreateVariant: React.FC = () => {
                     <Col>
                       <input
                         type='number'
-                        className='form-control form-control-sm'
+                        className='form-control form-control-sm no-validation'
                         min={1}
                         max={100} // TODO max latestRevision
                         value={ft.version}
