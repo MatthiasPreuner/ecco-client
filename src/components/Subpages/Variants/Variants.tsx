@@ -56,10 +56,10 @@ export const Variants: React.FC = () => {
         return filteredByFeatures.filter(variant => variant.name?.toLowerCase().includes(variantFilterText.toLowerCase()))
             .map((variant: VariantModel, i) => {
                 return (
-                    <tr style={{ width: '100%' }} onClick={() => setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
+                    <tr onClick={() => setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
                         {editVariant?.id === variant.id ?
                             <>
-                                <td width="20%">
+                                <td style={{ width: '20%' }}>
                                     <InputGroup size='sm' className="w-100">
                                         <FormControl
                                             type="text"
@@ -85,11 +85,11 @@ export const Variants: React.FC = () => {
                                 </td>
                             </> :
                             <>
-                                <td width="20%">{variant.name}</td>
+                                <td >{variant.name}</td>
                                 <td style={{ width: '80%' }}>{variant.description}
                                     <Stack gap={1} direction="horizontal" className="float-end ">
-                                        <div></div>
-                                        <Badge bg="primary" className='btn' onClick={() => setEditVariant({ ...variant })}><i className="bi bi-pencil-square"></i></Badge>
+                                        {editVariant === null &&
+                                            <Badge bg="primary" className='btn' onClick={() => setEditVariant({ ...variant })}><i className="bi bi-pencil-square"></i></Badge>}
                                     </Stack>
                                 </td>
                             </>

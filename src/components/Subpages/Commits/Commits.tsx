@@ -31,18 +31,18 @@ export const Commits: React.FC = () => {
                         <Table hover size='sm' className="table-fixed table-responsive">
                             <thead>
                                 <tr>
-                                    <th style={{ width: '400px' }}>Commit Message</th>
-                                    <th style={{ width: '200px' }}>Commiter</th>
-                                    <th style={{ width: '200px' }}>Date</th>
+                                    <th style={{ minWidth: '70%' }}>Commit Message</th>
+                                    <th style={{ minWidth: '15%' }}>Commiter</th>
+                                    <th style={{ minWidth: '15%' }}>Date</th>
                                 </tr>
                             </thead>
                             <tbody className="scrollable">
                                 {appState.repository.commits.map((commit, i) => {
                                     return (
                                         <tr onClick={(e) => selectCommit(e, commit)} className={selectedCommit === commit ? "btn-primary" : null} key={i}>
-                                            <td style={{ width: '400px' }}>{commit.commitMessage}</td> {/* TODO max string length */}
-                                            <td style={{ width: '200px' }}>{commit.username}</td>
-                                            <td style={{ width: '200px' }}>{commit.date}</td>
+                                            <td style={{ minWidth: '70%' }}>{commit.commitMessage}</td> {/* TODO max string length */}
+                                            <td style={{ minWidth: '15%' }}>{commit.username}</td>
+                                            <td style={{ minWidth: '15%' }}>{commit.date}</td>
                                         </tr>
                                     )
                                 })}

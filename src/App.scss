@@ -5,7 +5,7 @@
 }
 
 .features-list-group {
-    max-height: 70vh;
+    //max-height: 70vh;
 }
 
 .list-group {
@@ -66,6 +66,8 @@ table.table-hover tbody tr {
 .table-fixed {
     font-size: small;
     table-layout: fixed;
+    //position: relative;
+    //display: table;
     border-collapse: collapse;
     width: 100%;
     overflow-y: auto;
@@ -87,9 +89,8 @@ table.table-hover tbody tr {
 
 .table-fixed th,
 .table-fixed td {
-    padding: 5px;
     text-align: left;
-    /* width: 300px; */
+    width: 300px;
 }
 
 .table-fixed th {
