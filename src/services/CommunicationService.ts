@@ -117,8 +117,9 @@ export class CommunicationService {
         )
     }
     // Variants ========================================================================================
-    public createVariant(repository: RepositoryModel, name: string, configuration: string): Promise<any> {
+    public createVariant(repository: RepositoryModel, name: string, description: string, configuration: string): Promise<any> {
         let config = new RequestConfig();
+        let body = {name: name, description: description} // TODO
         config.headers = {
             'Content-Type': 'text/plain',
         };

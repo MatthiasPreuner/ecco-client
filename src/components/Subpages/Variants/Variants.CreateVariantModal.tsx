@@ -18,6 +18,7 @@ export const CreateVariant: React.FC = () => {
 
   const [show, setShow] = useState(false);
   const [name, setName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [appState, setAppState] = useSharedState();
   const [validated, setValidated] = useState(false);
 
@@ -56,7 +57,7 @@ export const CreateVariant: React.FC = () => {
     console.log(appState.repository.variants.filter(v => v.name === name))
     if (form.checkValidity() === true && nameIsValid()) {
       console.log("creating")
-      CommunicationService.getInstance().createVariant(appState.repository, name, config).then((apiData: RepositoryResponse) => {
+      CommunicationService.getInstance().createVariant(appState.repository, name, description, config).then((apiData: RepositoryResponse) => {
         setAppState((previousState) => ({
           ...previousState,
           repository: apiData.data
@@ -89,8 +90,8 @@ export const CreateVariant: React.FC = () => {
         </Modal.Header>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Modal.Body>
-            <Form.Group className='mb-3' key={1}>
-              <Form.Label>Variant Name</Form.Label>
+            <Form.Group className='mb-2' key={1}>
+              <Form.Label>Name</Form.Label>
               <Form.Control type="text" isInvalid={!nameIsValid()} placeholder="Name" value={name} onChange={e => setName(e.target.value)} required pattern="[A-Za-z0-9_]{1,}" />
              {/*  isValid={nameIsValid()}  */}
            {/*    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback> */}
@@ -98,7 +99,11 @@ export const CreateVariant: React.FC = () => {
                 <Form.Control.Feedback type="invalid">Name must not be empty!</Form.Control.Feedback> :
                 <Form.Control.Feedback type="invalid">A Variant with that Name already exists!</Form.Control.Feedback>}
             </Form.Group>
-            <Form.Group key={2}>
+            <Form.Group className='mb-2' key={2}>
+              <Form.Label>Description</Form.Label>
+              <Form.Control as="textarea" rows={1} placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} />
+            </Form.Group>
+            <Form.Group key={3}>
               <Form.Label>Features</Form.Label>
               {features.map((ft, i) => (
                 <>
@@ -143,7 +148,7 @@ export const CreateVariant: React.FC = () => {
                 </>))
               }
             </Form.Group>
-            <Form.Group className="mt-3" key={3}>
+            <Form.Group className="mt-3" key={4}>
               <Form.Label>Configuration</Form.Label>
               <Form.Control type="text" disabled value={config} />
             </Form.Group>
