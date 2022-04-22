@@ -34,8 +34,9 @@ export const CreateVariant: React.FC = () => {
   const [features, setFeatures] = useState<VariantFeature[]>(initFeatures);
 
   const handleClose = () => {
-    setName('');
     // clear form
+    setName('');
+    setDescription('');
     setShow(false);
     setValidated(false);
     setFeatures(initFeatures);
@@ -75,7 +76,7 @@ export const CreateVariant: React.FC = () => {
   console.log(nameIsValid())
   return (
     <>
-      <Button variant="primary" className="w-100" disabled={appState.repository.features.length == 0} onClick={handleShow}>Create Variant</Button>
+      <Button variant="primary" className="w-100" disabled={appState.repository.features.length === 0} onClick={handleShow}>Create Variant</Button>
 
       <Modal
         show={show}

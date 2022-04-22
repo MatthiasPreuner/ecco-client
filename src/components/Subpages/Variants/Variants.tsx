@@ -56,7 +56,7 @@ export const Variants: React.FC = () => {
         return filteredByFeatures.filter(variant => variant.name?.toLowerCase().includes(variantFilterText.toLowerCase()))
             .map((variant: VariantModel, i) => {
                 return (
-                    <tr onClick={() => setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
+                    <tr onClick={() => editVariant === null && setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
                         {editVariant?.id === variant.id ?
                             <>
                                 <td style={{ width: '20%' }}>
@@ -102,12 +102,12 @@ export const Variants: React.FC = () => {
     }
     let filteredVariants = getCurrentVariantExpression();
 
-    let addFeatureFilter = (name: FeatureModel) => {
-        setFeatureFilter([...featureFilter, name]);
+    let addFeatureFilter = (feature: FeatureModel) => {
+        setFeatureFilter([...featureFilter, feature]);
     }
 
-    let removeFeatureFilter = (name: FeatureModel) => {
-        setFeatureFilter([...featureFilter].filter(n => n !== name));
+    let removeFeatureFilter = (feature: FeatureModel) => {
+        setFeatureFilter([...featureFilter].filter(f => f !== feature));
     }
 
     let featureFilterDropdown = appState.repository.features.filter(
