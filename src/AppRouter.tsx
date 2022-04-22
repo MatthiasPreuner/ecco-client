@@ -1,7 +1,7 @@
 import * as React from "react";
 import { AppState, useSharedState } from "./states/AppState";
 import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
-import { Nav, Navbar, Container, NavDropdown} from 'react-bootstrap';
+import { Nav, Navbar, Container, NavDropdown } from 'react-bootstrap';
 
 import { Home } from "./components/Home";
 import { Repositories } from "./components/Subpages/Repositories/Repositories";
@@ -22,17 +22,14 @@ export const AppRouter: React.FC = () => {
     let logout = () => {
         setAppState((prevState: AppState) => ({
             ...prevState,
-           userIsLoggedIn: false,
-           // directory: "",
+            userIsLoggedIn: false,
+            // directory: "",
         }));
     }
 
     let chooseRepo = (repo: RepositoryHeaderModel) => {
-        CommunicationService.getInstance().getRepository(repo.rid).then((apiData: RepositoryResponse) => {
-            setAppState((previousState) => ({
-                ...previousState,
-                repository: apiData.data
-            }));
+        CommunicationService.getInstance().getRepository(repo).then((apiData: RepositoryResponse) => {
+            setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
         });
     }
 
