@@ -51,7 +51,7 @@ export const Repositories: React.FC = () => {
                         <ListGroup style={{ maxHeight: '80vh' }}> {/* TODO calc height */}
                             {appState.availableRepositories?.map((repo: RepositoryHeaderModel, i) => {
                                 return (
-                                    <ListGroup.Item key={i} action active={repo === selectedRepo} onClick={() => setSelectedRepo(repo)}>{repo.rid == appState.repository.rid && <i className="bi bi-dot"></i>} {repo.name}</ListGroup.Item>
+                                    <ListGroup.Item key={i} action active={repo === selectedRepo} onClick={() => setSelectedRepo(repo)}>{repo.rid == appState.repository?.rid && <i className="bi bi-dot"></i>} {repo.name}</ListGroup.Item>
                                 )
                             })}
                         </ListGroup>
