@@ -5,31 +5,32 @@ import { AppState, useSharedState } from "../../../states/AppState";
 
 import { RepositoryHeaderModel } from "../../../model/RepositoryModel";
 import { CommunicationService } from "../../../services/CommunicationService";
-import { RepositoryResponse } from "../../../model/RepositoryResponse";
+import { RepositoryHeaderResponse } from "../../../model/AvailableRepositoryResponse";
 
 export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) => {
 
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    // clear form
+    setInputValue('');
+    setShow(false);
+  }
+
   const handleShow = () => setShow(true);
+  let onModalDismiss = () => { handleClose(); }
 
   let [inputValue, setInputValue] = useState<string>('');
   let [appState, setAppState] = useSharedState();
 
-  let onModalDismiss = () => {
-    setInputValue('');
-    handleClose();
-  }
-
   let deleteRepo = () => {
     if (inputValue !== "DELETE") return;
 
-    CommunicationService.getInstance().deleteRepository(props.repo).then((apiData: RepositoryResponse) => {
-      setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
+    CommunicationService.getInstance().deleteRepository(props.repo).then((apiData: RepositoryHeaderResponse) => {
+      console.log(apiData.data)
+      setAppState((previousState) => ({ ...previousState, availableRepositories: apiData.data }));
     });
 
-    setInputValue(null);
     handleClose();
   }
 
