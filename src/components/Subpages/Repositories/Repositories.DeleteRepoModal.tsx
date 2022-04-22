@@ -4,6 +4,8 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import { AppState, useSharedState } from "../../../states/AppState";
 
 import { RepositoryHeaderModel } from "../../../model/RepositoryModel";
+import { CommunicationService } from "../../../services/CommunicationService";
+import { RepositoryResponse } from "../../../model/RepositoryResponse";
 
 export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) => {
 
@@ -23,12 +25,10 @@ export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props
   let deleteRepo = () => {
     if (inputValue !== "DELETE") return;
 
-  /*   let newArray = [...appState.availableRepositories].filter(el => el.name != props.repo.name)
+    CommunicationService.getInstance().deleteRepository(props.repo).then((apiData: RepositoryResponse) => {
+      setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
+    });
 
-    setAppState((prevState: AppState) => ({
-      ...prevState,
-      availableRepositories: newArray
-    })); */
     setInputValue(null);
     handleClose();
   }

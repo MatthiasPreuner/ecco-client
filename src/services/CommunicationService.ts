@@ -4,7 +4,7 @@ import { FeatureModel } from "../model/FeatureModel";
 import { FeatureRevisionModel } from "../model/FeatureRevisionModel";
 import { VariantModel } from "../model/VariantModel";
 import { FileWithPath } from "react-dropzone";
-import { RepositoryModel } from "../model/RepositoryModel";
+import { RepositoryHeaderModel, RepositoryModel } from "../model/RepositoryModel";
 /* import {AssociationModel} from "../Domain/Model/Backend/AssociationModel";
 import {AssociationInspection} from "../Domain/Model/Frontend/AssociationInspection";
 import {ArtefactgraphFilter} from "../Domain/Model/Backend/ChartArtefactgraph/ArtefactgraphFilter"; */
@@ -33,32 +33,6 @@ export class CommunicationService {
 
     }
 
-    public getDefaultRepo(): Promise<any> {
-        let config = new RequestConfig();
-        config.headers = {
-            'Access-Control-Allow-Credentials': true,
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-            /*  'Content-Type': 'multipart/form-data' */
-        }
-        /*    const instance = axios.create({
-               headers: config.headers
-           }) */
-        /* axios.post() */
-        return axios.post(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + '/2'}`
-        )
-        /* , 'Access-Control-Allow-Origin' */
-    }
-
-    public getRepository(id: string): Promise<any> {
-        return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${id}`
-        )
-    }
-
-
-
     // Repository ======================================================================================
     public getAllRepositories(): Promise<any> {
         return axios.get(
@@ -66,9 +40,27 @@ export class CommunicationService {
         )
     }
 
+    public getRepository(repo: RepositoryHeaderModel): Promise<any> {
+        return axios.get(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`
+        )
+    }
+
     public createRepository(name: string): Promise<any> {
         return axios.put(
             `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${name}`
+        )
+    }
+
+    public cloneRepository(repo: RepositoryHeaderModel, name: string): Promise<any> {
+        return axios.put(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/clone/${repo.rid}/${name}`
+        )
+    }
+
+    public deleteRepository(repo: RepositoryHeaderModel): Promise<any> {
+        return axios.delete(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`
         )
     }
 

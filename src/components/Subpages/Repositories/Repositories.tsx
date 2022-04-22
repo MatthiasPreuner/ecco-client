@@ -19,17 +19,20 @@ export const Repositories: React.FC = () => {
     const [selectedRepo, setSelectedRepo] = useState<RepositoryHeaderModel>(null);
 
     useEffect(() => {
+        refresh();
+    }, []);
+
+    let refresh = () => {
         CommunicationService.getInstance().getAllRepositories().then((apiData: RepositoryHeaderResponse) => {
-            console.log(apiData.data);
             setAppState((previousState) => ({
                 ...previousState,
                 availableRepositories: apiData.data
             }));
         });
-    }, []);
+    }
 
     let chooseRepo = () => {
-        CommunicationService.getInstance().getRepository(selectedRepo.rid).then((apiData: RepositoryResponse) => {
+        CommunicationService.getInstance().getRepository(selectedRepo).then((apiData: RepositoryResponse) => {
             setAppState((previousState) => ({
                 ...previousState,
                 repository: apiData.data
@@ -45,7 +48,7 @@ export const Repositories: React.FC = () => {
                 </Row>
                 <Row>
                     <Col xs={8}>
-                        <ListGroup>
+                        <ListGroup style={{ maxHeight: '80vh' }}> {/* TODO calc height */}
                             {appState.availableRepositories?.map((repo: RepositoryHeaderModel, i) => {
                                 return (
                                     <ListGroup.Item key={i} action active={repo === selectedRepo} onClick={() => setSelectedRepo(repo)}>{repo.name}</ListGroup.Item>
@@ -59,6 +62,7 @@ export const Repositories: React.FC = () => {
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><CloneRepoModal repo={selectedRepo} /></ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><DeleteRepoModal repo={selectedRepo} /></ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><Button variant="primary" type="submit" disabled={selectedRepo == null} onClick={chooseRepo}>Select</Button></ButtonGroup>
+                            <ButtonGroup className="me-2 mb-2 w-100" vertical><Button onClick={refresh}><i className="bi bi-arrow-clockwise"></i></Button></ButtonGroup>
                         </ButtonGroup>
                     </Col>
                 </Row>

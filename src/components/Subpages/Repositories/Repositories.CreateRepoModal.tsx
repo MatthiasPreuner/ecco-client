@@ -5,6 +5,26 @@ import { RepositoryHeaderResponse } from "../../../model/AvailableRepositoryResp
 import { CommunicationService } from "../../../services/CommunicationService";
 import { useSharedState } from "../../../states/AppState";
 
+/* export default class ParentClass extends React.Component {
+
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      count: 0
+    };
+  }
+
+
+
+  render() {
+
+    return false;
+
+  }
+
+} */
+
 export const CreateRepoModal: React.FC = () => {
 
   const [show, setShow] = useState(false);
@@ -21,21 +41,23 @@ export const CreateRepoModal: React.FC = () => {
     setShow(false);
   }
 
-  let nameIsValid = () => inputValue.length > 0 && appState.availableRepositories.filter(v => v.name.toLowerCase() === inputValue.toLowerCase()).length < 1;
+  let nameEmpty = () => !(inputValue?.length > 0);
+  let nameExists = () => appState.availableRepositories.filter(v => v.name.toLowerCase() === inputValue.toLowerCase()).length > 0;
+  let nameIsValid = () => !nameEmpty() && !nameExists();
 
   let createRepo = (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
 
+    event.preventDefault();
+    event.stopPropagation();
+
     if (form.checkValidity() === false || !nameIsValid()) {
 
-      event.preventDefault();
-      event.stopPropagation();
       setValidated(true);
 
     } else {
 
       CommunicationService.getInstance().createRepository(inputValue).then((apiData: RepositoryHeaderResponse) => {
-        console.log(apiData.data);
         setAppState((previousState) => ({
           ...previousState,
           availableRepositories: apiData.data
@@ -74,9 +96,11 @@ export const CreateRepoModal: React.FC = () => {
                 pattern="[A-Za-z0-9_]{1,}" value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)} />
               {validated ?
-                (inputValue?.length < 1 ?
-                <Form.Control.Feedback type="invalid">Name must not be empty!</Form.Control.Feedback> :
-                <Form.Control.Feedback type="invalid">Name already exists!</Form.Control.Feedback>) : null
+                (nameEmpty() ?
+                  <Form.Control.Feedback type="invalid">Name must not be empty!</Form.Control.Feedback> :
+                  nameExists() ? <Form.Control.Feedback type="invalid">Name already exists!</Form.Control.Feedback> :
+                    < Form.Control.Feedback type="invalid">Invalid Name!</Form.Control.Feedback>)
+                : null
               }
             </Form.Group>
           </Modal.Body>
