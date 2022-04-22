@@ -119,13 +119,13 @@ export class CommunicationService {
     // Variants ========================================================================================
     public createVariant(repository: RepositoryModel, name: string, description: string, configuration: string): Promise<any> {
         let config = new RequestConfig();
-        let body = {name: name, description: description} // TODO
+        let body = {configuration: configuration, description: description}
         config.headers = {
-            'Content-Type': 'text/plain',
+            'Content-Type': 'application/json',
         };
         return axios.put(
             `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${name}`,
-            configuration,
+            body,
             config
         )
     }
