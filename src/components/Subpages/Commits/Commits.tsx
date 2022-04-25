@@ -8,6 +8,7 @@ import { Container, Col, Row, Table, Button, ListGroup, Card, Badge } from 'reac
 import { MakeCommit } from "./Commits.MakeCommitModal";
 import { CompareCommits } from "./Commits.CompareCommitsModal";
 
+import './Commits.scss';
 
 export const Commits: React.FC = () => {
 

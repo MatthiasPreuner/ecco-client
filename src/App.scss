@@ -4,10 +4,6 @@
     text-align: center;
 }
 
-.features-list-group {
-    //max-height: 70vh;
-}
-
 .list-group {
     margin-bottom: 10px;
     overflow-y: auto;
@@ -48,18 +44,6 @@ table.table-hover tbody tr {
     padding-right: 0.5rem !important;
 }
 
-// make-commit-modal drop-zone ----------------
-.drop-zone {
-    height: 100px;
-    border: 1px solid #d8d8d8;
-    background-color: #ececec;
-}
-
-.drop-zone-active {
-    border: 2px solid black;
-    border-style: dashed !important
-}
-
 
 /* https://www.w3docs.com/snippets/html/how-to-create-a-table-with-a-fixed-header-and-scrollable-body.html */
 
@@ -97,10 +81,12 @@ table.table-hover tbody tr {
     border-bottom-width: 0px;
 }
 
+// still needed??
 .accordion-button.collapsed {
     background-color: #e9ecef;
 }
 
+// from template
 .App-logo {
     height: 40vmin;
     pointer-events: none;
