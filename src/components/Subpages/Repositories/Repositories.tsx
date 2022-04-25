@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AppState, useSharedState } from "../../../states/AppState";
 import { CommunicationService } from "../../../services/CommunicationService";
 
-import { Button, ButtonGroup, Container, Row, Col, ListGroup } from 'react-bootstrap';
+import { Button, ButtonGroup, Container, Row, Col, ListGroup, InputGroup, FormControl } from 'react-bootstrap';
 
 import { CreateRepoModal } from "./Repositories.CreateRepoModal";
 import { DeleteRepoModal } from "./Repositories.DeleteRepoModal";
@@ -17,6 +17,7 @@ export const Repositories: React.FC = () => {
 
     const [appState, setAppState] = useSharedState();
     const [selectedRepo, setSelectedRepo] = useState<RepositoryHeaderModel>(null);
+    const [repositoryFilterText, setRepositoryFilterText] = useState<string>("");
 
     useEffect(() => {
         refresh();
@@ -40,6 +41,20 @@ export const Repositories: React.FC = () => {
         });
     }
 
+    const getCurrentRepositoryExpression = (): JSX.Element[] => {
+        return appState.availableRepositories?.map((repository: RepositoryHeaderModel, i) => {
+            if (repository.name.toLowerCase().includes(repositoryFilterText.toLowerCase())) {
+                return (
+                    <ListGroup.Item key={i} action active={repository === selectedRepo} onClick={() => setSelectedRepo(repository)}>{repository.rid == appState.repository?.rid && <i className="bi bi-dot"></i>} {repository.name}</ListGroup.Item>
+                );
+            }
+        }).filter((singleJSXElement: JSX.Element) => {
+            return singleJSXElement !== undefined || singleJSXElement != null;
+        });
+    }
+    let repositories = getCurrentRepositoryExpression();
+
+
     return (
         <Container className="main d-flex pt-4 justify-content-center">
             <Col>
@@ -48,12 +63,24 @@ export const Repositories: React.FC = () => {
                 </Row>
                 <Row>
                     <Col xs={8}>
-                        <ListGroup style={{ maxHeight: '80vh' }}> {/* TODO calc height */}
-                            {appState.availableRepositories?.map((repo: RepositoryHeaderModel, i) => {
-                                return (
-                                    <ListGroup.Item key={i} action active={repo === selectedRepo} onClick={() => setSelectedRepo(repo)}>{repo.rid == appState.repository?.rid && <i className="bi bi-dot"></i>} {repo.name}</ListGroup.Item>
-                                )
-                            })}
+                        <Row>
+                            <InputGroup className="mb-3">
+                                <InputGroup.Text><i className="bi bi-funnel-fill"></i></InputGroup.Text>
+                                <FormControl
+                                    placeholder="Repositoryname for filtering..."
+                                    onChange={e => setRepositoryFilterText(e.target.value)}
+                                    value={repositoryFilterText}
+                                />
+                                {repositoryFilterText.length > 0 ? <Button variant="outline-primary" onClick={() => setRepositoryFilterText("")}><i className="bi bi-x"></i></Button> : null}
+                            </InputGroup>
+                        </Row>
+
+                        <ListGroup className="my-4" style={{ maxHeight: 'calc(100vh - 250px)' }}>
+                            {appState.availableRepositories.length == 0 ?
+                                <p>There are no Repositories yet.</p> :
+                                repositories.length == 0 ?
+                                    <p>Please consider using a different filter condition. There are no results.</p> :
+                                    repositories}
                         </ListGroup>
                     </Col>
                     <Col>

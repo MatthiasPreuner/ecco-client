@@ -62,7 +62,7 @@ export const Feature: React.FC = () => {
                                         {appState.repository.features.length == 0 ?
                                             <p>This Repository has no Features yet. Features are added with new Commits.</p> :
                                             features.length == 0 ?
-                                                <p>Please consider using a different feature condition. There are no results.</p> :
+                                                <p>Please consider using a different filter condition. There are no results.</p> :
                                                 features}
                                     </ListGroup>
                                 </Col>
