@@ -137,7 +137,7 @@ export const Variants: React.FC = () => {
                                     <th style={{ minWidth: '80%' }}>Description</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style={{height: "40vh"}}>
                                 {filteredVariants}
                             </tbody>
                         </Table>

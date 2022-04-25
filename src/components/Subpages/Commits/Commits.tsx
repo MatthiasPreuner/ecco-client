@@ -48,7 +48,7 @@ export const Commits: React.FC = () => {
                                     <th style={{ minWidth: '15%' }}>Date</th>
                                 </tr>
                             </thead>
-                            <tbody className="scrollable">
+                            <tbody style={{height: "40vh"}}>
                                 {appState.repository?.commits.map((commit, i) => {
                                     return (
                                         <tr onClick={(e) => selectCommit(e, commit)} className={selectedCommit === commit || compareCommit === commit ? "btn-primary" : null} key={i}>
