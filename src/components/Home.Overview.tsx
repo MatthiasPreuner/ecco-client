@@ -30,7 +30,7 @@ export const Overview: React.FC = () => {
                     border={'primary'}
                     key={idx}
                     text={'dark'}
-                    style={{ width: '18rem' }}
+                    style={{ width: '18rem', cursor: 'pointer' }}
                     className="mb-2 me-5"
                     onClick={() => navigate(`/${name.toLocaleLowerCase()}`)}
                 >

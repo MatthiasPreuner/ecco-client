@@ -9,6 +9,8 @@ import { Repositories } from "./Subpages/Repositories/Repositories";
 import { Container } from 'react-bootstrap';
 import { Overview } from "./Home.Overview";
 
+import './Home.scss';
+
 export const Home: React.FC = () => {
 
     const [appState, setAppState] = useSharedState();
