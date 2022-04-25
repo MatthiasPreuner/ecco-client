@@ -19,7 +19,7 @@ export const Commits: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (appState.repository === null) {
+        if (!appState.userIsLoggedIn || appState.repository === null) {
             navigate(`/`)
         }
     }, []);

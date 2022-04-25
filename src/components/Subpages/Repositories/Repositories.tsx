@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { AppState, useSharedState } from "../../../states/AppState";
 import { CommunicationService } from "../../../services/CommunicationService";
+import { useNavigate } from 'react-router-dom';
 
 import { Button, ButtonGroup, Container, Row, Col, ListGroup, InputGroup, FormControl } from 'react-bootstrap';
 
@@ -19,8 +20,14 @@ export const Repositories: React.FC = () => {
     const [selectedRepo, setSelectedRepo] = useState<RepositoryHeaderModel>(null);
     const [repositoryFilterText, setRepositoryFilterText] = useState<string>("");
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-        refresh();
+        if (!appState.userIsLoggedIn) {
+            navigate(`/`)
+        } else {
+            refresh();
+        }
     }, []);
 
     let refresh = () => {

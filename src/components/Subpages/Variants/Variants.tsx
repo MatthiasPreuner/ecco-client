@@ -26,7 +26,7 @@ export const Variants: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (appState.repository === null) {
+        if (!appState.userIsLoggedIn || appState.repository === null) {
             navigate(`/`)
         } else {
             setSelectedVariant(appState.repository.variants.find(v => v.id === selectedVariant?.id)) // update, when new repository is received after changing smtg

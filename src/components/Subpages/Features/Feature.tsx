@@ -30,7 +30,7 @@ export const Feature: React.FC = () => {
     let features = getCurrentFeatureExpression();
 
     useEffect(() => {
-        if (appState.repository === null) {
+        if (!appState.userIsLoggedIn || appState.repository === null) {
             navigate(`/`)
         } else {
             setTmpCurrentFeature(appState.repository.features.find(f => f.id === tmpCurrentFeature?.id)) // update, when new repository is received after changing smtg
