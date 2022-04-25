@@ -4,12 +4,14 @@
     text-align: center;
 }
 
+// list group with scrolling
 .list-group {
     margin-bottom: 10px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
 
+// global settings
 .no-user-select {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -34,18 +36,21 @@
     overflow: hidden;
 }
 
-table.table-hover tbody tr {
-    cursor: pointer;
-}
-
+// form validation settings
 .form-control.no-validation {
     border: 1px solid #ced4da !important;
     background-image: none !important;
     padding-right: 0.5rem !important;
 }
 
+// table with row hover
+table.table-hover tbody tr {
+    cursor: pointer;
+}
 
-/* https://www.w3docs.com/snippets/html/how-to-create-a-table-with-a-fixed-header-and-scrollable-body.html */
+
+/* table with fixed header
+ * https://www.w3docs.com/snippets/html/how-to-create-a-table-with-a-fixed-header-and-scrollable-body.html */
 
 .table-fixed {
     font-size: small;
