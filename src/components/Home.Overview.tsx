@@ -31,7 +31,7 @@ export const Overview: React.FC = () => {
                     key={idx}
                     text={'dark'}
                     style={{ width: '18rem', cursor: 'pointer' }}
-                    className="mb-2 me-5"
+                    className="overview-card mb-2 me-5"
                     onClick={() => navigate(`/${name.toLocaleLowerCase()}`)}
                 >
                     <Card.Header as='h4'>{name}</Card.Header>
