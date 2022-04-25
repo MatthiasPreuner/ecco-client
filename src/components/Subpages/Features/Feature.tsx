@@ -20,7 +20,7 @@ export const Feature: React.FC = () => {
         return appState.repository?.features.map((feature: FeatureModel, i) => {
             if (feature.name.toLowerCase().includes(featureFilterText.toLowerCase())) {
                 return (
-                    <ListGroup.Item key={i} action variant="light" active={feature === tmpCurrentFeature} onClick={() => setTmpCurrentFeature(feature)}>{feature.name}</ListGroup.Item>
+                    <ListGroup.Item key={i} action active={feature === tmpCurrentFeature} onClick={() => setTmpCurrentFeature(feature)}>{feature.name}</ListGroup.Item>
                 );
             }
         }).filter((singleJSXElement: JSX.Element) => {
@@ -58,7 +58,7 @@ export const Feature: React.FC = () => {
                             </Row>
                             <Row className="my-4">
                                 <Col>
-                                    <ListGroup className="features-list-group">
+                                    <ListGroup style={{ maxHeight: 'calc(100vh - 250px)' }}>
                                         {appState.repository.features.length == 0 ?
                                             <p>This Repository has no Features yet. Features are added with new Commits.</p> :
                                             features.length == 0 ?
