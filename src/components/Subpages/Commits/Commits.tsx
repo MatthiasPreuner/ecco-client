@@ -1,10 +1,13 @@
 import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 import { CommitModel } from "../../../model/CommitModel";
 import { Container, Col, Row, Table, Button, ListGroup, Card, Badge } from 'react-bootstrap';
 import { MakeCommit } from "./Commits.MakeCommitModal";
+import { CompareCommits } from "./Commits.CompareCommitsModal";
+
 
 export const Commits: React.FC = () => {
 
@@ -12,13 +15,21 @@ export const Commits: React.FC = () => {
     const [compareCommit, setCompareCommit] = useState<CommitModel>(null);
     const [selectedCommit, setSelectedCommit] = useState<CommitModel>(null);
 
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (appState.repository === null) {
+            navigate(`/`)
+        }
+    }, []);
+
     function printDate(date: Date): string {
         return [date.getDay(), date.getMonth(), date.getFullYear()].join('.') + ' ' +
             [date.getHours(), date.getMinutes(), date.getSeconds()].join(':');;
     }
 
     let selectCommit = (event: React.MouseEvent, commit: CommitModel) => {
-        setCompareCommit(event.ctrlKey ? selectedCommit : null);
+        setCompareCommit(event.ctrlKey && commit !== selectedCommit ? selectedCommit : null);
         setSelectedCommit(commit);
     }
 
@@ -37,9 +48,9 @@ export const Commits: React.FC = () => {
                                 </tr>
                             </thead>
                             <tbody className="scrollable">
-                                {appState.repository.commits.map((commit, i) => {
+                                {appState.repository?.commits.map((commit, i) => {
                                     return (
-                                        <tr onClick={(e) => selectCommit(e, commit)} className={selectedCommit === commit ? "btn-primary" : null} key={i}>
+                                        <tr onClick={(e) => selectCommit(e, commit)} className={selectedCommit === commit || compareCommit === commit ? "btn-primary" : null} key={i}>
                                             <td style={{ minWidth: '70%' }}>{commit.commitMessage}</td> {/* TODO max string length */}
                                             <td style={{ minWidth: '15%' }}>{commit.username}</td>
                                             <td style={{ minWidth: '15%' }}>{commit.date}</td>
@@ -50,7 +61,7 @@ export const Commits: React.FC = () => {
                         </Table>
                     </Col>
                     <Col>
-                        <Row className='mb-2'><Button className="w-100" disabled={compareCommit === null}>Compare</Button></Row>
+                        <Row className='mb-2'><CompareCommits commits={[selectedCommit, compareCommit]}/></Row>
                         <Row className='mb-2'><MakeCommit /></Row>
                     </Col>
                 </Row>

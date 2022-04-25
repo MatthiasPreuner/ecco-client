@@ -111,7 +111,7 @@ export const MakeCommit: React.FC = () => {
 
   const [configString, setConfigString] = useState<string>("");
 
-  const initialConfigFeatures = appState.repository.features.map(f => {
+  const initialConfigFeatures = appState.repository?.features.map(f => {
     return {
       enabled: false,
       name: f.name,
@@ -149,7 +149,7 @@ export const MakeCommit: React.FC = () => {
         }, 3000);
     });  */
 
-  let config = configFeatures.filter(ft => ft.enabled).concat(manualFeatures.filter(ft => ft.name !== '')).map(ft => (ft.enabled ? '' : '-') + ft.name + '.' + ft.revision).join(', ')
+  let config = configFeatures?.filter(ft => ft.enabled).concat(manualFeatures.filter(ft => ft.name !== '')).map(ft => (ft.enabled ? '' : '-') + ft.name + '.' + ft.revision).join(', ')
 
   
 
@@ -246,7 +246,7 @@ export const MakeCommit: React.FC = () => {
                   </Row>
                   <Row className="mb-2">
                     <Form.Group>
-                      <Form.Control isInvalid={config.length === 0} isValid={config.length > 0} type="hidden" />
+                      <Form.Control isInvalid={config?.length === 0} isValid={config?.length > 0} type="hidden" />
                       <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                       <Form.Control.Feedback type="invalid">Please select at least one Feature</Form.Control.Feedback>
                     </Form.Group>

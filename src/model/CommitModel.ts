@@ -1,3 +1,4 @@
+import { AssociationModel } from "./AssociationModel";
 import { ConfigurationModel } from "./ConfigurationModel";
 
 export interface CommitModel {
@@ -7,5 +8,5 @@ export interface CommitModel {
     username: string,
     date: string,
     configuration: ConfigurationModel,
- /*    associations: string, */
+    associations: AssociationModel[],
 }
