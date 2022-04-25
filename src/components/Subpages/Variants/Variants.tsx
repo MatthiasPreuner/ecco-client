@@ -13,6 +13,8 @@ import { Features } from "./Variants.Feature";
 import { CommunicationService } from "../../../services/CommunicationService";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 
+import './Variants.scss';
+
 export const Variants: React.FC = () => {
 
     const [appState, setAppState] = useSharedState();
@@ -85,17 +87,17 @@ export const Variants: React.FC = () => {
                                                 onChange={changeDescription}
                                             />
                                         </InputGroup>
-                                        <Badge key={0} bg="primary" className='btn' onClick={() => updateVariant()}><i className="bi bi-check-lg"></i></Badge>
-                                        <Badge key={1} bg="primary" className='btn' onClick={() => setEditVariant(null)}><i className="bi bi-x-lg"></i></Badge>
+                                        <Badge key={0} bg="secondary" className='btn' onClick={() => updateVariant()}><i className="bi bi-check-lg"></i></Badge>
+                                        <Badge key={1} bg="secondary" className='btn' onClick={() => setEditVariant(null)}><i className="bi bi-x-lg"></i></Badge>
                                     </Stack>
                                 </td>
                             </> :
                             <>
-                                <td >{variant.name}</td>
+                                <td>{variant.name}</td>
                                 <td style={{ width: '80%' }}>{variant.description}
-                                    <Stack gap={1} direction="horizontal" className="float-end ">
+                                    <Stack gap={1} direction="horizontal" className="float-end">
                                         {editVariant === null &&
-                                            <Badge bg="primary" className='btn' onClick={() => setEditVariant({ ...variant })}><i className="bi bi-pencil-square"></i></Badge>}
+                                            <Badge bg="secondary" className='btn' onClick={() => setEditVariant({ ...variant })}><i className="bi bi-pencil-square"></i></Badge>}
                                     </Stack>
                                 </td>
                             </>
@@ -128,7 +130,7 @@ export const Variants: React.FC = () => {
                 </Row>
                 <Row>
                     <Col xs={8}>
-                        <Table hover size='sm' className="table-fixed table-responsive" style={{ width: '100%' }}>
+                        <Table hover size='sm' className="table-fixed table-responsive variant-table" style={{ width: '100%' }}>
                             <thead>
                                 <tr>
                                     <th style={{ minWidth: '20%' }}>Name</th>
