@@ -122,6 +122,10 @@ export const Variants: React.FC = () => {
         f => featureFilter.indexOf(f) === -1
     )
 
+    let checkOutVariant = () => {
+        CommunicationService.getInstance().checkOutVariant(appState.repository, selectedVariant);
+    }
+
     return (
         <Container className="main d-flex pt-4 justify-content-center">
             <Col>
@@ -137,7 +141,7 @@ export const Variants: React.FC = () => {
                                     <th style={{ minWidth: '80%' }}>Description</th>
                                 </tr>
                             </thead>
-                            <tbody style={{height: "40vh"}}>
+                            <tbody style={{ height: "40vh" }}>
                                 {filteredVariants}
                             </tbody>
                         </Table>
@@ -181,19 +185,21 @@ export const Variants: React.FC = () => {
                                 {featureFilter.length > 0 ? <Button variant="outline-primary" onClick={() => setFeatureFilter([])}><i className="bi bi-x"></i></Button> : null}
                             </InputGroup>
                         </Row>
+                        <Row>
+                            <Col xs={6} />
+                            <Col xs={6}>
+                                <Button className="w-100" onClick={checkOutVariant}>Checkout Variant</Button>
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
                 {selectedVariant != null &&
-                    <>
-                        <Row>
-                            <Features variant={selectedVariant} />
-                            <Col xs={3} className="mr-auto mb-3">
-                                <h5>Associations</h5>
-                            </Col>
-                        </Row>
-                        <Row className="my-4 float-end"><Button className="w-100">Checkout Variant</Button>
-                        </Row>
-                    </>
+                    <Row>
+                        <Features variant={selectedVariant} />
+                        <Col xs={3} className="mr-auto mb-3">
+                            <h5>Associations</h5>
+                        </Col>
+                    </Row>
                 }
             </Col >
         </Container >

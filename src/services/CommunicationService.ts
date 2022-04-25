@@ -111,7 +111,7 @@ export class CommunicationService {
     // Variants ========================================================================================
     public createVariant(repository: RepositoryModel, name: string, description: string, configuration: string): Promise<any> {
         let config = new RequestConfig();
-        let body = {configuration: configuration, description: description}
+        let body = { configuration: configuration, description: description }
         config.headers = {
             'Content-Type': 'application/json',
         };
@@ -129,7 +129,7 @@ export class CommunicationService {
     }
 
     public updateVariant(repository: RepositoryModel, variant: VariantModel): Promise<any> {
-        let body = {name: variant.name, description: variant.description}
+        let body = { name: variant.name, description: variant.description }
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'application/json',
@@ -139,6 +139,22 @@ export class CommunicationService {
             body
         )
     }
+
+    public checkOutVariant(repository: RepositoryModel, variant: VariantModel) {
+        axios({
+            url: `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/checkout`,
+            method: 'GET',
+            responseType: 'blob', // important
+        }).then((response: any) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'checkout.zip'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        });
+    }
+
     // Variants / Features ========================================================================================
     public variantAddFeature(repository: RepositoryModel, variant: VariantModel, feature: FeatureModel): Promise<any> {
         return axios.put(
