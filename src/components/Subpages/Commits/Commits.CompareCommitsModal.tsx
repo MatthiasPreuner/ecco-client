@@ -76,11 +76,6 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
           <Modal.Body>
             <Table size="sm">
               <thead>
-             {/*    <tr>
-                  <td></td>
-                  <td>Commit:</td>
-                  <td>Commit:</td>
-                </tr> */}
                 <tr>
                   <td>Condition</td>
                   <td>{props.commits[0].commitMessage}</td>
@@ -88,7 +83,6 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
                 </tr>
               </thead>
               <tbody>
-
                 {compareRows.map((r, i) => {
                   return (
                     <tr key={i}>
@@ -98,11 +92,7 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
                     </tr>
                   )
                 })}
-
               </tbody>
-
-
-
             </Table>
           </Modal.Body>
           <Modal.Footer>

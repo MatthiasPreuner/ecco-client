@@ -70,10 +70,8 @@ export const CreateVariant: React.FC = () => {
   };
 
   let config = features.filter(ft => ft.enabled).map(ft => ft.name + '.' + ft.version).join(', ');
-
   let nameIsValid = () => name.length > 0 &&  appState.repository.variants.filter(v => v.name.toLowerCase() === name.toLowerCase()).length < 1;
 
-  console.log(nameIsValid())
   return (
     <>
       <Button variant="primary" className="w-100" disabled={appState.repository.features.length === 0} onClick={handleShow}>Create Variant</Button>
