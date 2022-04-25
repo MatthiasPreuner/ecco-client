@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 import { Container, Col, Row, InputGroup, FormControl, Button, ListGroup } from 'react-bootstrap';
 
@@ -12,6 +13,8 @@ export const Feature: React.FC = () => {
     const [appState, setAppState] = useSharedState();
     const [featureFilterText, setFeatureFilterText] = useState<string>("");
     const [tmpCurrentFeature, setTmpCurrentFeature] = useState<FeatureModel>(null);
+
+    const navigate = useNavigate();
 
     const getCurrentFeatureExpression = (): JSX.Element[] => {
         return appState.repository?.features.map((feature: FeatureModel, i) => {
@@ -27,7 +30,11 @@ export const Feature: React.FC = () => {
     let features = getCurrentFeatureExpression();
 
     useEffect(() => {
-        setTmpCurrentFeature(appState.repository.features.find(f => f.id === tmpCurrentFeature?.id)) // update, when new repository is received after changing smtg
+        if (appState.repository === null) {
+            navigate(`/`)
+        } else {
+            setTmpCurrentFeature(appState.repository.features.find(f => f.id === tmpCurrentFeature?.id)) // update, when new repository is received after changing smtg
+        }
     }, [appState.repository]);
 
     return (
@@ -54,9 +61,9 @@ export const Feature: React.FC = () => {
                                     <ListGroup className="features-list-group">
                                         {appState.repository.features.length == 0 ?
                                             <p>This Repository has no Features yet. Features are added with new Commits.</p> :
-                                            features.length == 0 ? 
-                                            <p>Please consider using a different feature condition. There are no results.</p> :
-                                            features}
+                                            features.length == 0 ?
+                                                <p>Please consider using a different feature condition. There are no results.</p> :
+                                                features}
                                     </ListGroup>
                                 </Col>
                             </Row>

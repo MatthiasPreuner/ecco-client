@@ -2,6 +2,7 @@ import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
 import { useState, useEffect } from "react";
 import { CreateVariant } from "./Variants.CreateVariantModal";
+import { useNavigate } from 'react-router-dom';
 
 import { Container, Col, Row, InputGroup, Table, Button, DropdownButton, Dropdown, FormControl, Badge, Stack } from 'react-bootstrap';
 
@@ -12,7 +13,6 @@ import { Features } from "./Variants.Feature";
 import { CommunicationService } from "../../../services/CommunicationService";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 
-
 export const Variants: React.FC = () => {
 
     const [appState, setAppState] = useSharedState();
@@ -21,8 +21,14 @@ export const Variants: React.FC = () => {
     const [featureFilter, setFeatureFilter] = useState<FeatureModel[]>([]);
     const [editVariant, setEditVariant] = useState<VariantModel>(null);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-        setSelectedVariant(appState.repository.variants.find(v => v.id === selectedVariant?.id)) // update, when new repository is received after changing smtg
+        if (appState.repository === null) {
+            navigate(`/`)
+        } else {
+            setSelectedVariant(appState.repository.variants.find(v => v.id === selectedVariant?.id)) // update, when new repository is received after changing smtg
+        }
     }, [appState.repository]);
 
     const updateVariant = () => {
@@ -53,7 +59,7 @@ export const Variants: React.FC = () => {
 
         var filteredByFeatures = appState.repository?.variants.filter(vari => featureFilter.map(f => f.name).every(e => vari.configuration.featureRevisions.map(r => r.featureRevisionString.split('.')[0]).includes(e)));
 
-        return filteredByFeatures.filter(variant => variant.name?.toLowerCase().includes(variantFilterText.toLowerCase()))
+        return filteredByFeatures?.filter(variant => variant.name?.toLowerCase().includes(variantFilterText.toLowerCase()))
             .map((variant: VariantModel, i) => {
                 return (
                     <tr onClick={() => editVariant === null && setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
@@ -79,8 +85,8 @@ export const Variants: React.FC = () => {
                                                 onChange={changeDescription}
                                             />
                                         </InputGroup>
-                                        <Badge bg="primary" className='btn' onClick={() => updateVariant()}><i className="bi bi-check-lg"></i></Badge>
-                                        <Badge bg="primary" className='btn' onClick={() => setEditVariant(null)}><i className="bi bi-x-lg"></i></Badge>
+                                        <Badge key={0} bg="primary" className='btn' onClick={() => updateVariant()}><i className="bi bi-check-lg"></i></Badge>
+                                        <Badge key={1} bg="primary" className='btn' onClick={() => setEditVariant(null)}><i className="bi bi-x-lg"></i></Badge>
                                     </Stack>
                                 </td>
                             </> :
@@ -110,7 +116,7 @@ export const Variants: React.FC = () => {
         setFeatureFilter([...featureFilter].filter(f => f !== feature));
     }
 
-    let featureFilterDropdown = appState.repository.features.filter(
+    let featureFilterDropdown = appState.repository?.features.filter(
         f => featureFilter.indexOf(f) === -1
     )
 
@@ -155,7 +161,7 @@ export const Variants: React.FC = () => {
                         <Row>
                             <InputGroup className="mb-3">
                                 <DropdownButton bsPrefix="dropdown-toggle btn btn-custom-color dropdown-btn" style={{ border: '1px solid #ced4da' }} disabled={featureFilterDropdown.length === 0} title="">
-                                    {featureFilterDropdown.map((feature, i) => {
+                                    {featureFilterDropdown?.map((feature, i) => {
                                         return (
                                             <Dropdown.Item key={i} onClick={() => addFeatureFilter(feature)}>{feature.name}</Dropdown.Item>
                                         )
