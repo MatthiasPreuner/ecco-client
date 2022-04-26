@@ -1,13 +1,11 @@
 import * as React from "react";
-import { useEffect } from "react";
+//import { useEffect } from "react";
 import { AppState, useSharedState } from "../states/AppState";
-import { CommunicationService } from "../services/CommunicationService";
-
 import { useNavigate } from 'react-router-dom';
 
+import { Card, Row, Button } from 'react-bootstrap';
 
-
-import { Card, Row } from 'react-bootstrap';
+//import { CommunicationService } from "../services/CommunicationService";
 
 export const Overview: React.FC = () => {
 
@@ -15,10 +13,7 @@ export const Overview: React.FC = () => {
     const navigate = useNavigate();
 
     let logout = () => {
-        setAppState((prevState: AppState) => ({
-            ...prevState,
-            userIsLoggedIn: false
-        }));
+        setAppState((prevState: AppState) => ({ ...prevState, userIsLoggedIn: false }));
     }
 
     let cards = ['Repositories', 'Features', 'Commits', 'Variants'];
@@ -46,7 +41,7 @@ export const Overview: React.FC = () => {
             }
 
             <Row>
-                <p>TODO ADD LOGOUT Button</p>
+                <Button onClick={logout}>Logout</Button>
             </Row>
 
         </>
