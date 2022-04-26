@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useDropzone, FileWithPath } from 'react-dropzone'
+import { FileWithPath } from 'react-dropzone'
 import { useState, useEffect } from "react";
-import { AppState, useSharedState } from "../../../states/AppState";
+import { useSharedState } from "../../../states/AppState";
 
 import { Col, Row, Form, Button, InputGroup } from 'react-bootstrap';
 import { CommitFeature } from "./Commits.MakeCommitModal"
@@ -80,16 +80,11 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
     let config = configFeatures.filter(ft => ft.enabled).concat(manualFeatures.filter(ft => ft.name !== '')).map(ft => (ft.enabled ? '' : '-') + ft.name + '.' + ft.revision).join(', ')
     props.setConfigString(config);
 
-    /* useEffect(() => {
-        props.setConfigString(config);
-    }, []); */
-
     let removeManualFeature = (i: number) => {
         var tmpManualFeatures = [...manualFeatures]
         tmpManualFeatures.splice(i, 1) // remove inplace
         setManualFeatures(tmpManualFeatures);
     }
-
     
     return (
         <Row style={{ height: '40vh', overflowY: 'scroll', marginRight: '0px' }}>

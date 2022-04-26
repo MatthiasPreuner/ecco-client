@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AppState, useSharedState } from "../../../states/AppState";
+import { useSharedState } from "../../../states/AppState";
 import { useEffect, useState } from "react";
 import { FeatureModel } from "../../../model/FeatureModel";
 import { CommunicationService } from "../../../services/CommunicationService";
@@ -59,8 +59,8 @@ export const FeatureDetail: React.FC<DetailViewProps> = ({ currentSelectedFeatur
 
     const changeFeatureDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         event.persist();
-        setSuccessButtonDisabled(selectedFeature.description == event.target.value)
-        setResetButtonDisabled(selectedFeature.description == event.target.value)
+        setSuccessButtonDisabled(selectedFeature.description === event.target.value)
+        setResetButtonDisabled(selectedFeature.description === event.target.value)
         setTmpFeatureDescription(event.target.value);
     }
 

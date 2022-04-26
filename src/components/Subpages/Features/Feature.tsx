@@ -59,9 +59,9 @@ export const Feature: React.FC = () => {
                             <Row className="my-4">
                                 <Col>
                                     <ListGroup style={{ maxHeight: 'calc(100vh - 250px)' }}>
-                                        {appState.repository.features.length == 0 ?
+                                        {appState.repository.features.length === 0 ?
                                             <p>This Repository has no Features yet. Features are added with new Commits.</p> :
-                                            features.length == 0 ?
+                                            features.length === 0 ?
                                                 <p>Please consider using a different filter condition. There are no results.</p> :
                                                 features}
                                     </ListGroup>

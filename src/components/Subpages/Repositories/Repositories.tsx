@@ -28,7 +28,7 @@ export const Repositories: React.FC = () => {
         } else {
             refresh();
         }
-    }, []);
+    }, [appState.userIsLoggedIn]);
 
     let refresh = () => {
         CommunicationService.getInstance().getAllRepositories().then((apiData: RepositoryHeaderResponse) => {
@@ -52,7 +52,7 @@ export const Repositories: React.FC = () => {
         return appState.availableRepositories?.map((repository: RepositoryHeaderModel, i) => {
             if (repository.name.toLowerCase().includes(repositoryFilterText.toLowerCase())) {
                 return (
-                    <ListGroup.Item key={i} action active={repository === selectedRepo} onClick={() => setSelectedRepo(repository)}>{repository.rid == appState.repository?.rid && <i className="bi bi-dot"></i>} {repository.name}</ListGroup.Item>
+                    <ListGroup.Item key={i} action active={repository === selectedRepo} onClick={() => setSelectedRepo(repository)}>{repository.rid === appState.repository?.rid && <i className="bi bi-dot"></i>} {repository.name}</ListGroup.Item>
                 );
             }
         }).filter((singleJSXElement: JSX.Element) => {
@@ -83,9 +83,9 @@ export const Repositories: React.FC = () => {
                         </Row>
 
                         <ListGroup className="my-4" style={{ maxHeight: 'calc(100vh - 250px)' }}>
-                            {appState.availableRepositories.length == 0 ?
+                            {appState.availableRepositories.length === 0 ?
                                 <p>There are no Repositories yet.</p> :
-                                repositories.length == 0 ?
+                                repositories.length === 0 ?
                                     <p>Please consider using a different filter condition. There are no results.</p> :
                                     repositories}
                         </ListGroup>

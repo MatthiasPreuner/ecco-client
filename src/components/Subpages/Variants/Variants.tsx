@@ -31,7 +31,7 @@ export const Variants: React.FC = () => {
         } else {
             setSelectedVariant(appState.repository.variants.find(v => v.id === selectedVariant?.id)) // update, when new repository is received after changing smtg
         }
-    }, [appState.repository]);
+    }, [appState.repository, appState.userIsLoggedIn, selectedVariant, navigate]);
 
     const updateVariant = () => {
         CommunicationService.getInstance().updateVariant(appState.repository, editVariant).then((apiData: RepositoryResponse) => {

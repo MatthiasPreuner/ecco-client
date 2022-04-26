@@ -2,10 +2,9 @@ import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
 import { useState } from "react";
 
-import { Col, Row, Form, Button, Modal, InputGroup, Table } from 'react-bootstrap';
+import { Col, Button, Modal, Table } from 'react-bootstrap';
 
 import { CommitModel } from "../../../model/CommitModel";
-import { Commits } from "./Commits";
 
 export interface CommitFeature {
   enabled: boolean,
@@ -16,7 +15,6 @@ export interface CommitFeature {
 export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
 
   const [show, setShow] = useState(false);
-  const [validated, setValidated] = useState(false);
 
   const handleClose = () => {
     setShow(false);
@@ -52,9 +50,6 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
   }
 
   const compareRows = compare();
-
-
-  const [appState, setAppState] = useSharedState();
 
   return (
     <>
