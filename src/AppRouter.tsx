@@ -42,14 +42,18 @@ export const AppRouter: React.FC = () => {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link as={Link} to="/">Home</Nav.Link>
-                            <Nav.Link as={Link} to="features" disabled={appState.repository === null}>Features</Nav.Link>
-                            <Nav.Link as={Link} to="commits" disabled={appState.repository === null}>Commits</Nav.Link>
-                            <Nav.Link as={Link} to="variants" disabled={appState.repository === null}>Variants</Nav.Link>
-                            {/*  <Nav.Link as={Link} to="artifacts" disabled={!appState.eccoServiceIsInitialized}>Artif acts</Nav.Link>
-                            <Nav.Link as={Link} to="associations" disabled={!appState.eccoServiceIsInitialized}>Associations</Nav.Link> */}
+                            {appState.userIsLoggedIn && appState.repository !== null &&
+                                <>
+                                    <Nav.Link as={Link} to="features" disabled={appState.repository === null}>Features</Nav.Link>
+                                    <Nav.Link as={Link} to="commits" disabled={appState.repository === null}>Commits</Nav.Link>
+                                    <Nav.Link as={Link} to="variants" disabled={appState.repository === null}>Variants</Nav.Link>
+                                    {/*    <Nav.Link as={Link} to="artifacts" disabled={!appState.eccoServiceIsInitialized}>Artif acts</Nav.Link>
+                                    <Nav.Link as={Link} to="associations" disabled={!appState.eccoServiceIsInitialized}>Associations</Nav.Link> */}
+                                </>
+                            }
                         </Nav>
                         <Nav>
-                            {appState.repository != null && appState.userIsLoggedIn &&
+                            {appState.userIsLoggedIn && appState.repository !== null &&
                                 <NavDropdown title={'Repository: ' + appState.repository.name} id="basic-nav-dropdown">
                                     {appState.availableRepositories.filter(e => e.name !== appState.repository.name).map((element, i) => {
                                         return (
@@ -77,7 +81,7 @@ export const AppRouter: React.FC = () => {
                 <Route path="/features" element={<Feature />} />
                 <Route path="/repositories" element={<Repositories />} />
                 <Route path="/commits" element={<Commits />} />
-                {/*                 <Route path="/artifacts" element={<Artifact />} />
+                {/* <Route path="/artifacts" element={<Artifact />} />
                 <Route path="/associations" element={<Association />} /> */}
                 <Route path="/variants" element={<Variants />} />
             </Routes>
