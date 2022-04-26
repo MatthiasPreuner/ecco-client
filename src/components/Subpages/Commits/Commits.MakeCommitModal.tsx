@@ -8,6 +8,7 @@ import { CommunicationService } from "../../../services/CommunicationService";
 import { Col, Row, Form, Button, Modal, InputGroup } from 'react-bootstrap';
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 import { FeatureRow } from "./Commits.MakeCommitModal.FeatureRow";
+import { FileTreeView } from "./Commits.MakeCommitModal.FileTreeView";
 
 export interface CommitFeature {
   enabled: boolean,
@@ -39,6 +40,7 @@ export const MakeCommit: React.FC = () => {
   const [tmpAcceptedFiles, setTmpAcceptedFiles] = useState<Map<String, FileWithPath>>(new Map<String, FileWithPath>());
   const [configFile, setConfigFile] = useState<FileWithPath>(undefined);
   const [commitMessage, setCommitMessage] = useState<string>('');
+  const [choosenFiles, setChoosenFiles] = useState<Array<FileWithPath>>(new Array<FileWithPath>());
 
   const reader = new FileReader();
 
@@ -95,7 +97,7 @@ export const MakeCommit: React.FC = () => {
       }
     })
     console.log("allFiles:")
-    console.log(allFiles )
+    console.log(allFiles)
     setTmpAcceptedFiles(allFiles);
   }, []);
 
@@ -126,9 +128,9 @@ export const MakeCommit: React.FC = () => {
 
     event.preventDefault();
     event.stopPropagation();
- 
+
     if (form.checkValidity() && tmpAcceptedFiles.size !== 0 && config.length !== 0) {
-      CommunicationService.getInstance().makeCommit(appState.repository, commitMessage, config, Array.from(tmpAcceptedFiles.values())).
+      CommunicationService.getInstance().makeCommit(appState.repository, commitMessage, config, choosenFiles).
         then((apiData: RepositoryResponse) => {
           console.log(apiData.data);
           setAppState((previousState) => ({
@@ -151,7 +153,6 @@ export const MakeCommit: React.FC = () => {
 
   let config = configFeatures?.filter(ft => ft.enabled).concat(manualFeatures.filter(ft => ft.name !== '')).map(ft => (ft.enabled ? '' : '-') + ft.name + '.' + ft.revision).join(', ')
 
-  
 
   let removeFile = (file: FileWithPath) => {
     // TODO remove properly :D even necessary???
@@ -174,6 +175,8 @@ export const MakeCommit: React.FC = () => {
     tmpManualFeatures.splice(i, 1) // remove inplace
     setManualFeatures(tmpManualFeatures);
   }
+
+  const onlyFiles: FileWithPath[] = Array.from(tmpAcceptedFiles.values());
 
   const files = Array.from(tmpAcceptedFiles.values()).map((file: FileWithPath) => (
     <li key={file.name} className='pb-1'>
@@ -198,69 +201,71 @@ export const MakeCommit: React.FC = () => {
         </Modal.Header>
         <Form validated={validated} onSubmit={handleSubmit}>
           <Modal.Body>
-           {/*    <div id={"zipfilesucessalert"} className="alert alert-success alert-dismissible ecco-alert fade" role="alert">
+            {/*    <div id={"zipfilesucessalert"} className="alert alert-success alert-dismissible ecco-alert fade" role="alert">
                 The files are sucessfully committed into the Repository!
                 <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div> */}
-              <Row className="mb-3" {...getRootProps()} >
-                <input {...getInputProps()} />
-                <Col className={"mx-2 d-flex rounded align-items-center align-content-center justify-content-around drop-zone " + (isDragActive ? "drop-zone-active" : "")}                                     >
-                  {
-                    isDragActive ?
-                      <p className="m-0">Drop the files here ...</p> :
-                      <p className="m-0">Drag 'n' drop some files or folders here, or click to select files</p>
-                  }
-                </Col>
-              </Row>
-              <Row style={{ minHeight: "45vh" }}>
-                <Col xs={6}>
-                  <Row>
-                    <Col xs={8}><h4 className="mb-0">Files</h4></Col>
-                    <Col xs={4}>
-                      {(tmpAcceptedFiles.size === 0) ?
-                        <Button variant='light' style={{ width: '100%' }} size='sm' disabled>no Files selected</Button> :
-                        <Button variant='danger' style={{ width: '100%' }} size='sm' onClick={removeAllFiles} disabled={tmpAcceptedFiles.size < 1}>Remove all files</Button>}
-                    </Col>
-                  </Row>
-                  <Row className="mb-2">
-                    <Form.Group>
-                      <Form.Control isInvalid={tmpAcceptedFiles.size === 0} isValid={tmpAcceptedFiles.size > 0} type="hidden" />
-                      <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                      <Form.Control.Feedback type="invalid">At least one File needs to be selected!</Form.Control.Feedback>
-                    </Form.Group>
-                  </Row>
-                  <Row>
-                    <ul style={{ listStyleType: "none" }}>{files}</ul>
-                  </Row>
-                </Col>
-                <Col xs={6}>
-                  <Row>
-                    <Col xs={8}><h4 className="mb-0">Features</h4></Col>
-                    <Col xs={4}>
-                      {(configFile == null) ?
-                        <Button variant='light' style={{ width: '100%' }} size='sm' disabled>.config not found</Button> :
-                        <Button variant='danger' style={{ width: '100%' }} size='sm' onClick={removeConfigFile} disabled={configFile == null}>Remove Config File</Button>}
-                    </Col>
-                  </Row>
-                  <Row className="mb-2">
-                    <Form.Group>
-                      <Form.Control isInvalid={config?.length === 0} isValid={config?.length > 0} type="hidden" />
-                      <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                      <Form.Control.Feedback type="invalid">Please select at least one Feature</Form.Control.Feedback>
-                    </Form.Group>
-                  </Row>
-                  <FeatureRow configFile={configFile} setConfigString={setConfigString} />
-                </Col>
-              </Row >
-              <Form.Group className="mb-1" key={3}>
-                <Form.Label>Configuration</Form.Label>
-                <Form.Control type="text" disabled value={configString} readOnly />
-              </Form.Group>
-              <Form.Group>
-                <Form.Control as="textarea" required rows={1} type="text" placeholder="Commit Message" value={commitMessage} onChange={e => setCommitMessage(e.target.value)} />
-              </Form.Group>
+            <Row className="mb-3" {...getRootProps()} >
+              <input {...getInputProps()} />
+              <Col className={"mx-2 d-flex rounded align-items-center align-content-center justify-content-around drop-zone " + (isDragActive ? "drop-zone-active" : "")}                                     >
+                {
+                  isDragActive ?
+                    <p className="m-0">Drop the files here ...</p> :
+                    <p className="m-0">Drag 'n' drop some files or folders here, or click to select files</p>
+                }
+              </Col>
+            </Row>
+            <Row style={{ minHeight: "45vh" }}>
+              <Col xs={6}>
+                <Row>
+                  <Col xs={8}><h4 className="mb-0">Files</h4></Col>
+                  <Col xs={4}>
+                    {(tmpAcceptedFiles.size === 0) ?
+                      <Button variant='light' style={{ width: '100%' }} size='sm' disabled>no Files selected</Button> :
+                      <Button variant='danger' style={{ width: '100%' }} size='sm' onClick={removeAllFiles} disabled={tmpAcceptedFiles.size < 1}>Remove all files</Button>}
+                  </Col>
+                </Row>
+                <Row className="mb-2">
+                  <Form.Group>
+                    <Form.Control isInvalid={tmpAcceptedFiles.size === 0} isValid={tmpAcceptedFiles.size > 0} type="hidden" />
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">At least one File needs to be selected!</Form.Control.Feedback>
+                  </Form.Group>
+                </Row>
+                <Row>
+                  <FileTreeView files={Array.from(tmpAcceptedFiles.values())} onChange={files => setChoosenFiles(files)} />
+                  <p>{choosenFiles.length}</p>
+                  {/* <ul style={{ listStyleType: "none" }}>{files}</ul> */}
+                </Row>
+              </Col>
+              <Col xs={6}>
+                <Row>
+                  <Col xs={8}><h4 className="mb-0">Features</h4></Col>
+                  <Col xs={4}>
+                    {(configFile == null) ?
+                      <Button variant='light' style={{ width: '100%' }} size='sm' disabled>.config not found</Button> :
+                      <Button variant='danger' style={{ width: '100%' }} size='sm' onClick={removeConfigFile} disabled={configFile == null}>Remove Config File</Button>}
+                  </Col>
+                </Row>
+                <Row className="mb-2">
+                  <Form.Group>
+                    <Form.Control isInvalid={config?.length === 0} isValid={config?.length > 0} type="hidden" />
+                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Please select at least one Feature</Form.Control.Feedback>
+                  </Form.Group>
+                </Row>
+                <FeatureRow configFile={configFile} setConfigString={setConfigString} />
+              </Col>
+            </Row >
+            <Form.Group className="mb-1" key={3}>
+              <Form.Label>Configuration</Form.Label>
+              <Form.Control type="text" disabled value={configString} readOnly />
+            </Form.Group>
+            <Form.Group>
+              <Form.Control as="textarea" required rows={1} type="text" placeholder="Commit Message" value={commitMessage} onChange={e => setCommitMessage(e.target.value)} />
+            </Form.Group>
           </Modal.Body>
           <Modal.Footer>
             <Col className="d-flex justify-content-between align-items-center">
