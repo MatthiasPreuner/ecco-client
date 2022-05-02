@@ -4,6 +4,11 @@
     text-align: center;
 }
 
+.nav-item>.dropdown-menu {
+    overflow-y: auto;
+    max-height: 50vh;
+}
+
 // list group with scrolling
 .list-group {
     margin-bottom: 10px;

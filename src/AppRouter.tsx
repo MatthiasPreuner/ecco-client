@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import { AppState, useSharedState } from "./states/AppState";
 import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
 import { Nav, Navbar, Container, NavDropdown } from 'react-bootstrap';
@@ -18,6 +19,7 @@ import { RepositoryResponse } from "./model/RepositoryResponse";
 export const AppRouter: React.FC = () => {
 
     const [appState, setAppState] = useSharedState();
+    const [expanded, setExpanded] = useState(false);
 
     let logout = () => {
         setAppState((prevState: AppState) => ({
@@ -31,22 +33,23 @@ export const AppRouter: React.FC = () => {
         CommunicationService.getInstance().getRepository(repo).then((apiData: RepositoryResponse) => {
             setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
         });
+        setExpanded(false);
     }
 
     return (
         <BrowserRouter>
-            <Navbar bg="light" expand="lg" fixed="top">
+            <Navbar bg="light" expand="lg" fixed="top" expanded={expanded}>
                 <Container>
                     <Navbar.Brand href="/">EccoHub</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : true)} />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link as={Link} to="/">Home</Nav.Link>
+                            {appState.userIsLoggedIn && <Nav.Link onClick={() => setExpanded(false)} as={Link} to="/">Home</Nav.Link>}
                             {appState.userIsLoggedIn && appState.repository !== null &&
                                 <>
-                                    <Nav.Link as={Link} to="features" disabled={appState.repository === null}>Features</Nav.Link>
-                                    <Nav.Link as={Link} to="commits" disabled={appState.repository === null}>Commits</Nav.Link>
-                                    <Nav.Link as={Link} to="variants" disabled={appState.repository === null}>Variants</Nav.Link>
+                                    <Nav.Link onClick={() => setExpanded(false)} data-bs-target=".navbar-collapse.show" as={Link} to="features" disabled={appState.repository === null}>Features</Nav.Link>
+                                    <Nav.Link onClick={() => setExpanded(false)} as={Link} to="commits" disabled={appState.repository === null}>Commits</Nav.Link>
+                                    <Nav.Link onClick={() => setExpanded(false)} as={Link} to="variants" disabled={appState.repository === null}>Variants</Nav.Link>
                                     {/*    <Nav.Link as={Link} to="artifacts" disabled={!appState.eccoServiceIsInitialized}>Artif acts</Nav.Link>
                                     <Nav.Link as={Link} to="associations" disabled={!appState.eccoServiceIsInitialized}>Associations</Nav.Link> */}
                                 </>
@@ -54,7 +57,7 @@ export const AppRouter: React.FC = () => {
                         </Nav>
                         <Nav>
                             {appState.userIsLoggedIn && appState.repository !== null &&
-                                <NavDropdown title={'Repository: ' + appState.repository.name} id="basic-nav-dropdown">
+                                <NavDropdown title={'Repository: ' + appState.repository.name} id="basic-nav-dropdown" >
                                     {appState.availableRepositories.filter(e => e.name !== appState.repository.name).map((element, i) => {
                                         return (
                                             <NavDropdown.Item key={i} onClick={() => chooseRepo(element)}>{element.name}</NavDropdown.Item>
@@ -62,12 +65,12 @@ export const AppRouter: React.FC = () => {
                                     })
                                     }
                                     {(appState.availableRepositories.length > 1) && < NavDropdown.Divider />}
-                                    <NavDropdown.Item as={Link} to="repositories">Repository Settings</NavDropdown.Item>
+                                    <NavDropdown.Item onClick={() => setExpanded(false)} as={Link} to="repositories">Repository Settings</NavDropdown.Item>
                                 </NavDropdown>
                             }
                             {appState.userIsLoggedIn ?
                                 <NavDropdown title={"User Name"} id="basic-nav-dropdown">
-                                    <NavDropdown.Item as={Link} to="">Account TODO</NavDropdown.Item>
+                                    <NavDropdown.Item onClick={() => setExpanded(false)} as={Link} to="">Account TODO</NavDropdown.Item>
                                     <NavDropdown.Divider />
                                     <NavDropdown.Item as={Link} to="/" onClick={logout}>Logout</NavDropdown.Item>
                                 </NavDropdown> : null
