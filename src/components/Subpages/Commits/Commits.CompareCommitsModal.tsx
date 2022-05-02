@@ -2,7 +2,7 @@ import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
 import { useState } from "react";
 
-import { Col, Button, Modal, Table } from 'react-bootstrap';
+import { Col, Button, Modal, Table, Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 import { CommitModel } from "../../../model/CommitModel";
 
@@ -53,8 +53,15 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
 
   return (
     <>
-      <Button className="w-100" onClick={handleShow} disabled={props.commits[1] === null} >Compare</Button>
-
+      <OverlayTrigger
+        placement="left"
+        delay={{ show: 250, hide: 400 }}
+        overlay={  <Tooltip id="tooltip-disabled">Hold CTRL to select 2 Commits</Tooltip>}
+      >
+        <span className="d-inline-block" style={{padding: '0px'}}>
+          <Button className="w-100" onClick={handleShow} disabled={props.commits[1] === null}>Compare</Button>
+        </span>
+      </OverlayTrigger>
 
       {props.commits[1] !== null &&
         <Modal
