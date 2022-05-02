@@ -44,7 +44,7 @@ export class FileTreeView extends React.Component<IProps, IState> {
         folderIndex = -1; // for unique folder values
         let root: Node[] = [{
             value: (folderIndex--).toString(),
-            label: 'Root',
+            label: 'Root Folder',
             children: [],
         }];
 
@@ -52,6 +52,9 @@ export class FileTreeView extends React.Component<IProps, IState> {
 
         files.forEach((f, idx) => {
             let path = f.path.substring(1) // remove starting '/'
+
+            root[0].label = path.substring(0, path.indexOf('/')) // set root label (only needed once)
+
             path = path.substring(path.indexOf('/') + 1) // remove root folder
             this.addPathToNode(root[0], f.name, idx, path)
         })
@@ -129,28 +132,31 @@ export class FileTreeView extends React.Component<IProps, IState> {
     }
 
     render() {
-
-        return (
-            <CheckboxTree
-                nodes={this.state.nodes}
-                checked={this.state.checked}
-                expanded={this.state.expanded}
-                onCheck={checked => this.onCheck(checked)}
-                onExpand={expanded => this.setState({ expanded })}
-                icons={{
-                    check: <i className="bi bi-check-square-fill" />,
-                    uncheck: <i className="bi bi-square"></i>,
-                    halfCheck: <i className="bi bi-check-square" />,
-                    expandClose: <i className="bi bi-caret-right-fill"></i>,
-                    expandOpen: <i className="bi bi-caret-down-fill"></i>,
-                    expandAll: <span className="rct-icon rct-icon-expand-all" />,
-                    collapseAll: <span className="rct-icon rct-icon-collapse-all" />,
-                    parentClose: <i className="bi bi-folder"></i>,
-                    parentOpen: <i className="bi bi-folder2-open"></i>,
-                    leaf: <i className="bi bi-file-earmark" />,
-                }}
-                showExpandAll
-            />
-        );
+        if (this.props.files?.length > 0) {
+            return (
+                <CheckboxTree
+                    nodes={this.state.nodes}
+                    checked={this.state.checked}
+                    expanded={this.state.expanded}
+                    onCheck={checked => this.onCheck(checked)}
+                    onExpand={expanded => this.setState({ expanded })}
+                    icons={{
+                        check: <i className="bi bi-check-square-fill" />,
+                        uncheck: <i className="bi bi-square" />,
+                        halfCheck: <i className="bi bi-check-square" />,
+                        expandClose: <i className="bi bi-caret-right-fill" />,
+                        expandOpen: <i className="bi bi-caret-down-fill" />,
+                        expandAll: <i className="bi bi-plus-square" />,
+                        collapseAll: <i className="bi bi-dash-square" />,
+                        parentClose: <i className="bi bi-folder" />,
+                        parentOpen: <i className="bi bi-folder2-open" />,
+                        leaf: <i className="bi bi-file-earmark" />,
+                    }}
+                    showExpandAll
+                />
+            );
+        } else {
+            return <></>
+        }
     }
 }

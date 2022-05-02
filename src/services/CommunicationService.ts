@@ -95,7 +95,9 @@ export class CommunicationService {
         let formData = new FormData();
         let config = new RequestConfig();
         acceptedFiles.forEach((tmpFile: FileWithPath) => {
-            formData.append("file", tmpFile, tmpFile.path);
+            let path = tmpFile.path.substring(1) // remove starting '/'
+            path = path.substring(path.indexOf('/')) // remove root folder
+            formData.append("file", tmpFile, path);
         });
         formData.append("message", message)
         formData.append("config", configuration)

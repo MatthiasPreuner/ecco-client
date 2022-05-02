@@ -28,6 +28,7 @@ export const MakeCommit: React.FC = () => {
     setCommitMessage('');
     setShow(false);
     setValidated(false);
+    setChoosenFiles(null);
   }
   const handleShow = () => setShow(true);
 
@@ -37,7 +38,7 @@ export const MakeCommit: React.FC = () => {
 
   const [appState, setAppState] = useSharedState();
 
-  const [tmpAcceptedFiles, setTmpAcceptedFiles] = useState<Map<String, FileWithPath>>(new Map<String, FileWithPath>());
+  const [tmpAcceptedFiles, setTmpAcceptedFiles] = useState<Map<String, FileWithPath>>(new Map<String, FileWithPath>()); // as Map to prevent duplicates, old files will be overwritten
   const [configFile, setConfigFile] = useState<FileWithPath>(undefined);
   const [commitMessage, setCommitMessage] = useState<string>('');
   const [choosenFiles, setChoosenFiles] = useState<Array<FileWithPath>>(new Array<FileWithPath>());
@@ -96,8 +97,6 @@ export const MakeCommit: React.FC = () => {
         allFiles.set(f.path, f);
       }
     })
-    console.log("allFiles:")
-    console.log(allFiles)
     setTmpAcceptedFiles(allFiles);
   }, []);
 
@@ -153,13 +152,6 @@ export const MakeCommit: React.FC = () => {
 
   let config = configFeatures?.filter(ft => ft.enabled).concat(manualFeatures.filter(ft => ft.name !== '')).map(ft => (ft.enabled ? '' : '-') + ft.name + '.' + ft.revision).join(', ')
 
-
-  let removeFile = (file: FileWithPath) => {
-    // TODO remove properly :D even necessary???
-    /*  tmpAcceptedFiles.delete(file.path);
-     setTmpAcceptedFiles(tmpAcceptedFiles); */
-  }
-
   let removeAllFiles = () => {
     setTmpAcceptedFiles(new Map<string, File>());
   }
@@ -169,20 +161,6 @@ export const MakeCommit: React.FC = () => {
     setManualFeatures(initialManualFeatures);
     setConfigFile(undefined);
   }
-
-  let removeManualFeature = (i: number) => {
-    var tmpManualFeatures = [...manualFeatures]
-    tmpManualFeatures.splice(i, 1) // remove inplace
-    setManualFeatures(tmpManualFeatures);
-  }
-
-  const onlyFiles: FileWithPath[] = Array.from(tmpAcceptedFiles.values());
-
-  const files = Array.from(tmpAcceptedFiles.values()).map((file: FileWithPath) => (
-    <li key={file.name} className='pb-1'>
-      <Button onClick={() => removeFile(file)} variant={'danger'} size={'sm'}><i className="bi bi-x"></i></Button> {file.path.substring(file.path.substring(1).indexOf("/") + 2)} - {file.size} bytes
-    </li>
-  ));
 
   return (
     <>
@@ -236,8 +214,6 @@ export const MakeCommit: React.FC = () => {
                 </Row>
                 <Row>
                   <FileTreeView files={Array.from(tmpAcceptedFiles.values())} onChange={files => setChoosenFiles(files)} />
-                  <p>{choosenFiles.length}</p>
-                  {/* <ul style={{ listStyleType: "none" }}>{files}</ul> */}
                 </Row>
               </Col>
               <Col xs={6}>
@@ -251,9 +227,9 @@ export const MakeCommit: React.FC = () => {
                 </Row>
                 <Row className="mb-2">
                   <Form.Group>
-                    <Form.Control isInvalid={config?.length === 0} isValid={config?.length > 0} type="hidden" />
+                    <Form.Control isInvalid={configString?.length === 0} isValid={configString?.length > 0} type="hidden" />
                     <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">Please select at least one Feature</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Please select at least one Feature {configString?.length}</Form.Control.Feedback>
                   </Form.Group>
                 </Row>
                 <FeatureRow configFile={configFile} setConfigString={setConfigString} />
