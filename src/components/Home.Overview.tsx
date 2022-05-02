@@ -3,7 +3,7 @@ import * as React from "react";
 import { AppState, useSharedState } from "../states/AppState";
 import { useNavigate } from 'react-router-dom';
 
-import { Card, Row, Button } from 'react-bootstrap';
+import { Card, Row, Button, Container, CardGroup, Col } from 'react-bootstrap';
 
 //import { CommunicationService } from "../services/CommunicationService";
 
@@ -16,34 +16,42 @@ export const Overview: React.FC = () => {
         setAppState((prevState: AppState) => ({ ...prevState, userIsLoggedIn: false }));
     }
 
-    let cards = ['Repositories', 'Features', 'Commits', 'Variants'];
+    let cards = new Map<string, string>([
+        ['Repositories', 'Create, clone, delete and select repositories.'],
+        ['Features', 'View features and edit feature and feature revision description.'],
+        ['Commits', 'View, compare and make new commits.'],
+        ['Variants', 'View, create, edit and checkout variants.']]);
     return (
         <>
-            {cards.map((name, idx) => (
-
-                <Card
-                    border={'primary'}
-                    key={idx}
-                    text={'dark'}
-                    style={{ width: '18rem', cursor: 'pointer' }}
-                    className="overview-card mb-2 me-5"
-                    onClick={() => navigate(`/${name.toLocaleLowerCase()}`)}
-                >
-                    <Card.Header as='h4'>{name}</Card.Header>
-                    <Card.Body>
-                        <Card.Text>
-                            Some quick example text to build on the card title and make up the bulk
-                            of the card's content. TODO
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-            ))
-            }
-
-            <Row>
-                <Button onClick={logout}>Logout</Button>
-            </Row>
-
+            <Container className="main d-flex pt-4 justify-content-center">
+                <Col>
+                    <Row className="align-items-center" style={{height: '80vh'}}>
+                        {Array.from(cards).map(([name, info], idx) => (
+                            <Col>
+                                <Card
+                                    border={'primary'}
+                                    key={idx}
+                                    text={'dark'}
+                                    style={{ width: '18rem', cursor: 'pointer' }}
+                                    className="overview-card mb-2"
+                                    onClick={() => navigate(`/${name.toLocaleLowerCase()}`)}
+                                >
+                                    <Card.Header as='h4'>{name}</Card.Header>
+                                    <Card.Body>
+                                        <Card.Text>{info}</Card.Text>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        ))
+                        }
+                    </Row>
+                    <Row className="justify-content-md-center">
+                        <Col md="auto">
+                            <Button onClick={logout}>Logout</Button>
+                        </Col>
+                    </Row>
+                </Col>
+            </Container>
         </>
     );
 }
