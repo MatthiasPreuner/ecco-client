@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { Button, Modal, Form } from 'react-bootstrap';
-import { AppState, useSharedState } from "../../../states/AppState";
+import { useSharedState } from "../../../states/AppState";
 
 import { RepositoryHeaderModel } from "../../../model/RepositoryModel";
 import { CommunicationService } from "../../../services/CommunicationService";
