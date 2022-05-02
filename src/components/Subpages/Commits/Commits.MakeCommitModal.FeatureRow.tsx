@@ -3,8 +3,9 @@ import { FileWithPath } from 'react-dropzone'
 import { useState, useEffect } from "react";
 import { useSharedState } from "../../../states/AppState";
 
-import { Col, Row, Form, Button, InputGroup } from 'react-bootstrap';
+import { Col, Row, Form, Button, InputGroup, Badge } from 'react-bootstrap';
 import { CommitFeature } from "./Commits.MakeCommitModal"
+import { maxHeaderSize } from "http";
 
 interface FeatureRowProps {
     configFile: FileWithPath,
@@ -19,15 +20,18 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
         enabled: false,
         name: '',
         revision: 1,
+        availablerevisions: [1]
     } as CommitFeature]
 
     const [manualFeatures, setManualFeatures] = useState<CommitFeature[]>(initialManualFeatures);
 
     const initialConfigFeatures = appState.repository.features.map(f => {
+        let avail = f.revisions.sort((a, b) => Number(a.id) - Number(b.id)).map(r => parseInt(r.id))
         return {
             enabled: false,
             name: f.name,
-            revision: 1
+            revision: Math.max(...avail),
+            availablerevisions: [...avail, Math.max(...avail) + 1]
         } as CommitFeature;
     })
 
@@ -49,6 +53,7 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
                 enabled: !str.startsWith('-'),
                 name: nameversion[0].toUpperCase(),
                 revision: parseInt(nameversion[1]),
+                availablerevisions: [1]
             }
             return feature;
         })
@@ -64,7 +69,6 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
                 newConfigFeatures[index].revision = f.revision;
             } else {
                 newManualFeatures.unshift(f); // add manual feature
-
             }
         })
 
@@ -85,7 +89,7 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
         tmpManualFeatures.splice(i, 1) // remove inplace
         setManualFeatures(tmpManualFeatures);
     }
-    
+
     return (
         <Row style={{ height: '40vh', overflowY: 'scroll', marginRight: '0px' }}>
             <Col>
@@ -101,7 +105,7 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
                                     isInvalid={config.length === 0}
                                     isValid={config.length > 0}
                                     formNoValidate // not working
-                                    
+
                                     onChange={event => {
                                         var newConfigFeatures = [...configFeatures]
                                         newConfigFeatures[i].enabled = !ft.enabled;
@@ -113,16 +117,19 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
                                 {ft.enabled &&
                                     <input
                                         type='number'
-                                        className='form-control form-control-sm no-validation'
-                                        min={1}
-                                        max={999} // TODO current + 1 or skipping enabled?
+                                        className={'form-control form-control-sm no-validation '.concat((ft.revision === Math.max(...ft.availablerevisions)) ? " input-new" : "")}
+                                        min={Math.min(...ft.availablerevisions)}
+                                        max={Math.max(...ft.availablerevisions)}
                                         /*    isInvalid={config.length === 0}
                                            isValid={config.length > 0}  */
                                         value={ft.revision}
                                         disabled={!ft.enabled}
                                         onChange={event => {
                                             var newConfigFeatures = [...configFeatures]
-                                            newConfigFeatures[i].revision = parseInt(event.target.value);
+                                            let oldRevivision = ft.revision
+                                            let oldIndex = ft.availablerevisions.indexOf(oldRevivision)
+                                            let diff = parseInt(event.target.value) - oldRevivision
+                                            newConfigFeatures[i].revision = ft.availablerevisions[oldIndex + diff];
                                             setConfigFeatures(newConfigFeatures);
                                         }}
                                     />}
@@ -144,20 +151,20 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
                             /></Col>
                         <Col xs={9}>
                             <InputGroup>
-                                <input placeholder="Feature Name" type="text" className="form-control no-validation form-control-sm" style={{ marginLeft: '-25px' }}
+                                <input placeholder="Feature Name" type="text" className="form-control no-validation form-control-sm input-new" style={{ marginLeft: '-25px' }}
                                     value={ft.name}
                                     onChange={event => {
                                         var tmpManualFeatures = [...manualFeatures]
                                         // if it was empty before
                                         if (tmpManualFeatures[i].name === '') {
-                                            tmpManualFeatures.push({ enabled: false, name: '', revision: 1 }) // add new empty
+                                            tmpManualFeatures.push({ enabled: false, name: '', revision: 1, availablerevisions: [1] }) // add new empty
                                             tmpManualFeatures[i].enabled = true; // enable self
                                         }
                                         tmpManualFeatures[i].name = event.target.value.toLocaleUpperCase();
                                         // if it is empty now
                                         if (event.target.value === '') {
                                             tmpManualFeatures = tmpManualFeatures.filter(feature => feature.name !== '') // remove all empty
-                                            tmpManualFeatures = [...tmpManualFeatures, { enabled: false, name: '', revision: 1 }] // add new empty
+                                            tmpManualFeatures = [...tmpManualFeatures, { enabled: false, name: '', revision: 1, availablerevisions: [1] }] // add new empty
                                         }
                                         setManualFeatures(tmpManualFeatures);
                                     }} />

@@ -10,8 +10,8 @@ import { FeatureRevisionModel } from "../../../model/FeatureRevisionModel";
 interface VariantFeature {
   enabled: boolean,
   name: string,
-  version: number,
-  revisions: FeatureRevisionModel[]
+  revision: number,
+  availableRevisions: number[]
 }
 
 export const CreateVariant: React.FC = () => {
@@ -23,11 +23,12 @@ export const CreateVariant: React.FC = () => {
   const [validated, setValidated] = useState(false);
 
   const initFeatures = () => appState.repository.features.map(ft => {
+    let avail = ft.revisions.sort((a, b) => Number(a.id) - Number(b.id)).map(r => parseInt(r.id))
     return {
       enabled: false,
       name: ft.name,
-      version: 1,
-      revisions: ft.revisions
+      revision: Math.max(...avail),
+      availableRevisions: avail
     } as VariantFeature
   });
 
@@ -54,7 +55,7 @@ export const CreateVariant: React.FC = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    console.log("valid"+name  + nameIsValid())
+    console.log("valid" + name + nameIsValid())
     console.log(appState.repository.variants.filter(v => v.name === name))
     if (form.checkValidity() === true && nameIsValid()) {
       console.log("creating")
@@ -69,8 +70,8 @@ export const CreateVariant: React.FC = () => {
     setValidated(true);
   };
 
-  let config = features.filter(ft => ft.enabled).map(ft => ft.name + '.' + ft.version).join(', ');
-  let nameIsValid = () => name.length > 0 &&  appState.repository.variants.filter(v => v.name.toLowerCase() === name.toLowerCase()).length < 1;
+  let config = features.filter(ft => ft.enabled).map(ft => ft.name + '.' + ft.revision).join(', ');
+  let nameIsValid = () => name.length > 0 && appState.repository.variants.filter(v => v.name.toLowerCase() === name.toLowerCase()).length < 1;
 
   return (
     <>
@@ -92,8 +93,8 @@ export const CreateVariant: React.FC = () => {
             <Form.Group className='mb-2' key={1}>
               <Form.Label>Name</Form.Label>
               <Form.Control type="text" isInvalid={!nameIsValid()} placeholder="Name" value={name} onChange={e => setName(e.target.value)} required pattern="[A-Za-z0-9_]{1,}" />
-             {/*  isValid={nameIsValid()}  */}
-           {/*    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback> */}
+              {/*  isValid={nameIsValid()}  */}
+              {/*    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback> */}
               {name.length < 1 ?
                 <Form.Control.Feedback type="invalid">Name must not be empty!</Form.Control.Feedback> :
                 <Form.Control.Feedback type="invalid">A Variant with that Name already exists!</Form.Control.Feedback>}
@@ -113,35 +114,32 @@ export const CreateVariant: React.FC = () => {
                           onChange={() => {
                             var changedFeatures = [...features]
                             changedFeatures[i].enabled = !ft.enabled;
-                            changedFeatures[i].version = changedFeatures[i].enabled ? changedFeatures[i].version : 1
+                            changedFeatures[i].revision = changedFeatures[i].enabled ? changedFeatures[i].revision : 1
                             setFeatures(changedFeatures);
                           }}
                         />
                         <Form.Check.Label>{ft.name}</Form.Check.Label>
-                        {(i === features.length -1) && <Form.Control.Feedback type="invalid">Select at least one feature!</Form.Control.Feedback>}
+                        {(i === features.length - 1) && <Form.Control.Feedback type="invalid">Select at least one feature!</Form.Control.Feedback>}
                       </Form.Check>
                     </Col>
                     <Col>
-                      <input
-                        type='number'
-                        className='form-control form-control-sm no-validation'
-                        min={1}
-                        max={100} // TODO max latestRevision
-                        value={ft.version}
-                        disabled={!ft.enabled}
-                        onChange={event => {
-
-                          var changedFeatures = [...features]
-
-                          if (Number(event.target.value) > ft.version) {
-                            changedFeatures[i].version = ft.version + 1;
-                          } else {
-                            //down
-                            changedFeatures[i].version = ft.version - 1;
-                          }
-                          setFeatures(changedFeatures);
-                        }}
-                      />
+                      {ft.enabled &&
+                        <input
+                          type='number'
+                          className='form-control form-control-sm no-validation'
+                          min={Math.min(...ft.availableRevisions)}
+                          max={Math.max(...ft.availableRevisions)}
+                          value={ft.revision}
+                          disabled={!ft.enabled}
+                          onChange={event => {
+                            var changedFeatures = [...features]
+                            let oldRevivision = ft.revision
+                            let oldIndex = ft.availableRevisions.indexOf(oldRevivision)
+                            let diff = parseInt(event.target.value) - oldRevivision
+                            changedFeatures[i].revision = ft.availableRevisions[oldIndex + diff];
+                            setFeatures(changedFeatures);
+                          }}
+                        />}
                     </Col>
                   </Row>
                 </>))

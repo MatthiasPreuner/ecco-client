@@ -14,6 +14,7 @@ export interface CommitFeature {
   enabled: boolean,
   name: string,
   revision: number,
+  availablerevisions: number[]
 }
 
 export const MakeCommit: React.FC = () => {
@@ -59,6 +60,7 @@ export const MakeCommit: React.FC = () => {
         enabled: !str.startsWith('-'),
         name: nameversion[0].toUpperCase(),
         revision: parseInt(nameversion[1]),
+        availablerevisions: []
       }
       return feature;
     })
