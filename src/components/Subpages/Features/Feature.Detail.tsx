@@ -37,26 +37,6 @@ export const FeatureDetail: React.FC<DetailViewProps> = ({ currentSelectedFeatur
             });
     }
 
-
-    /*   useEffect(() => {
-          //...dann wurde eine Kopie von tmpCurrentFeature gemacht und die neue Description aus dem Textarea
-          // wird in das neue Objekt reingeschrieben, erst dann will ich den Request raussenden...
-          CommunicationService.getInstance().updateFeatureInBackend(currentSelectedFeatureModel).then((apiData: FeatureResponse) => {
-              setAppState((previousState: AppState) => ({
-                  ...previousState,
-                  features: apiData.data
-              }));
-          }).catch((error) => {
-              console.log(error);
-          }).finally(() => {
-  
-          });
-      }, [appState.currentFeature.description]); */
-
-    /* useEffect(() => {
-        setTmpCurrentFeatureModel(currentSelectedFeatureModel);
-    }, [currentSelectedFeatureModel]); */
-
     const changeFeatureDescription = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         event.persist();
         setSuccessButtonDisabled(selectedFeature.description === event.target.value)
