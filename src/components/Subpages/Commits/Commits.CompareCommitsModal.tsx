@@ -1,8 +1,7 @@
 import * as React from "react";
-import { useSharedState } from "../../../states/AppState";
 import { useState } from "react";
 
-import { Col, Button, Modal, Table, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Col, Button, Modal, Table, Tooltip, OverlayTrigger, Badge } from 'react-bootstrap';
 
 import { CommitModel } from "../../../model/CommitModel";
 
@@ -29,7 +28,7 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
   }
 
   const compare = () => {
-
+    // props.commits.sort((a,b) => a.date-b.date) needs date comparision
     let result: CompareRow[] = [];
 
     props.commits[0]?.associations.forEach(a => {
@@ -51,14 +50,36 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
 
   const compareRows = compare();
 
+  let parseCondition = (condition: string) => {
+    return condition.replaceAll('d^0', '').split(' AND ').map(subcondstr => {
+
+      let m = new Map<string, number[]>();
+      subcondstr.split(',').forEach(str => {
+
+        let split = str.replace(/[[\]()]/g, '').split('.')
+
+        let f = split[0];
+        let r = parseInt(split[1]);
+
+        if (m.has(f)) {
+          m.get(f).push(r)
+        } else {
+          m.set(f, [r])
+        }
+      })
+      return m
+    })
+  }
+
+
   return (
     <>
       <OverlayTrigger
         placement="left"
         delay={{ show: 250, hide: 400 }}
-        overlay={  <Tooltip id="tooltip-disabled">Hold CTRL to select 2 Commits</Tooltip>}
+        overlay={<Tooltip id="tooltip-disabled">Hold CTRL to select 2 Commits</Tooltip>}
       >
-        <span className="d-inline-block" style={{padding: '0px'}}>
+        <span className="d-inline-block" style={{ padding: '0px' }}>
           <Button className="w-100" onClick={handleShow} disabled={props.commits[1] === null}>Compare</Button>
         </span>
       </OverlayTrigger>
@@ -80,17 +101,29 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
               <thead>
                 <tr>
                   <td>Condition</td>
-                  <td>{props.commits[0].commitMessage}</td>
-                  <td>{props.commits[1].commitMessage}</td>
+                  <td style={{ textAlign: "center" }}>{props.commits[0].commitMessage}</td>
+                  <td style={{ textAlign: "center" }}>{props.commits[1].commitMessage}</td>
                 </tr>
               </thead>
               <tbody>
                 {compareRows.map((r, i) => {
                   return (
                     <tr key={i}>
-                      <td>{r.condition}</td>
-                      <td style={{ textAlign: "center" }}>{r.c0 && <i className="bi bi-check"></i>}</td>
-                      <td style={{ textAlign: "center" }}>{r.c1 && <i className="bi bi-check"></i>}</td>
+                      <td>
+                        <div className="d-flex flex-wrap px-0" style={{ minHeight: '46px' }}>
+                          {parseCondition(r.condition).map((map, idx) =>
+                            <>
+                              {Array.from(map).map((map, idx) =>
+                                <div key={idx} className="association-container" >
+                                  {map[0]} {map[1].sort((a, b) => a - b).map(v => <Badge className="association-badge">{v}</Badge>)}
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </td>
+                      <td style={{ textAlign: "center" }}>{r.c0 && <i className="bi bi-check-lg"></i>}</td>
+                      <td style={{ textAlign: "center" }}>{r.c1 && <i className="bi bi-check-lg"></i>}</td>
                     </tr>
                   )
                 })}

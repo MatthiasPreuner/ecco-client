@@ -2,10 +2,10 @@ import * as React from "react";
 import { FeatureModel } from "../../../model/FeatureModel";
 import { useEffect, useState } from "react";
 
-import { FeatureRevisionModel as FeatureRevisionModel } from "../../../model/FeatureRevisionModel";
+import { FeatureRevisionModel } from "../../../model/FeatureRevisionModel";
 import { FeatureRevisionDetail } from "./Feature.Detail.RevisionDetail";
 
-import { Col, Row, Dropdown } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { SpinButtonGroup } from "../../SpinButtonGroup";
 
 interface FeatureRevisionProps {
@@ -17,6 +17,16 @@ export const FeatureRevisionList: React.FC<FeatureRevisionProps> = ({ feature: f
     const [currentFeatureRevision, setCurrentFeatureRevision] = useState<FeatureRevisionModel>(feat.revisions[feat.revisions.length - 1]);
     const [currentFeatureRevisionIndex, setCurrentFeatureRevisionIndex] = useState<number>(feat.revisions.length - 1);
 
+    const maxIndex = () => {
+        setCurrentFeatureRevision(feat.revisions[feat.revisions.length - 1]);
+        setCurrentFeatureRevisionIndex(feat.revisions.length - 1);
+    }
+
+    const setIndex = (index: number) => {
+        setCurrentFeatureRevision(feat.revisions[index]);
+        setCurrentFeatureRevisionIndex(index);
+    }
+
     useEffect(() => {
         feat?.revisions.sort((a, b) => Number(a.id) - Number(b.id));
         if (feat?.name !== currentFeatureRevision?.featureRevisionString.split('.')[0]) {
@@ -25,19 +35,7 @@ export const FeatureRevisionList: React.FC<FeatureRevisionProps> = ({ feature: f
             setIndex(currentFeatureRevisionIndex);
         }
 
-    }, [feat]);
-
-    let maxIndex = () => {
-        setCurrentFeatureRevision(feat.revisions[feat.revisions.length - 1]);
-        setCurrentFeatureRevisionIndex(feat.revisions.length - 1);
-    }
-
-    let setIndex = (index: number) => {
-        setCurrentFeatureRevision(feat.revisions[index]);
-        setCurrentFeatureRevisionIndex(index);
-    }
-
-    const btnVariant = 'primary';
+    });
 
     return (
         <Row>
