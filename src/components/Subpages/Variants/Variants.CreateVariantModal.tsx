@@ -5,7 +5,7 @@ import { useSharedState } from "../../../states/AppState";
 
 import { CommunicationService } from "../../../services/CommunicationService";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
-import { FeatureRevisionModel } from "../../../model/FeatureRevisionModel";
+import { SpinButtonGroup } from "../../SpinButtonGroup";
 
 interface VariantFeature {
   enabled: boolean,
@@ -124,22 +124,35 @@ export const CreateVariant: React.FC = () => {
                     </Col>
                     <Col>
                       {ft.enabled &&
-                        <input
-                          type='number'
-                          className='form-control form-control-sm no-validation'
+                        <SpinButtonGroup
+                          value={ft.revision}
                           min={Math.min(...ft.availableRevisions)}
                           max={Math.max(...ft.availableRevisions)}
-                          value={ft.revision}
-                          disabled={!ft.enabled}
-                          onChange={event => {
+                          onChange={value => {
                             var changedFeatures = [...features]
                             let oldRevivision = ft.revision
                             let oldIndex = ft.availableRevisions.indexOf(oldRevivision)
-                            let diff = parseInt(event.target.value) - oldRevivision
-                            changedFeatures[i].revision = ft.availableRevisions[oldIndex + diff];
+                            changedFeatures[i].revision = ft.availableRevisions[oldIndex + value];
                             setFeatures(changedFeatures);
                           }}
-                        />}
+                        />
+                        /*   <input
+                            type='number'
+                            className='form-control form-control-sm no-validation'
+                            min={Math.min(...ft.availableRevisions)}
+                            max={Math.max(...ft.availableRevisions)}
+                            value={ft.revision}
+                            disabled={!ft.enabled}
+                            onChange={event => {
+                              var changedFeatures = [...features]
+                              let oldRevivision = ft.revision
+                              let oldIndex = ft.availableRevisions.indexOf(oldRevivision)
+                              let diff = parseInt(event.target.value) - oldRevivision
+                              changedFeatures[i].revision = ft.availableRevisions[oldIndex + diff];
+                              setFeatures(changedFeatures);
+                            }} 
+                          />}*/
+                      }
                     </Col>
                   </Row>
                 </>))

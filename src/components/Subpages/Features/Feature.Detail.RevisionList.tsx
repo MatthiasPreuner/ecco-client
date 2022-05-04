@@ -6,6 +6,7 @@ import { FeatureRevisionModel as FeatureRevisionModel } from "../../../model/Fea
 import { FeatureRevisionDetail } from "./Feature.Detail.RevisionDetail";
 
 import { Col, Row, Dropdown } from 'react-bootstrap';
+import { SpinButtonGroup } from "../../SpinButtonGroup";
 
 interface FeatureRevisionProps {
     feature: FeatureModel
@@ -42,18 +43,14 @@ export const FeatureRevisionList: React.FC<FeatureRevisionProps> = ({ feature: f
         <Row>
             <Col>
                 <Row className="d-flex justify-content-between">
-                    <Col xs={6}><h5>Featurerevisions:</h5></Col>
-                    <Col xs={6} className="d-flex justify-content-end">
-                        <Dropdown className="d-flex justify-content-end">
-                            <Dropdown.Toggle variant="primary" id="dropdown-basic">{currentFeatureRevision.id}</Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                {feat.revisions.map((r, i) =>
-                                    <Dropdown.Item key={i}
-                                        onClick={() => setIndex(i)}
-                                    >{r.id}</Dropdown.Item>
-                                )}
-                            </Dropdown.Menu>
-                        </Dropdown>
+                    <Col xs={9}><h5>Featurerevisions:</h5></Col>
+                    <Col xs={3} className="d-flex justify-content-end">
+                        <SpinButtonGroup
+                            value={parseInt(currentFeatureRevision.id)}
+                            min={Math.min(...feat.revisions.map(r => parseInt(r.id)))}
+                            max={Math.max(...feat.revisions.map(r => parseInt(r.id)))}
+                            onChange={value => setIndex(currentFeatureRevisionIndex + value)}
+                            />
                     </Col>
                 </Row>
                 <FeatureRevisionDetail

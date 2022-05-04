@@ -3,9 +3,9 @@ import { FileWithPath } from 'react-dropzone'
 import { useState, useEffect } from "react";
 import { useSharedState } from "../../../states/AppState";
 
-import { Col, Row, Form, Button, InputGroup, Badge } from 'react-bootstrap';
+import { Col, Row, Form, Button, InputGroup } from 'react-bootstrap';
 import { CommitFeature } from "./Commits.MakeCommitModal"
-import { maxHeaderSize } from "http";
+import { SpinButtonGroup } from "../../SpinButtonGroup";
 
 interface FeatureRowProps {
     configFile: FileWithPath,
@@ -105,7 +105,6 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
                                     isInvalid={config.length === 0}
                                     isValid={config.length > 0}
                                     formNoValidate // not working
-
                                     onChange={event => {
                                         var newConfigFeatures = [...configFeatures]
                                         newConfigFeatures[i].enabled = !ft.enabled;
@@ -115,24 +114,19 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
                             </Col>
                             <Col xs={2} className="pe-1">
                                 {ft.enabled &&
-                                    <input
-                                        type='number'
-                                        className={'form-control form-control-sm no-validation '.concat((ft.revision === Math.max(...ft.availablerevisions)) ? " input-new" : "")}
+                                    <SpinButtonGroup
+                                        value={ft.revision}
                                         min={Math.min(...ft.availablerevisions)}
                                         max={Math.max(...ft.availablerevisions)}
-                                        /*    isInvalid={config.length === 0}
-                                           isValid={config.length > 0}  */
-                                        value={ft.revision}
-                                        disabled={!ft.enabled}
-                                        onChange={event => {
+                                        onChange={value => {
                                             var newConfigFeatures = [...configFeatures]
                                             let oldRevivision = ft.revision
                                             let oldIndex = ft.availablerevisions.indexOf(oldRevivision)
-                                            let diff = parseInt(event.target.value) - oldRevivision
-                                            newConfigFeatures[i].revision = ft.availablerevisions[oldIndex + diff];
+                                            newConfigFeatures[i].revision = ft.availablerevisions[oldIndex + value];
                                             setConfigFeatures(newConfigFeatures);
                                         }}
-                                    />}
+                                    />
+                                }
                             </Col>
                         </Row>
                     </>
@@ -172,9 +166,7 @@ export const FeatureRow: React.FC<FeatureRowProps> = (props: FeatureRowProps) =>
                             </InputGroup>
                         </Col>
                         <Col xs={2} className="pe-1">
-                            <input
-                                type='number'
-                                className='form-control form-control-sm'
+                            <SpinButtonGroup
                                 value={ft.revision} // new features start with revision 1
                                 disabled
                             />
