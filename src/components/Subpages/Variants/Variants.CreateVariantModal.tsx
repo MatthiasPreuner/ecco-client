@@ -92,7 +92,7 @@ export const CreateVariant: React.FC = () => {
           <Modal.Body>
             <Form.Group className='mb-2' key={1}>
               <Form.Label>Name</Form.Label>
-              <Form.Control type="text" isInvalid={!nameIsValid()} placeholder="Name" value={name} onChange={e => setName(e.target.value)} required pattern="[A-Za-z0-9_]{1,}" />
+              <Form.Control type="text" isInvalid={!nameIsValid()} placeholder="Name" value={name} onChange={e => setName(e.target.value)} required pattern="[A-Za-z0-9 _.]{1,}" />
               {/*  isValid={nameIsValid()}  */}
               {/*    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback> */}
               {name.length < 1 ?
