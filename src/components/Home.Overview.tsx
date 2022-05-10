@@ -27,7 +27,7 @@ export const Overview: React.FC = () => {
                 <Col>
                     <Row className="align-items-center" style={{height: '80vh'}}>
                         {Array.from(cards).map(([name, info], idx) => (
-                            <Col>
+                            <Col key={idx}>
                                 <Card
                                     border={'primary'}
                                     key={idx}

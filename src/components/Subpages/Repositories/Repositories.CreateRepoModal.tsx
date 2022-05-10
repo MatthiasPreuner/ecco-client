@@ -68,6 +68,58 @@ export const CreateRepoModal: React.FC = () => {
     }
   };
 
+  const [formState, setFormState] = useState({
+    formValues: {
+      name: "",
+      password: ""
+    },
+    formErrors: {
+      name: "",
+      password: ""
+    },
+    formValidity: {
+      name: false,
+      password: false
+    }
+  });
+
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    const { formValues } = formState;
+    formValues[target.name as keyof typeof formValues] = target.value;
+    setFormState(prev => ({ ...prev, formValues: formValues }));
+    handleValidation(target);
+  };
+
+  const handleValidation = (target: EventTarget & HTMLInputElement) => {
+    const { name, value } = target;
+    const fieldValidationErrors = formState.formErrors;
+    const validity = formState.formValidity;
+    const isEmail = name === "email";
+    const isPassword = name === "password";
+   /*  const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;*/
+   validity[name as keyof typeof validity] = value.length > 0; 
+  /*   fieldValidationErrors[name] = validity[name]
+      ? ""
+      : `${name} is required and cannot be empty`; if (validity[name]) {
+        if (isEmail) {
+          validity[name] = emailTest.test(value);
+          fieldValidationErrors[name] = validity[name]
+            ? ""
+            : `${name} should be a valid email address`;
+        }
+        if (isPassword) {
+          validity[name] = value.length >= 3;
+          fieldValidationErrors[name] = validity[name]
+            ? ""
+            : `${name} should be 3 characters minimum`;
+        }
+      } setFormState({
+        ...formState,
+        formErrors: fieldValidationErrors,
+        formValidity: validity
+      }); */
+  };
+
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
@@ -84,24 +136,29 @@ export const CreateRepoModal: React.FC = () => {
         <Modal.Header closeButton>
           <Modal.Title>Create Repository</Modal.Title>
         </Modal.Header>
-        <Form className="w-80" noValidate validated={validated} onSubmit={createRepo}>
+        <Form className="w-80" onSubmit={createRepo}>
           <Modal.Body>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Group className="mb-3">
               <Form.Label>A new empty Repository will be created. Please enter a name:</Form.Label>
-              <Form.Control
+              <input
                 type="text"
-                isInvalid={!nameIsValid()}
-                isValid={nameIsValid()}
+                /*  isInvalid={false /* validated && !nameIsValid() */
+                /*  isValid={false} */
+                name="name"
                 placeholder="Name of the new Repository..."
-                pattern="[A-Za-z0-9_]{1,}" value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)} />
-              {validated ?
+                pattern="[A-Za-z0-9_]{1,}"
+                className={`form-control ${formState.formErrors.name ? "is-invalid" : ""}`}
+                value={formState.formValues.name}
+                onChange={handleChange}
+              />
+              <Form.Control.Feedback type="invalid">{formState.formErrors.name}</Form.Control.Feedback>
+            {/*   {validated ?
                 (nameEmpty() ?
                   <Form.Control.Feedback type="invalid">Name must not be empty!</Form.Control.Feedback> :
                   nameExists() ? <Form.Control.Feedback type="invalid">Name already exists!</Form.Control.Feedback> :
                     < Form.Control.Feedback type="invalid">Invalid Name!</Form.Control.Feedback>)
                 : null
-              }
+              } */}
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
