@@ -4,10 +4,11 @@ React Front-End for the Ecco-System
 Back-End: https://github.com/Dorkat0/ecco
 
 using:
-Typescript
-Bootstrap 5 (react-bootstrap)
-Bootstrap Icons (https://icons.getbootstrap.com/)
-(axios, echarts, jquery)
+React + Typescript
+[Bootstrap 5](https://www.npmjs.com/package/react-bootstrap)
+[Bootstrap Icons](https://icons.getbootstrap.com/)
+[Axios (HTTP-Client)](https://www.npmjs.com/package/react-axios)
+(echarts, jquery)
 
 
 ## How to get started
