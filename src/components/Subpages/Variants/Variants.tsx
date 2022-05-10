@@ -60,8 +60,16 @@ export const Variants: React.FC = () => {
     const getCurrentVariantExpression = (): JSX.Element[] => {
 
         var filteredByFeatures = appState.repository?.variants.filter(vari => featureFilter.map(f => f.name).every(e => vari.configuration.featureRevisions.map(r => r.featureRevisionString.split('.')[0]).includes(e)));
+/* 
+        if (appState.repository.variants.length === 0) {
+            return (
+                <tr>
+                    <th style={{ minWidth: '20%' }}>Name</th>
+                    <th style={{ minWidth: '80%' }}>Description</th>
+                </tr>)
+        } */
 
-        return filteredByFeatures?.filter(variant => variant.name?.toLowerCase().includes(variantFilterText.toLowerCase()))
+        return filteredByFeatures?.filter(variant => (variant.name?.toLowerCase().includes(variantFilterText.toLowerCase()) || variant.description?.toLowerCase().includes(variantFilterText.toLowerCase())))
             .map((variant: VariantModel, i) => {
                 return (
                     <tr onClick={() => editVariant === null && setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
@@ -157,7 +165,7 @@ export const Variants: React.FC = () => {
                             <InputGroup className="mb-3">
                                 <InputGroup.Text><i className="bi bi-funnel-fill"></i></InputGroup.Text>
                                 <FormControl
-                                    placeholder="Variantname for filtering..."
+                                    placeholder="Text for filtering..."
                                     onChange={e => setVariantFilterText(e.target.value)}
                                     value={variantFilterText}
                                 />
