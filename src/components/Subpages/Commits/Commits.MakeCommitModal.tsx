@@ -90,7 +90,6 @@ export const MakeCommit: React.FC = () => {
   }, [configFile]);
 
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
-    console.log(tmpAcceptedFiles)
     var allFiles = new Map(tmpAcceptedFiles)
     acceptedFiles.forEach(f => {
       if (f.name.endsWith(".config")) {
@@ -133,7 +132,6 @@ export const MakeCommit: React.FC = () => {
     if (form.checkValidity() && tmpAcceptedFiles.size !== 0 && config.length !== 0) {
       CommunicationService.getInstance().makeCommit(appState.repository, commitMessage, config, choosenFiles).
         then((apiData: RepositoryResponse) => {
-          console.log(apiData.data);
           setAppState((previousState) => ({
             ...previousState,
             repository: apiData.data
