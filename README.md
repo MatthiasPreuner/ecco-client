@@ -1,9 +1,10 @@
-# Getting Started with Create React App
+# EccoHub Browser Client
 
-React Front-End for the Ecco-System  
-Back-End: https://github.com/Dorkat0/ecco  
+This is the React Front-End for the Ecco-System  
 
-using:  
+The Back-End can be found [here](https://github.com/Dorkat0/ecco)  
+
+## Technical Details:  
 React + Typescript  
 [Bootstrap 5](https://www.npmjs.com/package/react-bootstrap)  
 [Bootstrap Icons](https://icons.getbootstrap.com/)  
