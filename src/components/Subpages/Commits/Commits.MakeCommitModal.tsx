@@ -30,6 +30,7 @@ export const MakeCommit: React.FC = () => {
     setShow(false);
     setValidated(false);
     setChoosenFiles(null);
+    removeAllFiles();
   }
   const handleShow = () => setShow(true);
 
@@ -229,7 +230,7 @@ export const MakeCommit: React.FC = () => {
                   <Form.Group>
                     <Form.Control isInvalid={configString?.length === 0} isValid={configString?.length > 0} type="hidden" />
                     <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">Please select at least one Feature {configString?.length}</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">Please select at least one Feature</Form.Control.Feedback>
                   </Form.Group>
                 </Row>
                 <FeatureRow configFile={configFile} setConfigString={setConfigString} />

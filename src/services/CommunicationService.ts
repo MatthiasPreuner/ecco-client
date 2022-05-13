@@ -94,16 +94,23 @@ export class CommunicationService {
 
         let formData = new FormData();
         let config = new RequestConfig();
+   
         acceptedFiles.forEach((tmpFile: FileWithPath) => {
             let path = tmpFile.path.substring(1) // remove starting '/'
             path = path.substring(path.indexOf('/')) // remove root folder
             formData.append("file", tmpFile, path);
         });
+
+        console.log(formData.getAll("file"))
+
+
         formData.append("message", message)
         formData.append("config", configuration)
         config.headers = {
             'Content-Type': 'multipart/form-data'
         }
+        console.log(formData)
+        console.log(`${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`)
         return axios.post(
             `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`,
             formData,
