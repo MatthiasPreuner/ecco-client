@@ -7,7 +7,7 @@ import { FeatureModel } from "../../../model/FeatureModel";
 import { CommunicationService } from "../../../services/CommunicationService";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 import { FeatureRevisionModel } from "../../../model/FeatureRevisionModel";
-import { SpinButtonGroup } from "../../SpinButtonGroup";
+import { SpinButtonGroup } from "../../common/SpinButtonGroup";
 
 
 export const Features: React.FC<{ variant: VariantModel }> = (props) => {

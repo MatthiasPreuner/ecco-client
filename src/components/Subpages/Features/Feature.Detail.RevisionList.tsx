@@ -6,7 +6,7 @@ import { FeatureRevisionModel } from "../../../model/FeatureRevisionModel";
 import { FeatureRevisionDetail } from "./Feature.Detail.RevisionDetail";
 
 import { Col, Row } from 'react-bootstrap';
-import { SpinButtonGroup } from "../../SpinButtonGroup";
+import { SpinButtonGroup } from "../../common/SpinButtonGroup";
 
 interface FeatureRevisionProps {
     feature: FeatureModel

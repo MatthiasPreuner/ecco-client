@@ -5,7 +5,7 @@ import { useSharedState } from "../../../states/AppState";
 
 import { Col, Row, Form, Button, InputGroup } from 'react-bootstrap';
 import { CommitFeature } from "./Commits.MakeCommitModal"
-import { SpinButtonGroup } from "../../SpinButtonGroup";
+import { SpinButtonGroup } from "../../common/SpinButtonGroup";
 
 interface FeatureRowProps {
     configFile: FileWithPath,

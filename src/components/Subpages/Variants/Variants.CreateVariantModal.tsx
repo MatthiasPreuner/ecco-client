@@ -5,7 +5,7 @@ import { useSharedState } from "../../../states/AppState";
 
 import { CommunicationService } from "../../../services/CommunicationService";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
-import { SpinButtonGroup } from "../../SpinButtonGroup";
+import { SpinButtonGroup } from "../../common/SpinButtonGroup";
 
 interface VariantFeature {
   enabled: boolean,
