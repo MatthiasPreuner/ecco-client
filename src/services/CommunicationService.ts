@@ -58,6 +58,18 @@ export class CommunicationService {
         )
     }
 
+    public forkRepository(repo: RepositoryHeaderModel, name: string, selectedFeatures : string): Promise<any> {
+        let config = new RequestConfig();
+        config.headers = {
+            'Content-Type': 'text/plain',
+        };
+        return axios.put(
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/clone/${repo.rid}/${name}`,
+            selectedFeatures,
+            config
+        )
+    }
+
     public deleteRepository(repo: RepositoryHeaderModel): Promise<any> {
         return axios.delete(
             `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`
@@ -85,6 +97,19 @@ export class CommunicationService {
         return axios.post(
             `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id}/${featureRevision.id + '/description'}`,
             description,
+            config
+        )
+    }
+
+    public pullFeatures(repository: RepositoryModel, fromRepo: string, selectedFeatures : string): Promise<any> {
+        let body = { fromRId: "fromRepo.id", selectedFeatures: selectedFeatures }
+        let config = new RequestConfig();
+        config.headers = {
+            'Content-Type': 'application/json',
+        };
+        return axios.post(
+            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/pull`,
+            body,
             config
         )
     }
