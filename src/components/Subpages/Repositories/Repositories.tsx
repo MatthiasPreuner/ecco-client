@@ -9,10 +9,12 @@ import { Button, ButtonGroup, Container, Row, Col, ListGroup, InputGroup, FormCo
 
 import { CreateRepoModal } from "./Repositories.CreateRepoModal";
 import { DeleteRepoModal } from "./Repositories.DeleteRepoModal";
+import { ForkRepoModal } from "./Repositories.ForkRepoModal";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 import { CloneRepoModal } from "./Repositories.CloneRepoModal";
 import { RepositoryHeaderModel } from "../../../model/RepositoryModel";
 import { RepositoryHeaderResponse } from "../../../model/AvailableRepositoryResponse";
+
 
 export const Repositories: React.FC = () => {
 
@@ -94,6 +96,7 @@ export const Repositories: React.FC = () => {
                         <ButtonGroup vertical>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><CreateRepoModal /></ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><CloneRepoModal repo={selectedRepo} /></ButtonGroup>
+                            <ButtonGroup className="me-2 mb-2 w-100" vertical><ForkRepoModal repo={selectedRepo} /></ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><DeleteRepoModal repo={selectedRepo} /></ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><Button variant="primary" type="submit" disabled={selectedRepo == null} onClick={chooseRepo}>Select</Button></ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><Button onClick={refresh}><i className="bi bi-arrow-clockwise"></i></Button></ButtonGroup>

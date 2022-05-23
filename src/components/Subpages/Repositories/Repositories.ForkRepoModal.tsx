@@ -1,30 +1,43 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Modal, Form } from 'react-bootstrap';
-import { RepositoryHeaderModel } from "../../../model/RepositoryModel";
+import { RepositoryHeaderModel, RepositoryModel } from "../../../model/RepositoryModel";
 import { RepositoryHeaderResponse } from "../../../model/AvailableRepositoryResponse";
 import { CommunicationService } from "../../../services/CommunicationService";
 import { useSharedState } from "../../../states/AppState";
+import { FeatureSelector, FeatureSelectorFeature } from "../../common/FeatureSelector";
+import { RepositoryResponse } from "../../../model/RepositoryResponse";
 
-export const CloneRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) => {
+export const ForkRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) => {
 
   const [show, setShow] = useState(false);
   const [inputValue, setInputValue] = useState<string>("");
   const [appState, setAppState] = useSharedState();
   const [validated, setValidated] = useState(false);
+  const [repoToClone, setRepoToClone] = useState<RepositoryModel>(null)
+  const [configString, setConfigString] = useState<string>("")
+  const [initFeatures, setInitFeatures] = useState<FeatureSelectorFeature[]>([])
 
-  const handleShow = () => setShow(true);
-
+  const handleShow = () => {
+    setShow(true);
+    openRepo();
+  }
   const handleClose = () => {
     // clear form
     setInputValue("");
     setValidated(false);
     setShow(false);
+    setRepoToClone(null);
+    setConfigString("");
   }
 
   let nameEmpty = () => !(inputValue?.length > 0);
   let nameExists = () => appState.availableRepositories.filter(v => v.name.toLowerCase() === inputValue.toLowerCase()).length > 0;
   let nameIsValid = () => !nameEmpty() && !nameExists();
+
+  let openRepo = () => {
+    CommunicationService.getInstance().getRepository(props.repo).then((apiData: RepositoryResponse) => setRepoToClone(apiData.data))
+  }
 
   let cloneRepo = (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
@@ -49,10 +62,23 @@ export const CloneRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props)
     }
   };
 
+  useEffect(() => {
+    let f = repoToClone?.features.map(ft => {
+      let avail = ft.revisions.sort((a, b) => Number(a.id) - Number(b.id)).map(r => parseInt(r.id))
+      return {
+        enabled: false,
+        name: ft.name,
+        revision: Math.max(...avail),
+        availableRevisions: avail
+      } as FeatureSelectorFeature
+    });
+    setInitFeatures(f);
+  }, [repoToClone]);
+
   return (
     <>
       <Button variant="primary" onClick={handleShow} className="w-100" disabled={props.repo === null}>
-        Clone <i className="bi bi-files"></i>
+        Fork <i className="bi bi-diagram-2-fill"></i>
       </Button>
 
       <Modal
@@ -63,12 +89,12 @@ export const CloneRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props)
         className="no-user-select"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Clone Repository</Modal.Title>
+          <Modal.Title>Fork Repository</Modal.Title>
         </Modal.Header>
         <Form className="w-80" noValidate validated={validated} onSubmit={cloneRepo}>
           <Modal.Body>
             <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>A new copy of {props.repo?.name} will be created.<br/>Please enter a name for the repository:</Form.Label>
+              <Form.Label>A new fork of '{props.repo?.name}' will be created.<br/>Please enter a name for the new repository:</Form.Label>
               <Form.Control
                 type="text"
                 isInvalid={!nameIsValid()}
@@ -83,6 +109,14 @@ export const CloneRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props)
                     < Form.Control.Feedback type="invalid">Invalid Name!</Form.Control.Feedback>)
                 : null
               }
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Features</Form.Label>
+              <FeatureSelector features={initFeatures} disableRevisions onChange={s => setConfigString(s)} />
+            </Form.Group>
+            <Form.Group className="mt-3" key={4}>
+              <Form.Label>Configuration</Form.Label>
+              <Form.Control type="text" disabled value={configString} />
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
