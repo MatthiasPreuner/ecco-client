@@ -7,6 +7,7 @@ import { Container, Col, Row, InputGroup, FormControl, Button, ListGroup } from 
 
 import { FeatureModel } from "../../../model/FeatureModel";
 import { FeatureDetail } from "./Feature.Detail";
+import { PullFeaturesModal } from "./Feature.PullFeaturesModal";
 
 export const Feature: React.FC = () => {
 
@@ -43,35 +44,46 @@ export const Feature: React.FC = () => {
                 <Row><h3>Features</h3></Row>
                 {appState.repository == null ?
                     <Row><p>No Repository selected.</p></Row> :
-                    <Row>
-                        <Col xs={6} className="pr-3">
-                            <Row>
-                                <InputGroup className="mb-3">
-                                    <InputGroup.Text><i className="bi bi-funnel-fill"></i></InputGroup.Text>
-                                    <FormControl
-                                        placeholder="Featurename for filtering..."
-                                        onChange={e => setFeatureFilterText(e.target.value)}
-                                        value={featureFilterText}
-                                    />
-                                    {featureFilterText.length > 0 ? <Button variant="outline-primary" onClick={() => setFeatureFilterText("")}><i className="bi bi-x"></i></Button> : null}
-                                </InputGroup>
-                            </Row>
-                            <Row className="my-4">
-                                <Col>
-                                    <ListGroup style={{ maxHeight: 'calc(100vh - 250px)' }}>
-                                        {appState.repository.features.length === 0 ?
-                                            <p>This Repository has no Features yet. Features are added with new Commits.</p> :
-                                            features.length === 0 ?
-                                                <p>Please consider using a different filter condition. There are no results.</p> :
-                                                features}
-                                    </ListGroup>
-                                </Col>
-                            </Row>
-                        </Col>
-                        <Col className="px-3">
-                            <FeatureDetail currentSelectedFeatureModel={tmpCurrentFeature} />
-                        </Col>
-                    </Row>
+                    <>
+                        <Row>
+                            <Col xs={6} className="pr-3">
+                                <Row>
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text><i className="bi bi-funnel-fill"></i></InputGroup.Text>
+                                        <FormControl
+                                            placeholder="Featurename for filtering..."
+                                            onChange={e => setFeatureFilterText(e.target.value)}
+                                            value={featureFilterText}
+                                        />
+                                        {featureFilterText.length > 0 ? <Button variant="outline-primary" onClick={() => setFeatureFilterText("")}><i className="bi bi-x"></i></Button> : null}
+                                    </InputGroup>
+                                </Row>
+                            </Col>
+                            <Col>
+                                <PullFeaturesModal repo={appState.availableRepositories.find(r => r.rid = appState.repository.rid)} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={6}>
+                                <Row className="my-4">
+                                    <Col>
+                                        <ListGroup style={{ maxHeight: 'calc(100vh - 250px)' }}>
+                                            {appState.repository.features.length === 0 ?
+                                                <p>This Repository has no Features yet. Features are added with new Commits.</p> :
+                                                features.length === 0 ?
+                                                    <p>Please consider using a different filter condition. There are no results.</p> :
+                                                    features}
+                                        </ListGroup>
+                                    </Col>
+                                </Row>
+                            </Col>
+                            <Col className="px-3">
+                                <Row>
+                                    <FeatureDetail currentSelectedFeatureModel={tmpCurrentFeature} />
+                                </Row>
+                            </Col>
+                        </Row>
+                    </>
                 }
             </Col>
         </Container>
