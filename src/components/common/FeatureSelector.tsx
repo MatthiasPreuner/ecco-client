@@ -5,6 +5,8 @@ import { Row, Col, Form, InputGroup, Button } from 'react-bootstrap';
 import { SpinButtonGroup } from "./SpinButtonGroup";
 
 
+import './FeatureSelector.scss';
+
 export interface FeatureSelectorFeature {
     enabled: boolean,
     name: string,
@@ -19,7 +21,6 @@ export interface FeatureSelectorProps {
     onChange?: (enabledFeatures: string, disabledFeatures: string) => void,
 }
 
-// manualfeatures
 
 export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
 
@@ -27,11 +28,11 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
     const [manualFeatures, setManualFeatures] = useState<FeatureSelectorFeature[]>([]);
 
     useEffect(() => {
-        if (props.features) changeConfigFeatures([...props.features]);
+        if (props.features) setConfigFeatures([...props.features]);
     }, [props.features]);
 
     useEffect(() => {
-        if (props.manualFeatures) changeManualFeatures([...props.manualFeatures]);
+        if (props.manualFeatures) setManualFeatures([...props.manualFeatures]);
     }, [props.manualFeatures]);
 
     // updateConfigString
@@ -42,20 +43,6 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
         props.onChange.call(this, enabledFeatures, disabledFeatures);
     }, [configFeatures, manualFeatures]);
 
-    const changeConfigFeatures = (changedFeatures: FeatureSelectorFeature[]) => {
-        setConfigFeatures(changedFeatures);
-    }
-
-    const changeManualFeatures = (changedFeatures: FeatureSelectorFeature[]) => {
-        setManualFeatures(changedFeatures);
-    }
-
-    const changeFeatures = (configFeatures: FeatureSelectorFeature[], manualFeatures: FeatureSelectorFeature[]) => {
-        setConfigFeatures(configFeatures);
-        setManualFeatures(manualFeatures);
-    }
-
-
     const switchAll = (to: boolean) => {
         var tmpConfigFeatures = [...configFeatures]
         tmpConfigFeatures.forEach(f => f.enabled = to)
@@ -64,8 +51,9 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
         tmpManualFeatures.forEach(f => {
             if (f.name !== "") f.enabled = to;
         });
-
-        changeFeatures(tmpConfigFeatures, tmpManualFeatures);
+        
+        setConfigFeatures(configFeatures);
+        setManualFeatures(manualFeatures);
     }
 
     let removeManualFeature = (i: number) => {
@@ -74,12 +62,12 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
         setManualFeatures(tmpManualFeatures);
     }
 
-    const inValid = configFeatures !== null && configFeatures.length > 0 && configFeatures.filter(f => f.enabled).length < 1;
-    const valid = configFeatures !== null && configFeatures.length > 0 && configFeatures.filter(f => f.enabled).length > 0;
+    const inValid = configFeatures !== null && configFeatures.length > 0 && configFeatures.concat(manualFeatures).filter(f => f.enabled).length < 1;
+    const valid = configFeatures !== null && configFeatures.length > 0 && configFeatures.concat(manualFeatures).filter(f => f.enabled).length > 0;
 
     return (
         <>
-            <Row key={0}>
+            <Row key={0} style={{position: 'sticky', top: '0', backgroundColor: '#fff', zIndex: 5}}>
                 <Col xs={9}>
                     <Form.Group>
                         <Form.Control isInvalid={inValid} isValid={valid} type="hidden" />
@@ -102,7 +90,7 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
                                     var changedFeatures = [...configFeatures]
                                     changedFeatures[i].enabled = !ft.enabled;
                                     changedFeatures[i].revision = changedFeatures[i].enabled ? changedFeatures[i].revision : 1
-                                    changeConfigFeatures(changedFeatures);
+                                    setConfigFeatures(changedFeatures);
                                 }}
                             />
                             <Form.Check.Label>{ft.name}</Form.Check.Label>
@@ -119,7 +107,7 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
                                     let oldRevivision = ft.revision
                                     let oldIndex = ft.availableRevisions.indexOf(oldRevivision)
                                     changedFeatures[i].revision = ft.availableRevisions[oldIndex + value];
-                                    changeConfigFeatures(changedFeatures);
+                                    setConfigFeatures(changedFeatures);
                                 }}
                             />
                         }
@@ -135,12 +123,12 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
                             onChange={event => {
                                 var tmpManualFeatures = [...manualFeatures]
                                 tmpManualFeatures[i].enabled = !ft.enabled;
-                                changeManualFeatures(tmpManualFeatures);
-                            }}
-                        /></Col>
+                                setManualFeatures(tmpManualFeatures);
+                            }}/>
+                    </Col>
                     <Col xs={9}>
                         <InputGroup>
-                            <input placeholder="Feature Name" type="text" className="form-control no-validation form-control-sm input-new" style={{ marginLeft: '-25px' }}
+                            <input placeholder="Feature Name" type="text" className="form-control form-control-sm input-new" style={{ marginLeft: '-25px' }}
                                 value={ft.name}
                                 onChange={event => {
                                     var tmpManualFeatures = [...manualFeatures]
@@ -156,7 +144,7 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
                                         tmpManualFeatures = tmpManualFeatures.filter(feature => feature.name !== '') // remove all empty
                                         tmpManualFeatures = [...tmpManualFeatures, { enabled: false, name: '', revision: 1, availableRevisions: [1] }] // add new empty
                                     }
-                                    changeManualFeatures(tmpManualFeatures);
+                                    setManualFeatures(tmpManualFeatures);
                                 }} />
                             {ft.name.length > 0 ? <Button size='sm' variant="outline-primary" onClick={() => removeManualFeature(i)}><i className="bi bi-x"></i></Button> : null}
                         </InputGroup>

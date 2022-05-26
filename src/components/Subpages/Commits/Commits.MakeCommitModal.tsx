@@ -23,8 +23,6 @@ export const MakeCommit: React.FC = () => {
   const [validated, setValidated] = useState(false);
 
   const handleClose = () => {
-    setConfigFeatures(initialConfigFeatures);
-    setManualFeatures(initialManualFeatures);
     setConfigFile(undefined);
     setCommitMessage('');
     setShow(false);
@@ -45,51 +43,6 @@ export const MakeCommit: React.FC = () => {
   const [commitMessage, setCommitMessage] = useState<string>('');
   const [choosenFiles, setChoosenFiles] = useState<Array<FileWithPath>>(new Array<FileWithPath>());
 
-  const reader = new FileReader();
-
-  reader.onload = function (progressEvent) {
-
-    var featuresFromConfig: CommitFeature[] = [];
-    var configText: string = progressEvent.target.result.toString();
-
-    featuresFromConfig = configText.split(',').map(str => {
-
-      str = str.replace(' ', '');
-      var nameversion = str.replace('-', '').split('.');
-
-      var feature: CommitFeature = {
-        enabled: !str.startsWith('-'),
-        name: nameversion[0].toUpperCase(),
-        revision: parseInt(nameversion[1]),
-        availablerevisions: []
-      }
-      return feature;
-    })
-
-    let newManualFeatures = [...initialManualFeatures]
-    let newConfigFeatures = [...initialConfigFeatures]
-
-    featuresFromConfig.forEach(f => {
-      let index = configFeatures.findIndex(cf => cf.name === f.name);
-      if (index >= 0) {
-        let index = configFeatures.findIndex(cf => cf.name === f.name)
-        newConfigFeatures[index].enabled = f.enabled;
-        newConfigFeatures[index].revision = f.revision;
-      } else {
-        newManualFeatures.unshift(f); // add manual feature
-
-      }
-    })
-
-    setConfigFeatures(newConfigFeatures);
-    setManualFeatures(newManualFeatures);
-  };
-
-  useEffect(() => {
-    if (configFile)
-      reader.readAsText(configFile);
-  }, [configFile]);
-
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     var allFiles = new Map(tmpAcceptedFiles)
     acceptedFiles.forEach(f => {
@@ -103,26 +56,7 @@ export const MakeCommit: React.FC = () => {
   }, []);
 
   const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-  const initialManualFeatures = [{
-    enabled: false,
-    name: '',
-    revision: 1,
-  } as CommitFeature]
-
-  const [manualFeatures, setManualFeatures] = useState<CommitFeature[]>(initialManualFeatures);
-
   const [configString, setConfigString] = useState<string>("");
-
-  const initialConfigFeatures = appState.repository?.features.map(f => {
-    return {
-      enabled: false,
-      name: f.name,
-      revision: 1
-    } as CommitFeature;
-  })
-
-  const [configFeatures, setConfigFeatures] = useState<CommitFeature[]>(initialConfigFeatures);
 
   let handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
@@ -151,16 +85,9 @@ export const MakeCommit: React.FC = () => {
         }, 3000);
     });  */
 
-  //let config = configFeatures?.filter(ft => ft.enabled).concat(manualFeatures.filter(ft => ft.name !== '')).map(ft => (ft.enabled ? '' : '-') + ft.name + '.' + ft.revision).join(', ')
-
+  
   let removeAllFiles = () => {
     setTmpAcceptedFiles(new Map<string, File>());
-  }
-
-  let removeConfigFile = () => {
-    setConfigFeatures(initialConfigFeatures);
-    setManualFeatures(initialManualFeatures);
-    setConfigFile(undefined);
   }
 
   return (
@@ -180,12 +107,6 @@ export const MakeCommit: React.FC = () => {
         </Modal.Header>
         <Form validated={validated} onSubmit={handleSubmit}>
           <Modal.Body>
-            {/*    <div id={"zipfilesucessalert"} className="alert alert-success alert-dismissible ecco-alert fade" role="alert">
-                The files are sucessfully committed into the Repository!
-                <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div> */}
             <Row className="mb-3" {...getRootProps()} >
               <input {...getInputProps()} />
               <Col className={"mx-2 d-flex rounded align-items-center align-content-center justify-content-around drop-zone " + (isDragActive ? "drop-zone-active" : "")}                                     >
@@ -223,7 +144,7 @@ export const MakeCommit: React.FC = () => {
                   <Col xs={4}>
                     {(configFile == null) ?
                       <Button variant='light' style={{ width: '100%' }} size='sm' disabled>.config not found</Button> :
-                      <Button variant='danger' style={{ width: '100%' }} size='sm' onClick={removeConfigFile} disabled={configFile == null}>Remove Config File</Button>}
+                      <Button variant='danger' style={{ width: '100%' }} size='sm' onClick={() => setConfigFile(undefined)} disabled={configFile == null}>Remove Config File</Button>}
                   </Col>
                 </Row>
                 <FeatureColumn configFile={configFile} setConfigString={setConfigString} />
