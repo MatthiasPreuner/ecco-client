@@ -1,10 +1,9 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Button, Modal, Row, Col, Form } from 'react-bootstrap';
-import { useSharedState } from "../../states/AppState";
+import { Row, Col, Form } from 'react-bootstrap';
 
-import { RepositoryResponse } from "../../model/RepositoryResponse";
 import { SpinButtonGroup } from "./SpinButtonGroup";
+
 
 export interface FeatureSelectorFeature {
     enabled: boolean,
@@ -16,7 +15,7 @@ export interface FeatureSelectorFeature {
 export interface FeatureSelectorProps {
     features?: FeatureSelectorFeature[],
     disableRevisions?: boolean,
-    onChange?: (config: string) => void,
+    onChange?: (enabledFeatures: string, disabledFeatures: string) => void,
 }
 
 // manualfeatures
@@ -26,26 +25,34 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
     const [features, setFeatures] = useState<FeatureSelectorFeature[]>(null);
 
     useEffect(() => {
-        console.log(props.features)
-        if (props.features)
-            setFeatures([...props.features]);
-        console.log("props")
+        if (props.features) changeFeatures([...props.features]);
     }, [props.features]);
 
     const changeFeatures = (changedFeatures: FeatureSelectorFeature[]) => {
-        let config = changedFeatures?.filter(ft => ft.enabled).map(ft => ft.name + '.' + ft.revision).join(', ');
-        props.onChange.call(this, config);
-        console.log(changedFeatures)
+        let enabledFeatures = changedFeatures?.filter(ft => ft.enabled).map(ft => ft.name + '.' + ft.revision).join(', ');
+        let disabledFeatures = changedFeatures?.filter(ft => !ft.enabled).map(ft => '-' + ft.name + '.' + ft.revision).join(', ');
+        props.onChange.call(this, enabledFeatures, disabledFeatures);
         setFeatures(changedFeatures);
+    }
+
+    const changeAll = (to: boolean) => {
+        var changedFeatures = [...features]
+        changedFeatures.forEach(f => f.enabled = to)
+        changeFeatures(changedFeatures);
     }
 
     return (
         <>
+            <div key={0} className="d-flex flex-row-reverse"> {/* // </TODO> */}
+                <button className="btn" onClick={()=>changeAll(false)}><i className="bi bi-dash-square" /></button>
+                <button className="btn"  onClick={()=>changeAll(true)}><i className="bi bi-plus-square" /></button>
+            </div>
             {features?.map((ft, i) => (
-                <Row key={i}>
+                <Row key={i + 1}>
                     <Col xs={10}>
                         <Form.Check id={i.toString()} className='my-1'>
                             <Form.Check.Input isInvalid={features.filter(f => f.enabled).length < 1} // counterintuitive
+                                checked={ft.enabled}
                                 onChange={() => {
                                     var changedFeatures = [...features]
                                     changedFeatures[i].enabled = !ft.enabled;

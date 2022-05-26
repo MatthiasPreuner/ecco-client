@@ -15,7 +15,7 @@ export const ForkRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) 
   const [appState, setAppState] = useSharedState();
   const [validated, setValidated] = useState(false);
   const [repoToClone, setRepoToClone] = useState<RepositoryModel>(null)
-  const [configString, setConfigString] = useState<string>("")
+  const [configString, setConfigString] = useState<[string, string]>(["", ""])
   const [initFeatures, setInitFeatures] = useState<FeatureSelectorFeature[]>([])
 
   const handleShow = () => {
@@ -28,7 +28,7 @@ export const ForkRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) 
     setValidated(false);
     setShow(false);
     setRepoToClone(null);
-    setConfigString("");
+    setConfigString(["", ""]);
   }
 
   let nameEmpty = () => !(inputValue?.length > 0);
@@ -51,7 +51,7 @@ export const ForkRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) 
 
     } else {
 
-      CommunicationService.getInstance().cloneRepository(props.repo, inputValue).then((apiData: RepositoryHeaderResponse) => {
+      CommunicationService.getInstance().forkRepository(props.repo, inputValue, configString[1]).then((apiData: RepositoryHeaderResponse) => {
         setAppState((previousState) => ({
           ...previousState,
           availableRepositories: apiData.data
@@ -66,7 +66,7 @@ export const ForkRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) 
     let f = repoToClone?.features.map(ft => {
       let avail = ft.revisions.sort((a, b) => Number(a.id) - Number(b.id)).map(r => parseInt(r.id))
       return {
-        enabled: false,
+        enabled: true,
         name: ft.name,
         revision: Math.max(...avail),
         availableRevisions: avail
@@ -93,7 +93,7 @@ export const ForkRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) 
         </Modal.Header>
         <Form className="w-80" noValidate validated={validated} onSubmit={cloneRepo}>
           <Modal.Body>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Group className="mb-3" controlId="name">
               <Form.Label>A new fork of '{props.repo?.name}' will be created.<br/>Please enter a name for the new repository:</Form.Label>
               <Form.Control
                 type="text"
@@ -112,16 +112,16 @@ export const ForkRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) 
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Features</Form.Label>
-              <FeatureSelector features={initFeatures} disableRevisions onChange={s => setConfigString(s)} />
+              <FeatureSelector features={initFeatures} disableRevisions onChange={(enabled, disabled) => setConfigString([enabled, disabled])} />
             </Form.Group>
             <Form.Group className="mt-3" key={4}>
               <Form.Label>Configuration</Form.Label>
-              <Form.Control type="text" disabled value={configString} />
+              <Form.Control as="textarea" rows={2} type="text" disabled value={configString[0]} />
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Close</Button>
-            <Button variant="primary" type="submit">Create Repository</Button>
+            <Button variant="primary" type="submit">Fork Repository</Button>
           </Modal.Footer>
         </Form>
       </Modal>
