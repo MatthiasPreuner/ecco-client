@@ -25,7 +25,6 @@ export const AppRouter: React.FC = () => {
         setAppState((prevState: AppState) => ({
             ...prevState,
             userIsLoggedIn: false,
-            // directory: "",
         }));
     }
 
@@ -58,7 +57,7 @@ export const AppRouter: React.FC = () => {
                         <Nav>
                             {appState.userIsLoggedIn && appState.repository !== null &&
                                 <NavDropdown title={'Repository: ' + appState.repository.name} id="basic-nav-dropdown" >
-                                    {appState.availableRepositories.filter(e => e.name !== appState.repository.name).map((element, i) => {
+                                    {appState.availableRepositories?.filter(e => e.name !== appState.repository.name).map((element, i) => {
                                         return (
                                             <NavDropdown.Item key={i} onClick={() => chooseRepo(element)}>{element.name}</NavDropdown.Item>
                                         )
