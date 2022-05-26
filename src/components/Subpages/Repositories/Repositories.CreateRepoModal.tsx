@@ -41,7 +41,7 @@ export const CreateRepoModal: React.FC = () => {
     setShow(false);
   }
 
-  let nameEmpty = () => !(inputValue?.length > 0);
+  let nameEmpty = () => !(formState.formValues.name?.length > 0);
   let nameExists = () => appState.availableRepositories.filter(v => v.name.toLowerCase() === inputValue.toLowerCase()).length > 0;
   let nameIsValid = () => !nameEmpty() && !nameExists();
 
@@ -50,14 +50,14 @@ export const CreateRepoModal: React.FC = () => {
 
     event.preventDefault();
     event.stopPropagation();
-
+    console.log(nameIsValid())
     if (form.checkValidity() === false || !nameIsValid()) {
 
       setValidated(true);
 
     } else {
 
-      CommunicationService.getInstance().createRepository(inputValue).then((apiData: RepositoryHeaderResponse) => {
+      CommunicationService.getInstance().createRepository(formState.formValues.name).then((apiData: RepositoryHeaderResponse) => {
         setAppState((previousState) => ({
           ...previousState,
           availableRepositories: apiData.data
@@ -94,30 +94,25 @@ export const CreateRepoModal: React.FC = () => {
     const { name, value } = target;
     const fieldValidationErrors = formState.formErrors;
     const validity = formState.formValidity;
-    const isEmail = name === "email";
-    const isPassword = name === "password";
-   /*  const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;*/
-   validity[name as keyof typeof validity] = value.length > 0; 
-  /*   fieldValidationErrors[name] = validity[name]
+    const isName = name === "name";
+    //const isPassword = name === "password";
+    const nameTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    validity[name as keyof typeof validity] = name.length > 0;
+
+    fieldValidationErrors[name as keyof typeof fieldValidationErrors] = validity[name as keyof typeof validity]
       ? ""
-      : `${name} is required and cannot be empty`; if (validity[name]) {
-        if (isEmail) {
-          validity[name] = emailTest.test(value);
-          fieldValidationErrors[name] = validity[name]
+      : `${name} is required and cannot be empty`; if (validity[name as keyof typeof validity]) {
+        if (isName) {
+          validity[name as keyof typeof validity] = appState.availableRepositories.filter(v => v.name.toLowerCase() === value.toLowerCase()).length < 1;
+          fieldValidationErrors[name as keyof typeof fieldValidationErrors] = validity[name as keyof typeof validity]
             ? ""
-            : `${name} should be a valid email address`;
-        }
-        if (isPassword) {
-          validity[name] = value.length >= 3;
-          fieldValidationErrors[name] = validity[name]
-            ? ""
-            : `${name} should be 3 characters minimum`;
+            : `${name} already exists`;
         }
       } setFormState({
         ...formState,
         formErrors: fieldValidationErrors,
         formValidity: validity
-      }); */
+      });
   };
 
   return (
@@ -152,7 +147,7 @@ export const CreateRepoModal: React.FC = () => {
                 onChange={handleChange}
               />
               <Form.Control.Feedback type="invalid">{formState.formErrors.name}</Form.Control.Feedback>
-            {/*   {validated ?
+              {/*   {validated ?
                 (nameEmpty() ?
                   <Form.Control.Feedback type="invalid">Name must not be empty!</Form.Control.Feedback> :
                   nameExists() ? <Form.Control.Feedback type="invalid">Name already exists!</Form.Control.Feedback> :
