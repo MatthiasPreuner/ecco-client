@@ -8,10 +8,9 @@ import { useSharedState } from "../../../states/AppState";
 import { FeatureSelector, FeatureSelectorFeature } from "../../common/FeatureSelector";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 
-export const PullFeaturesModal: React.FC<{ repo: RepositoryHeaderModel }> = (props) => {
+export const PullFeaturesModal: React.FC = () => {
 
   const [show, setShow] = useState(false);
-  const [inputValue, setInputValue] = useState<string>("");
   const [appState, setAppState] = useSharedState();
   const [validated, setValidated] = useState(false);
   const [repoToPullFrom, setRepoToPullFrom] = useState<RepositoryModel>(null)
@@ -23,38 +22,34 @@ export const PullFeaturesModal: React.FC<{ repo: RepositoryHeaderModel }> = (pro
   }
   const handleClose = () => {
     // clear form
-    setInputValue("");
     setValidated(false);
     setShow(false);
     setRepoToPullFrom(null);
     setConfigString(["", ""]);
   }
 
-  let nameEmpty = () => !(inputValue?.length > 0);
-  let nameExists = () => appState.availableRepositories.filter(v => v.name.toLowerCase() === inputValue.toLowerCase()).length > 0;
-  let nameIsValid = () => !nameEmpty() && !nameExists();
-
   let openRepo = (repo: RepositoryHeaderModel) => {
     console.log(repo.name)
     CommunicationService.getInstance().getRepository(repo).then((apiData: RepositoryResponse) => setRepoToPullFrom(apiData.data))
   }
 
-  let cloneRepo = (event: React.FormEvent<HTMLFormElement>) => {
+  let pullFeatures = (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
+    console.log("pull")
 
     event.preventDefault();
     event.stopPropagation();
 
-    if (form.checkValidity() === false || !nameIsValid()) {
+    if (form.checkValidity() === false || repoToPullFrom === null) {
 
       setValidated(true);
 
     } else {
 
-      CommunicationService.getInstance().cloneRepository(props.repo, inputValue).then((apiData: RepositoryHeaderResponse) => {
+      CommunicationService.getInstance().pullFeatures(appState.repository, repoToPullFrom.rid, configString[0]).then((apiData: RepositoryResponse) => {
         setAppState((previousState) => ({
           ...previousState,
-          availableRepositories: apiData.data
+          repository: apiData.data
         }));
       });
 
@@ -77,8 +72,9 @@ export const PullFeaturesModal: React.FC<{ repo: RepositoryHeaderModel }> = (pro
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow} className="w-100" disabled={props.repo === null}>
-        Pull <i className="bi bi-diagram-2-fill"></i>
+      {console.log("validated" + validated)}
+      <Button variant="primary" onClick={handleShow} className="w-100" disabled={appState.availableRepositories === null}>
+        Pull Features <i className="bi bi-diagram-2-fill"></i>
       </Button>
 
       <Modal
@@ -92,17 +88,18 @@ export const PullFeaturesModal: React.FC<{ repo: RepositoryHeaderModel }> = (pro
         <Modal.Header closeButton>
           <Modal.Title>Pull Features</Modal.Title>
         </Modal.Header>
-        <Form className="w-80" noValidate validated={validated} onSubmit={cloneRepo}>
+        <Form className="w-80" validated={validated} onSubmit={pullFeatures}>
           <Modal.Body>
             <Form.Group className="mb-3" controlId="selectRepo">
               <Form.Label>Where do you want to pull features from?</Form.Label>
-              <Form.Select>
+              <Form.Select isInvalid={repoToPullFrom === null}>
                 {repoToPullFrom == null &&
                   <option value={0}>Select repository</option>
                 }
                 {appState.availableRepositories.filter(r => r.rid !== appState.repository.rid).map((repo, idx) =>
                   (<option onClick={e => openRepo(repo)} value={idx + 1}>{repo.name}</option>)
                 )}
+                <Form.Control.Feedback type="invalid">Select at valid Repository!</Form.Control.Feedback>
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
@@ -116,7 +113,7 @@ export const PullFeaturesModal: React.FC<{ repo: RepositoryHeaderModel }> = (pro
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Close</Button>
-            <Button variant="primary" type="submit">Fork Repository</Button>
+            <Button variant="primary" type="submit">Pull Features</Button>
           </Modal.Footer>
         </Form>
       </Modal>

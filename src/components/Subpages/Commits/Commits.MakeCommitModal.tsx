@@ -7,8 +7,8 @@ import { CommunicationService } from "../../../services/CommunicationService";
 
 import { Col, Row, Form, Button, Modal, InputGroup } from 'react-bootstrap';
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
-import { FeatureRow } from "./Commits.MakeCommitModal.FeatureRow";
 import { FileTreeView } from "./Commits.MakeCommitModal.FileTreeView";
+import { FeatureColumn } from "./Commits.MakeCommitModal.FeatureColumn";
 
 export interface CommitFeature {
   enabled: boolean,
@@ -130,8 +130,8 @@ export const MakeCommit: React.FC = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (form.checkValidity() && tmpAcceptedFiles.size !== 0 && config.length !== 0) {
-      CommunicationService.getInstance().makeCommit(appState.repository, commitMessage, config, choosenFiles).
+    if (form.checkValidity() && tmpAcceptedFiles.size !== 0 && configString.length !== 0) {
+      CommunicationService.getInstance().makeCommit(appState.repository, commitMessage, configString, choosenFiles).
         then((apiData: RepositoryResponse) => {
           setAppState((previousState) => ({
             ...previousState,
@@ -151,7 +151,7 @@ export const MakeCommit: React.FC = () => {
         }, 3000);
     });  */
 
-  let config = configFeatures?.filter(ft => ft.enabled).concat(manualFeatures.filter(ft => ft.name !== '')).map(ft => (ft.enabled ? '' : '-') + ft.name + '.' + ft.revision).join(', ')
+  //let config = configFeatures?.filter(ft => ft.enabled).concat(manualFeatures.filter(ft => ft.name !== '')).map(ft => (ft.enabled ? '' : '-') + ft.name + '.' + ft.revision).join(', ')
 
   let removeAllFiles = () => {
     setTmpAcceptedFiles(new Map<string, File>());
@@ -226,14 +226,7 @@ export const MakeCommit: React.FC = () => {
                       <Button variant='danger' style={{ width: '100%' }} size='sm' onClick={removeConfigFile} disabled={configFile == null}>Remove Config File</Button>}
                   </Col>
                 </Row>
-                <Row className="mb-2">
-                  <Form.Group>
-                    <Form.Control isInvalid={configString?.length === 0} isValid={configString?.length > 0} type="hidden" />
-                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">Please select at least one Feature</Form.Control.Feedback>
-                  </Form.Group>
-                </Row>
-                <FeatureRow configFile={configFile} setConfigString={setConfigString} />
+                <FeatureColumn configFile={configFile} setConfigString={setConfigString} />
               </Col>
             </Row >
             <Form.Group className="mb-1" key={3}>

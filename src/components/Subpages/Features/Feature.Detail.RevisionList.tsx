@@ -38,24 +38,22 @@ export const FeatureRevisionList: React.FC<FeatureRevisionProps> = ({ feature: f
     });
 
     return (
-        <Row>
-            <Col>
-                <Row className="d-flex justify-content-between">
-                    <Col xs={9}><h5>Featurerevisions:</h5></Col>
-                    <Col xs={3} className="d-flex justify-content-end">
-                        <SpinButtonGroup
-                            value={parseInt(currentFeatureRevision.id)}
-                            min={Math.min(...feat.revisions.map(r => parseInt(r.id)))}
-                            max={Math.max(...feat.revisions.map(r => parseInt(r.id)))}
-                            onChange={value => setIndex(currentFeatureRevisionIndex + value)}
-                            />
-                    </Col>
-                </Row>
-                <FeatureRevisionDetail
-                    feature={feat}
-                    featureRevision={currentFeatureRevision}
+        <>
+            <div className="m-2 d-flex justify-content-between">
+                <Col xs={10}>
+                    <h5>Featurerevisions:</h5>
+                </Col>
+                <SpinButtonGroup
+                    value={parseInt(currentFeatureRevision.id)}
+                    min={Math.min(...feat.revisions.map(r => parseInt(r.id)))}
+                    max={Math.max(...feat.revisions.map(r => parseInt(r.id)))}
+                    onChange={value => setIndex(currentFeatureRevisionIndex + value)}
                 />
-            </Col>
-        </Row >
+            </div>
+            <FeatureRevisionDetail
+                feature={feat}
+                featureRevision={currentFeatureRevision}
+            />
+        </>
     );
 }

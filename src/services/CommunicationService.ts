@@ -58,14 +58,14 @@ export class CommunicationService {
         )
     }
 
-    public forkRepository(repo: RepositoryHeaderModel, name: string, selectedFeatures : string): Promise<any> {
+    public forkRepository(repo: RepositoryHeaderModel, name: string, deselectedFeatures : string): Promise<any> {
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'text/plain',
         };
         return axios.put(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/clone/${repo.rid}/${name}`,
-            selectedFeatures,
+            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/fork/${repo.rid}/${name}`,
+            deselectedFeatures,
             config
         )
     }
@@ -103,8 +103,9 @@ export class CommunicationService {
         )
     }
 
-    public pullFeatures(repository: RepositoryModel, fromRepo: string, selectedFeatures : string): Promise<any> {
-        let body = { fromRId: "fromRepo.id", selectedFeatures: selectedFeatures }
+    public pullFeatures(repository: RepositoryModel, fromRId: string, deselectedFeatures : string): Promise<any> {
+        console.log("pull")
+        let body = { fromRId: fromRId, deselectedFeatures: deselectedFeatures }
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'application/json',

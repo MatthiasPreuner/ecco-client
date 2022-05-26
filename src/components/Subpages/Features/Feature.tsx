@@ -60,7 +60,13 @@ export const Feature: React.FC = () => {
                                 </Row>
                             </Col>
                             <Col>
-                                <PullFeaturesModal repo={appState.availableRepositories.find(r => r.rid = appState.repository.rid)} />
+                                <Row className="mb-3">
+                                    <Col xs={6}></Col>
+                                    <Col xs={6}>
+                                        <PullFeaturesModal />
+                                    </Col>
+                                </Row>
+
                             </Col>
                         </Row>
                         <Row>
