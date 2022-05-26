@@ -96,7 +96,6 @@ export class CommunicationService {
         config.headers = {
             'Content-Type': 'application/json',
         };
-        console.log(body)
         return axios.post(
             `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id}/${featureRevision.id + '/description'}`,
             body,
