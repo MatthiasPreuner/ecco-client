@@ -82,7 +82,7 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
                             .sort((a, b) => a.featureRevisionString.localeCompare(b.featureRevisionString))
                             .map((rev, i) => {
 
-                                let possibleFeatureRevisions = appState.repository.features.find(f => f.name === rev.featureRevisionString.split('.')[0]).revisions
+                                let possibleFeatureRevisions = appState.repository?.features?.find(f => f.name === rev.featureRevisionString.split('.')[0]).revisions
                                     .sort((a, b) => Number(a.id) - Number(b.id));
 
                                 let currentIndex = possibleFeatureRevisions.map(r => r.featureRevisionString).indexOf(rev.featureRevisionString);
