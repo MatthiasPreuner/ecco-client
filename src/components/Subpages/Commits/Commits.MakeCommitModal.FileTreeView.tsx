@@ -28,6 +28,10 @@ let root: Node[] = [{
 
 let folderIndex: number;
 
+/* 
+ * source:
+ * https://www.npmjs.com/package/react-checkbox-tree
+ */
 export class FileTreeView extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
