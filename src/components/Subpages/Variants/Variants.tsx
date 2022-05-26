@@ -26,6 +26,7 @@ export const Variants: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        console.log(appState.repository)
         if (!appState.userIsLoggedIn || appState.repository === null) {
             navigate(`/`)
         } else {
@@ -174,7 +175,7 @@ export const Variants: React.FC = () => {
                         </Row>
                         <Row>
                             <InputGroup className="mb-3">
-                                <DropdownButton bsPrefix="dropdown-toggle btn btn-custom-color dropdown-btn" style={{ border: '1px solid #ced4da' }} disabled={featureFilterDropdown.length === 0} title="">
+                                <DropdownButton bsPrefix="dropdown-toggle btn btn-custom-color dropdown-btn" style={{ border: '1px solid #ced4da' }} disabled={featureFilterDropdown?.length === 0} title="">
                                     {featureFilterDropdown?.map((feature, i) => {
                                         return (
                                             <Dropdown.Item key={i} onClick={() => addFeatureFilter(feature)}>{feature.name}</Dropdown.Item>
