@@ -29,7 +29,6 @@ export const FeatureDetail: React.FC<DetailViewProps> = ({ currentSelectedFeatur
 
         CommunicationService.getInstance().updateFeatureDescription(appState.repository, selectedFeature, tmpFeatureDescription)
             .then((apiData: RepositoryResponse) => {
-                console.log(apiData.data);
                 setAppState((previousState) => ({
                     ...previousState,
                     repository: apiData.data
