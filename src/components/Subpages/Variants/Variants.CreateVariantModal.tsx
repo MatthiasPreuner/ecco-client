@@ -1,19 +1,11 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Button, Modal, Row, Col, Form } from 'react-bootstrap';
+import { Button, Modal, Col, Form } from 'react-bootstrap';
 import { useSharedState } from "../../../states/AppState";
 
 import { CommunicationService } from "../../../services/CommunicationService";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
-import { SpinButtonGroup } from "../../common/SpinButtonGroup";
 import { FeatureSelector, FeatureSelectorFeature } from "../../common/FeatureSelector";
-
-interface VariantFeature {
-  enabled: boolean,
-  name: string,
-  revision: number,
-  availableRevisions: number[]
-}
 
 export const CreateVariant: React.FC = () => {
 
