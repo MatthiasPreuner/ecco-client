@@ -43,7 +43,7 @@ export const Feature: React.FC = () => {
             <Col>
                 <Row><h3>Features</h3></Row>
                 {appState.repository == null ?
-                    <Row><p>No Repository selected.</p></Row> :
+                    <Row><i>No Repository selected.</i></Row> :
                     <>
                         <Row>
                             <Col xs={6} className="pr-3">
@@ -75,9 +75,9 @@ export const Feature: React.FC = () => {
                                     <Col>
                                         <ListGroup style={{ maxHeight: 'calc(100vh - 250px)' }}>
                                             {appState.repository.features.length === 0 ?
-                                                <p>This Repository has no Features yet. Features are added with new Commits.</p> :
+                                                <i>This Repository has no Features yet. Features are added with new Commits.</i> :
                                                 features.length === 0 ?
-                                                    <p>Please consider using a different filter condition. There are no results.</p> :
+                                                    <i>Please consider using a different filter condition. There are no results.</i> :
                                                     features}
                                         </ListGroup>
                                     </Col>

@@ -14,6 +14,7 @@ import { CommunicationService } from "../../../services/CommunicationService";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 
 import './Variants.scss';
+import { TableInfoRow } from "../../common/TableInfoRow";
 
 export const Variants: React.FC = () => {
 
@@ -26,7 +27,6 @@ export const Variants: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(appState.repository)
         if (!appState.userIsLoggedIn || appState.repository === null) {
             navigate(`/`)
         } else {
@@ -58,20 +58,21 @@ export const Variants: React.FC = () => {
         }));
     }
 
+    let infoMessage: string = "";
     const getCurrentVariantExpression = (): JSX.Element[] => {
 
         var filteredByFeatures = appState.repository?.variants.filter(vari => featureFilter.map(f => f.name).every(e => vari.configuration.featureRevisions.map(r => r.featureRevisionString.split('.')[0]).includes(e)));
-/* 
-        if (appState.repository.variants.length === 0) {
-            return (
-                <tr>
-                    <th style={{ minWidth: '20%' }}>Name</th>
-                    <th style={{ minWidth: '80%' }}>Description</th>
-                </tr>)
-        } */
+        var filteredByFeaturesAndText = filteredByFeatures?.filter(variant => (variant.name?.toLowerCase().includes(variantFilterText.toLowerCase()) || variant.description?.toLowerCase().includes(variantFilterText.toLowerCase())))
 
-        return filteredByFeatures?.filter(variant => (variant.name?.toLowerCase().includes(variantFilterText.toLowerCase()) || variant.description?.toLowerCase().includes(variantFilterText.toLowerCase())))
-            .map((variant: VariantModel, i) => {
+        if (appState.repository?.features.length === 0) {
+            infoMessage = "Repository has no Features yet, please make a Commit before creating a new Variant!"
+        } else if (appState.repository?.variants.length === 0) {
+            infoMessage = "Repository has no Variants yet, please create a new Variant!"
+        } else if (filteredByFeaturesAndText?.length === 0) {
+            infoMessage = "No matches found, please change search parameters!"
+        } else {
+            infoMessage = " "
+            return filteredByFeaturesAndText?.map((variant: VariantModel, i) => {
                 return (
                     <tr onClick={() => editVariant === null && setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
                         {editVariant?.id === variant.id ?
@@ -116,6 +117,7 @@ export const Variants: React.FC = () => {
             }).filter((singleJSXElement: JSX.Element) => {
                 return singleJSXElement !== undefined || singleJSXElement !== null;
             });
+        }
     }
     let filteredVariants = getCurrentVariantExpression();
 
@@ -150,8 +152,9 @@ export const Variants: React.FC = () => {
                                     <th style={{ minWidth: '80%' }}>Description</th>
                                 </tr>
                             </thead>
-                            <tbody style={{ height: "40vh" }}>
+                            <tbody style={{ height: "35vh" }}>
                                 {filteredVariants}
+                                <TableInfoRow message={infoMessage} />
                             </tbody>
                         </Table>
                     </Col>

@@ -1,0 +1,16 @@
+tr.info {
+    --bs-table-hover-bg: #fff;
+
+    >td {
+        width: 100%;
+        border-style: none;
+        >i {
+            font-size: var(--bs-body-font-size);
+        }
+    }
+}
+
+tr.info:hover {
+    background-color: #fff;
+    cursor: default;
+}

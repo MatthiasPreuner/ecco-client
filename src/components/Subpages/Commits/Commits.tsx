@@ -9,6 +9,7 @@ import { MakeCommit } from "./Commits.MakeCommitModal";
 import { CompareCommits } from "./Commits.CompareCommitsModal";
 
 import './Commits.scss';
+import { TableInfoRow } from "../../common/TableInfoRow";
 
 export const Commits: React.FC = () => {
 
@@ -34,6 +35,8 @@ export const Commits: React.FC = () => {
         setSelectedCommit(commit);
     }
 
+    let infoMessage: string = appState.repository?.features.length === 0 ? "Repository has no Commits yet." : "";
+
     return (
         <Container className="main d-flex pt-4 justify-content-center">
             <Col>
@@ -48,7 +51,7 @@ export const Commits: React.FC = () => {
                                     <th style={{ minWidth: '15%' }}>Date</th>
                                 </tr>
                             </thead>
-                            <tbody style={{height: "40vh"}}>
+                            <tbody style={{ height: "40vh" }}>
                                 {appState.repository?.commits.map((commit, i) => {
                                     return (
                                         <tr onClick={(e) => selectCommit(e, commit)} className={selectedCommit === commit || compareCommit === commit ? "btn-primary" : null} key={i}>
@@ -58,11 +61,12 @@ export const Commits: React.FC = () => {
                                         </tr>
                                     )
                                 })}
+                                <TableInfoRow message={infoMessage} />
                             </tbody>
                         </Table>
                     </Col>
                     <Col>
-                        <Row className='mb-2'><CompareCommits commits={[selectedCommit, compareCommit]}/></Row>
+                        <Row className='mb-2'><CompareCommits commits={[selectedCommit, compareCommit]} /></Row>
                         <Row className='mb-2'><MakeCommit /></Row>
                     </Col>
                 </Row>
