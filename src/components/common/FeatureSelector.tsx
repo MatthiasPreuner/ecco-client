@@ -21,7 +21,6 @@ export interface FeatureSelectorProps {
     onChange?: (enabledFeatures: string, disabledFeatures: string) => void,
 }
 
-
 export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
 
     const [configFeatures, setConfigFeatures] = useState<FeatureSelectorFeature[]>([]);
@@ -41,7 +40,7 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
         // TODO
         let disabledFeatures = configFeatures?.filter(ft => !ft.enabled).map(ft => '-' + ft.name + '.' + ft.revision).join(', ');
         props.onChange.call(this, enabledFeatures, disabledFeatures);
-    }, [configFeatures, manualFeatures]);
+    }, [configFeatures, manualFeatures, props.onChange]);
 
     const switchAll = (to: boolean) => {
         var tmpConfigFeatures = [...configFeatures]
@@ -52,8 +51,8 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
             if (f.name !== "") f.enabled = to;
         });
         
-        setConfigFeatures(configFeatures);
-        setManualFeatures(manualFeatures);
+        setConfigFeatures(tmpConfigFeatures);
+        setManualFeatures(tmpManualFeatures);
     }
 
     let removeManualFeature = (i: number) => {
@@ -75,10 +74,15 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
                         <Form.Control.Feedback type="invalid">Select at least one feature!</Form.Control.Feedback>
                     </Form.Group>
                 </Col>
-                <Col className="d-flex flex-row-reverse">
+                <Col className="rct-options">
+                    <button key={"b0"} onClick={() => switchAll(true)} aria-label="Select all" title="Select all" type="button" className="rct-option rct-option-expand-all"><i className="bi bi-plus-square" /></button>
+                    <button key={"b1"} onClick={() => switchAll(false)} aria-label="Deselect all" title="Deselect all" type="button" className="rct-option rct-option-collapse-all"><i className="bi bi-dash-square" /></button>
+                </Col>
+
+             {/*    <Col className="d-flex flex-row-reverse">
                     <button className="btn" type="button" onClick={() => switchAll(false)}><i className="bi bi-dash-square" /></button>
                     <button className="btn" type="button" onClick={() => switchAll(true)}><i className="bi bi-plus-square" /></button>
-                </Col>
+                </Col> */}
             </Row>
             {configFeatures?.map((ft, i) => (
                 <Row key={i + 1}>
