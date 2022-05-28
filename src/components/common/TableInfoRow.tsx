@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import './TableInfoRow.scss';
 
 export interface TableInfoRowProps {
     message?: string,
