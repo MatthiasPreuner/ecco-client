@@ -71,7 +71,7 @@ export const Variants: React.FC = () => {
         } else if (filteredByFeaturesAndText?.length === 0) {
             infoMessage = "No matches found, please change search parameters!"
         } else {
-            infoMessage = " "
+            infoMessage = ""
             return filteredByFeaturesAndText?.map((variant: VariantModel, i) => {
                 return (
                     <tr onClick={() => editVariant === null && setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
