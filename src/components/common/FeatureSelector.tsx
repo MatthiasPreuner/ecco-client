@@ -118,7 +118,7 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
                 </Row>
             ))}
             {manualFeatures?.map((ft, i) => (
-                <Row>
+                <Row key={configFeatures?.length + i}>
                     <Col xs={1}>
                         <input type="checkbox" id="new" className="form-check-input my-1"
                             disabled={ft.name === ''}

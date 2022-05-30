@@ -90,7 +90,7 @@ export const PullFeaturesModal: React.FC = () => {
         </Modal.Header>
         <Form className="w-80" validated={validated} onSubmit={pullFeatures}>
           <Modal.Body>
-            <Form.Group className="mb-3" controlId="selectRepo">
+            <Form.Group className="mb-3" key={0} controlId="selectRepo">
               <Form.Label>Where do you want to pull features from?</Form.Label>
               <Form.Select isInvalid={repoToPullFrom === null}>
                 {repoToPullFrom == null &&
@@ -102,11 +102,11 @@ export const PullFeaturesModal: React.FC = () => {
                 <Form.Control.Feedback type="invalid">Select at valid Repository!</Form.Control.Feedback>
               </Form.Select>
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3" key={1}>
               <Form.Label>Features</Form.Label>
               <FeatureSelector features={initFeatures} disableRevisions onChange={(enabled, disabled) => setConfigString([enabled, disabled])} />
             </Form.Group>
-            <Form.Group className="mt-3" key={4}>
+            <Form.Group className="mt-3" key={2} >
               <Form.Label>Configuration</Form.Label>
               <Form.Control as="textarea" required rows={2} type="text" disabled value={configString[0]} />
             </Form.Group>

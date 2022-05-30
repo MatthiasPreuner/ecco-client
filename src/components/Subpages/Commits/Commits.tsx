@@ -55,7 +55,7 @@ export const Commits: React.FC = () => {
                                 {appState.repository?.commits.map((commit, i) => {
                                     return (
                                         <tr onClick={(e) => selectCommit(e, commit)} className={selectedCommit === commit || compareCommit === commit ? "btn-primary" : null} key={i}>
-                                            <td style={{ minWidth: '70%' }}>{commit.commitMessage}</td> {/* TODO max string length */}
+                                            <td style={{ minWidth: '70%' }}>{commit.commitMessage}</td>{/* TODO max string length */}
                                             <td style={{ minWidth: '15%' }}>{commit.username}</td>
                                             <td style={{ minWidth: '15%' }}>{commit.date}</td>
                                         </tr>
