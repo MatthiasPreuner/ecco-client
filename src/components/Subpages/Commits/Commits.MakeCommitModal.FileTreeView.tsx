@@ -6,7 +6,7 @@ import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import { FileWithPath } from 'react-dropzone';
 
 interface IProps {
-    files?: FileWithPath[],
+    files?: Map<String, FileWithPath>, //FileWithPath[],
     //setChoosenFiles?: Dispatch<SetStateAction<FileWithPath[]>>
     onChange?: (choosenFiles: FileWithPath[]) => void
 }
@@ -14,7 +14,8 @@ interface IProps {
 interface IState {
     checked: any[];
     expanded: any[];
-    nodes: any
+    nodes: any,
+    prevFiles: Map<String, FileWithPath>
 }
 
 // see https://icons.getbootstrap.com/
@@ -39,11 +40,12 @@ export class FileTreeView extends React.Component<IProps, IState> {
         this.state = {
             checked: [],
             expanded: [],
-            nodes: root
+            nodes: root,
+            prevFiles: props.files
         };
     }
 
-    createTree(files: FileWithPath[]): any {
+    static createTree(files: FileWithPath[]): [any, string[]] {
 
         folderIndex = -1; // for unique folder values
         let root: Node[] = [{
@@ -52,7 +54,9 @@ export class FileTreeView extends React.Component<IProps, IState> {
             children: [],
         }];
 
-        if (this.props.files === null || this.props.files.length < 1) return root;
+        let tmpChecked: string[] = [];
+
+        if (files === null || files.length < 1) return [root, []];
 
         files.forEach((f, idx) => {
             let path = f.path.substring(1) // remove starting '/'
@@ -60,16 +64,16 @@ export class FileTreeView extends React.Component<IProps, IState> {
             root[0].label = path.substring(0, path.indexOf('/')) // set root label (only needed once)
 
             path = path.substring(path.indexOf('/') + 1) // remove root folder
-            this.addPathToNode(root[0], f.name, idx, path)
+            FileTreeView.addPathToNode(root[0], f.name, idx, path, tmpChecked)
         })
-        this.sortRecursiveley(root[0]);
-        return root;
+        FileTreeView.sortRecursiveley(root[0]);
+        return [root, tmpChecked];
     }
 
-    addPathToNode(node: Node, fileName: string, idx: number, path: string) {
+    static addPathToNode(node: Node, fileName: string, idx: number, path: string, tmpChecked: string[]) {
         let i = path.indexOf('/');
         if (i == -1) {
-            this.addFileToNode(node, fileName, idx)
+            FileTreeView.addFileToNode(node, fileName, idx, tmpChecked)
         } else {
             let folderName: string = path.substring(0, i)
             let childNode: Node = node.children.find(node => node.label === folderName) // check child-node exists
@@ -82,19 +86,20 @@ export class FileTreeView extends React.Component<IProps, IState> {
                 }
                 node.children.push(childNode)
             }
-            this.addPathToNode(childNode, fileName, idx, path.substring(i + 1))
+            FileTreeView.addPathToNode(childNode, fileName, idx, path.substring(i + 1), tmpChecked)
         }
     }
 
-    addFileToNode(node: Node, fileName: string, idx: number) {
+    static addFileToNode(node: Node, fileName: string, idx: number, tmpChecked: string[]) {
         node.children.push({
             value: idx.toString(),
             label: fileName,
             icon: this.getFileIcon(fileName)
         })
+        tmpChecked.push(idx.toString()) // ugly */
     }
 
-    getFileIcon(fileName: string): React.ReactNode {
+    static getFileIcon(fileName: string): React.ReactNode {
         let extension: string = fileName.substring(fileName.lastIndexOf('.') + 1)
 
         if (availableBootstrapIconsFileTypes.includes(extension)) {
@@ -103,14 +108,14 @@ export class FileTreeView extends React.Component<IProps, IState> {
         return <i className="bi bi-file-earmark" />
     }
 
-    sortRecursiveley(node: Node) {
+    static sortRecursiveley(node: Node) {
         node.children.sort((a, b) => {
             if (a.children !== undefined && b.children === undefined) {
-                this.sortRecursiveley(a);
+                FileTreeView.sortRecursiveley(a);
                 return -1;
             }
             if (b.children !== undefined && a.children === undefined) {
-                this.sortRecursiveley(b);
+                FileTreeView.sortRecursiveley(b);
                 return 1;
             }
             return a.label.toString().localeCompare(b.label.toString())
@@ -118,25 +123,25 @@ export class FileTreeView extends React.Component<IProps, IState> {
     }
 
     onCheck(checked: string[]) {
-        this.setState({ checked });
-
-        // invoke onChange event
-        let files: FileWithPath[] = [];
-        checked.forEach(idx => { files.push(this.props.files[parseInt(idx)]) })
         if (this.props.onChange) {
+            // invoke onChange event
+            let files: FileWithPath[] = [];
+            checked.forEach(idx => { files.push(this.state.prevFiles.get(idx)) })
             this.props.onChange.call(this, files);
         }
-
+        this.setState({ checked });
     }
 
-    // TODO unsafe
-    componentWillReceiveProps(nextProps: IProps) {
-        let allNodes = this.createTree(nextProps.files);
-        this.setState((s) => ({ ...s, nodes: allNodes }))
+    static getDerivedStateFromProps(nextProps: IProps, prevState: any) {
+        if (nextProps.files !== prevState.prevFiles) {
+            let [allNodes, checkedNodes] = FileTreeView.createTree(Array.from(nextProps.files.values()));
+            return ({ ...prevState, nodes: allNodes, checked: checkedNodes, prevFiles: nextProps.files })
+        }
+        return null;
     }
 
     render() {
-        if (this.props.files?.length > 0) {
+        if (this.props.files?.size > 0) {
             return (
                 <CheckboxTree
                     nodes={this.state.nodes}

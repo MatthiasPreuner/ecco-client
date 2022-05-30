@@ -135,7 +135,7 @@ export const MakeCommit: React.FC = () => {
                   </Form.Group>
                 </Row>
                 <Row>
-                  <FileTreeView files={Array.from(tmpAcceptedFiles.values())} onChange={files => setChoosenFiles(files)} />
+                  <FileTreeView files={tmpAcceptedFiles} onChange={files => setChoosenFiles(files)} />
                 </Row>
               </Col>
               <Col xs={6}>
