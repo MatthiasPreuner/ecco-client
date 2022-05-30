@@ -59,13 +59,14 @@ export class CommunicationService {
     }
 
     public forkRepository(repo: RepositoryHeaderModel, name: string, deselectedFeatures : string): Promise<any> {
+        let body = { deselectedFeatures: deselectedFeatures }
         let config = new RequestConfig();
         config.headers = {
-            'Content-Type': 'text/plain',
+            'Content-Type': 'application/json',
         };
         return axios.put(
             `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/fork/${repo.rid}/${name}`,
-            deselectedFeatures,
+            body,
             config
         )
     }
