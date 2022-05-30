@@ -27,21 +27,17 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
     const [manualFeatures, setManualFeatures] = useState<FeatureSelectorFeature[]>([]);
 
     useEffect(() => {
-        console.log("props.features")
         if (props.features) setConfigFeatures([...props.features]);
     }, [props.features]);
 
     useEffect(() => {
-        console.log("props.manualFeatures")
         if (props.manualFeatures) setManualFeatures([...props.manualFeatures]);
     }, [props.manualFeatures]);
 
     // updateConfigString
     useEffect(() => {
-        console.log("updateConfigString")
         let enabledFeatures = configFeatures?.filter(ft => ft.enabled).concat(manualFeatures.filter(ft => ft.name !== "")).map(ft => (ft.enabled ? '' : '-') + ft.name + '.' + ft.revision).join(', ');
-        // TODO
-        let disabledFeatures = configFeatures?.filter(ft => !ft.enabled).map(ft => '-' + ft.name + '.' + ft.revision).join(', ');
+        let disabledFeatures = configFeatures?.filter(ft => !ft.enabled).map(ft => ft.name + '.' + ft.revision).join(', ');
         props.onChange.call(this, enabledFeatures, disabledFeatures);
     }, [configFeatures, manualFeatures]);
 
