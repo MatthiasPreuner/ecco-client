@@ -25,7 +25,7 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
     }
 
     let variantRemoveFeature = (featureRevision: FeatureRevisionModel) => {
-        CommunicationService.getInstance().variantRemoveFeature(appState.repository, props.variant, featureRevision.featureRevisionString.split('.')[0])
+        CommunicationService.getInstance().variantRemoveFeature(appState.repository, props.variant, featureRevision.featureName)
             .then((apiData: RepositoryResponse) => {
                 setAppState((previousState) => ({
                     ...previousState,
@@ -55,6 +55,10 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
     }
     let AddableFeatures = addableFeatures();
 
+
+
+
+
     return (
         <>
             <Col xs={3} className="mr-auto mb-3">
@@ -82,20 +86,20 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
                             .sort((a, b) => a.featureRevisionString.localeCompare(b.featureRevisionString))
                             .map((rev, i) => {
 
-                                let possibleFeatureRevisions = appState.repository?.features?.find(f => f.name === rev.featureRevisionString.split('.')[0]).revisions
+                                let possibleFeatureRevisions = appState.repository?.features?.find(f => f.name === rev.featureName).revisions
                                     .sort((a, b) => Number(a.id) - Number(b.id));
 
-                                let currentIndex = possibleFeatureRevisions.map(r => r.featureRevisionString).indexOf(rev.featureRevisionString);
+                                let currentIndex = possibleFeatureRevisions?.map(r => r.featureRevisionString).indexOf(rev.featureRevisionString);
 
                                 return (
-                                    <ListGroup.Item key={i} className="pe-1">{rev.featureRevisionString.split('.')[0]}
+                                    <ListGroup.Item key={i} className="pe-1">{rev.featureName}
                                         <Stack gap={1} direction="horizontal" className="float-end ">
                                             <SpinButtonGroup
                                                 style={{width: '80px'}}
                                                 value={rev.id}
-                                                min={possibleFeatureRevisions[0].id}
-                                                max={possibleFeatureRevisions[possibleFeatureRevisions.length - 1].id}
-                                                onChange={(value) => variantUpdateFeature(props.variant, rev.featureRevisionString.split('.')[0], possibleFeatureRevisions[currentIndex + value].id)}
+                                                min={possibleFeatureRevisions[0]?.id}
+                                                max={possibleFeatureRevisions[possibleFeatureRevisions.length - 1]?.id}
+                                                onChange={(value) => variantUpdateFeature(props.variant, rev.featureName, possibleFeatureRevisions[currentIndex + value].id)}
                                             />
                                             <Button size='sm' onClick={() => variantRemoveFeature(rev)}><i className="bi bi-x-lg" /></Button>
                                         </Stack>

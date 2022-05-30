@@ -29,7 +29,7 @@ export const FeatureRevisionList: React.FC<FeatureRevisionProps> = ({ feature: f
 
     useEffect(() => {
         feat?.revisions.sort((a, b) => Number(a.id) - Number(b.id));
-        if (feat?.name !== currentFeatureRevision?.featureRevisionString.split('.')[0]) {
+        if (feat?.name !== currentFeatureRevision?.featureName) {
             maxIndex();
         } else {
             setIndex(currentFeatureRevisionIndex);

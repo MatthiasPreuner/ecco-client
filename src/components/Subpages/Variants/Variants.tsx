@@ -61,7 +61,7 @@ export const Variants: React.FC = () => {
     let infoMessage: string = "";
     const getCurrentVariantExpression = (): JSX.Element[] => {
 
-        var filteredByFeatures = appState.repository?.variants.filter(vari => featureFilter.map(f => f.name).every(e => vari.configuration.featureRevisions.map(r => r.featureRevisionString.split('.')[0]).includes(e)));
+        var filteredByFeatures = appState.repository?.variants.filter(vari => featureFilter.map(f => f.name).every(e => vari.configuration.featureRevisions.map(r => r.featureName).includes(e)));
         var filteredByFeaturesAndText = filteredByFeatures?.filter(variant => (variant.name?.toLowerCase().includes(variantFilterText.toLowerCase()) || variant.description?.toLowerCase().includes(variantFilterText.toLowerCase())))
 
         if (appState.repository?.features.length === 0) {

@@ -41,7 +41,7 @@ export const FeatureColumn: React.FC<FeatureRowProps> = (props: FeatureRowProps)
 
             var feature: FeatureSelectorFeature = {
                 enabled: !str.startsWith('-'),
-                name: nameversion[0].toUpperCase(),
+                name: nameversion[0],
                 revision: parseInt(nameversion[1]),
                 availableRevisions: [1]
             }

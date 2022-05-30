@@ -79,8 +79,8 @@ export const Commits: React.FC = () => {
                                     <ListGroup variant="flush" className='mb-0' style={{ maxHeight: '30vh' }}>
                                         {selectedCommit.configuration.featureRevisions.map((rev, i) => {
                                             return (
-                                                <ListGroup.Item key={i}>{rev.featureRevisionString.split('.')[0]}
-                                                    <Badge className="float-end" bg="primary">{rev.featureRevisionString.split('.')[1]}</Badge>
+                                                <ListGroup.Item key={i}>{rev.featureName}
+                                                    <Badge className="float-end" bg="primary">{rev.featureRevisionIndex}</Badge>
                                                 </ListGroup.Item>
                                             )
                                         })}
