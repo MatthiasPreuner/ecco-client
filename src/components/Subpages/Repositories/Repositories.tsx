@@ -71,7 +71,7 @@ export const Repositories: React.FC = () => {
                     <h3>Repositories</h3>
                 </Row>
                 <Row>
-                    <Col xs={8}>
+                    <Col xs={10}>
                         <Row>
                             <InputGroup className="mb-3">
                                 <InputGroup.Text><i className="bi bi-funnel-fill"></i></InputGroup.Text>
@@ -92,12 +92,14 @@ export const Repositories: React.FC = () => {
                                     repositories}
                         </ListGroup>
                     </Col>
-                    <Col>
-                        <ButtonGroup vertical>
+                    <Col className="d-flex flex-column justify-content-between">
+                        <ButtonGroup vertical className="w-100 mb-5">
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><CreateRepoModal /></ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><CloneRepoModal repo={selectedRepo} /></ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><ForkRepoModal repo={selectedRepo} /></ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><DeleteRepoModal repo={selectedRepo} /></ButtonGroup>
+                        </ButtonGroup>
+                        <ButtonGroup vertical className="w-100">
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><Button variant="primary" type="submit" disabled={selectedRepo == null} onClick={chooseRepo}>Select</Button></ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical><Button onClick={refresh}><i className="bi bi-arrow-clockwise"></i></Button></ButtonGroup>
                         </ButtonGroup>
