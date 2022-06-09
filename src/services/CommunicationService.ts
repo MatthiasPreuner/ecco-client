@@ -58,7 +58,7 @@ export class CommunicationService {
         )
     }
 
-    public forkRepository(repo: RepositoryHeaderModel, name: string, deselectedFeatures : string): Promise<any> {
+    public forkRepository(repo: RepositoryHeaderModel, name: string, deselectedFeatures: string): Promise<any> {
         let body = { deselectedFeatures: deselectedFeatures }
         let config = new RequestConfig();
         config.headers = {
@@ -104,7 +104,7 @@ export class CommunicationService {
         )
     }
 
-    public pullFeatures(repository: RepositoryModel, fromRId: string, deselectedFeatures : string): Promise<any> {
+    public pullFeatures(repository: RepositoryModel, fromRId: string, deselectedFeatures: string): Promise<any> {
         console.log("pull")
         let body = { fromRId: fromRId, deselectedFeatures: deselectedFeatures }
         let config = new RequestConfig();
@@ -123,7 +123,7 @@ export class CommunicationService {
 
         let formData = new FormData();
         let config = new RequestConfig();
-   
+
         acceptedFiles.forEach((tmpFile: FileWithPath) => {
             let path = tmpFile.path.substring(1) // remove starting '/'
             path = path.substring(path.indexOf('/')) // remove root folder
@@ -178,19 +178,12 @@ export class CommunicationService {
         )
     }
 
-    public checkOutVariant(repository: RepositoryModel, variant: VariantModel) {
-        axios({
+    public checkOutVariant(repository: RepositoryModel, variant: VariantModel): Promise<any> {
+        return axios({
             url: `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/checkout`,
             method: 'GET',
             responseType: 'blob', // important
-        }).then((response: any) => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'checkout.zip'); //or any other extension
-            document.body.appendChild(link);
-            link.click();
-        });
+        })
     }
 
     // Variants / Features ========================================================================================
