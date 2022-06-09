@@ -8,7 +8,7 @@ export interface ErrorResponseToastProps {
 export const LoadingButton: React.FC<ErrorResponseToastProps & ButtonProps> = (props) => {
 
     return (
-        <Button {...props} disabled={props.loading}>
+        <Button {...props} disabled={props.loading || props.disabled}>
             {props.loading &&
                 <Spinner
                     as="span"
