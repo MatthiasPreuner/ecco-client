@@ -4,84 +4,66 @@ import { Button, Modal, Form } from 'react-bootstrap';
 import { RepositoryHeaderResponse } from "../../../model/AvailableRepositoryResponse";
 import { CommunicationService } from "../../../services/CommunicationService";
 import { useSharedState } from "../../../states/AppState";
-
-/* export default class ParentClass extends React.Component {
-
-  constructor(props: any) {
-    super(props);
-
-    this.state = {
-      count: 0
-    };
-  }
-
-
-
-  render() {
-
-    return false;
-
-  }
-
-} */
+import { AxiosError } from "axios";
+import { ErrorResponseToast } from "../../common/ErrorResponseToast";
+import { LoadingButton } from "../../common/LoadingButton";
 
 export const CreateRepoModal: React.FC = () => {
 
   const [show, setShow] = useState(false);
-  const [inputValue, setInputValue] = useState<string>("");
   const [appState, setAppState] = useSharedState();
-  const [validated, setValidated] = useState(false);
+  const [errorResponse, setErrorResponse] = useState<AxiosError>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleShow = () => setShow(true);
 
   const handleClose = () => {
     // clear form
-    setInputValue("");
-    setValidated(false);
+    setFormState(defaultFormState);
+    setErrorResponse(undefined);
+    setLoading(false)
+    // hide form
     setShow(false);
   }
 
-  let nameEmpty = () => !(formState.formValues.name?.length > 0);
-  let nameExists = () => appState.availableRepositories.filter(v => v.name.toLowerCase() === inputValue.toLowerCase()).length > 0;
-  let nameIsValid = () => !nameEmpty() && !nameExists();
-
-  let createRepo = (event: React.FormEvent<HTMLFormElement>) => {
-    const form = event.currentTarget;
-
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    event.stopPropagation();
-    console.log(nameIsValid())
-    if (form.checkValidity() === false || !nameIsValid()) {
+    const { formValues, formValidity } = formState;
 
-      setValidated(true);
-
-    } else {
-
+    if (Object.values(formValidity).every(Boolean)) {
+      // Form is valid
+      setLoading(true);
       CommunicationService.getInstance().createRepository(formState.formValues.name).then((apiData: RepositoryHeaderResponse) => {
         setAppState((previousState) => ({
           ...previousState,
           availableRepositories: apiData.data
         }));
-      });
-
-      handleClose();
+        handleClose();
+      }, (e: AxiosError) => {setErrorResponse(e); setLoading(false)})
+    } else {
+      for (let key in formValues) {
+        let target = {
+          name: key,
+          value: formValues[key as keyof typeof formValues]
+        } as EventTarget & HTMLInputElement;
+        handleValidation(target);
+      }
     }
   };
 
-  const [formState, setFormState] = useState({
+  const defaultFormState = {
     formValues: {
-      name: "",
-      password: ""
+      name: ""
     },
     formErrors: {
-      name: "",
-      password: ""
+      name: ""
     },
     formValidity: {
-      name: false,
-      password: false
+      name: false
     }
-  });
+  };
+
+  const [formState, setFormState] = useState(defaultFormState);
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { formValues } = formState;
@@ -95,24 +77,28 @@ export const CreateRepoModal: React.FC = () => {
     const fieldValidationErrors = formState.formErrors;
     const validity = formState.formValidity;
     const isName = name === "name";
-    //const isPassword = name === "password";
-    const nameTest = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    validity[name as keyof typeof validity] = name.length > 0;
 
-    fieldValidationErrors[name as keyof typeof fieldValidationErrors] = validity[name as keyof typeof validity]
-      ? ""
-      : `${name} is required and cannot be empty`; if (validity[name as keyof typeof validity]) {
-        if (isName) {
-          validity[name as keyof typeof validity] = appState.availableRepositories.filter(v => v.name.toLowerCase() === value.toLowerCase()).length < 1;
-          fieldValidationErrors[name as keyof typeof fieldValidationErrors] = validity[name as keyof typeof validity]
-            ? ""
-            : `${name} already exists`;
-        }
-      } setFormState({
-        ...formState,
-        formErrors: fieldValidationErrors,
-        formValidity: validity
-      });
+    if (isName) {
+
+      fieldValidationErrors[name as keyof typeof fieldValidationErrors] = ``
+      validity[name as keyof typeof validity] = false;
+
+      if (value.length === 0) {
+        fieldValidationErrors[name as keyof typeof fieldValidationErrors] = `Name is required and cannot be empty`
+      } else if (/[^A-Za-z0-9_]+/.test(value)) {
+        fieldValidationErrors[name as keyof typeof fieldValidationErrors] = `Name contains invalid characters`
+      } else if (appState.availableRepositories.filter(v => v.name.toLowerCase() === value.toLowerCase()).length > 0) {
+        fieldValidationErrors[name as keyof typeof fieldValidationErrors] = `Name already exists`
+      } else {
+        validity[name as keyof typeof validity] = true;
+      }
+    }
+
+    setFormState({
+      ...formState,
+      formErrors: fieldValidationErrors,
+      formValidity: validity
+    });
   };
 
   return (
@@ -131,14 +117,12 @@ export const CreateRepoModal: React.FC = () => {
         <Modal.Header closeButton>
           <Modal.Title>Create Repository</Modal.Title>
         </Modal.Header>
-        <Form className="w-80" onSubmit={createRepo}>
+        <Form className="w-80" onSubmit={handleSubmit}>
           <Modal.Body>
             <Form.Group className="mb-3">
-              <Form.Label>A new empty Repository will be created. Please enter a name:</Form.Label>
+              <Form.Label>A new empty repository will be created. Please enter a name:</Form.Label>
               <input
                 type="text"
-                /*  isInvalid={false /* validated && !nameIsValid() */
-                /*  isValid={false} */
                 name="name"
                 placeholder="Name of the new Repository..."
                 pattern="[A-Za-z0-9_]{1,}"
@@ -147,18 +131,12 @@ export const CreateRepoModal: React.FC = () => {
                 onChange={handleChange}
               />
               <Form.Control.Feedback type="invalid">{formState.formErrors.name}</Form.Control.Feedback>
-              {/*   {validated ?
-                (nameEmpty() ?
-                  <Form.Control.Feedback type="invalid">Name must not be empty!</Form.Control.Feedback> :
-                  nameExists() ? <Form.Control.Feedback type="invalid">Name already exists!</Form.Control.Feedback> :
-                    < Form.Control.Feedback type="invalid">Invalid Name!</Form.Control.Feedback>)
-                : null
-              } */}
             </Form.Group>
+            <ErrorResponseToast error={errorResponse} />
           </Modal.Body>
-          <Modal.Footer>
+          <Modal.Footer className="d-flex justify-content-between">
             <Button variant="secondary" onClick={handleClose}>Close</Button>
-            <Button variant="primary" type="submit">Create Repository</Button>
+            <LoadingButton loading={loading} variant="primary" type="submit">Create Repository</LoadingButton>
           </Modal.Footer>
         </Form>
       </Modal>
