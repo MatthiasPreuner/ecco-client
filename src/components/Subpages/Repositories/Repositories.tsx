@@ -49,10 +49,7 @@ export const Repositories: React.FC = () => {
     let chooseRepo = () => {
         setChoosing(true)
         CommunicationService.getInstance().getRepository(selectedRepo).then((apiData: RepositoryResponse) => {
-            setAppState((previousState) => ({
-                ...previousState,
-                repository: apiData.data
-            }));
+            setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
             setChoosing(false)
         }, (e) => setChoosing(false));
     }
@@ -62,7 +59,7 @@ export const Repositories: React.FC = () => {
         if (appState.availableRepositories.length === 0) {
             return [(<i>There are no Repositories yet.</i>)]
         }
- 
+
         let filteredRepositories = appState.availableRepositories?.filter(r => r.name.toLowerCase().includes(repositoryFilterText.toLowerCase()))
 
         if (filteredRepositories.length === 0) {
@@ -118,16 +115,7 @@ export const Repositories: React.FC = () => {
                                     onClick={chooseRepo}>Select</LoadingButton>
                             </ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical>
-                                <Button onClick={refresh}>
-                                    {loading ?
-                                        <Spinner
-                                            as="span"
-                                            animation="border"
-                                            size="sm"
-                                            role="status"
-                                            aria-hidden="true"
-                                        /> : <i className="bi bi-arrow-clockwise" />}
-                                </Button>
+                                <LoadingButton loading={loading} hidecontentwhileloading onClick={refresh}><i className="bi bi-arrow-clockwise" /> </LoadingButton>
                             </ButtonGroup>
                         </ButtonGroup>
                     </Col>

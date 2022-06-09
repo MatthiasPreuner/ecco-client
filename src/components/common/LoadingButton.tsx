@@ -7,7 +7,6 @@ export interface ErrorResponseToastProps {
 }
 
 export const LoadingButton: React.FC<ErrorResponseToastProps & ButtonProps> = (props) => {
-    console.log(!(props.hidecontentwhileloading && props.loading))
     return (
         <Button {...props} disabled={props.loading || props.disabled}>
             {props.loading &&
