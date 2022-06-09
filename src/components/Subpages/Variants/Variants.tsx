@@ -200,7 +200,7 @@ export const Variants: React.FC = () => {
                         <Row>
                             <Col xs={6} />
                             <Col xs={6}>
-                                <Button className="w-100" onClick={checkOutVariant}>Checkout Variant</Button>
+                                <Button className="w-100" onClick={checkOutVariant} disabled={!selectedVariant}>Checkout Variant</Button>
                             </Col>
                         </Row>
                     </Col>
