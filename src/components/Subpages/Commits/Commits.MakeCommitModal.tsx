@@ -9,6 +9,15 @@ import { Col, Row, Form, Button, Modal, InputGroup } from 'react-bootstrap';
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 import { FileTreeView } from "./Commits.MakeCommitModal.FileTreeView";
 import { FeatureColumn } from "./Commits.MakeCommitModal.FeatureColumn";
+import { AxiosError } from "axios";
+
+declare module 'react' {
+  interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
+    // extends React's HTMLAttributes
+    directory?: string;
+    webkitdirectory?: string;
+  }
+}
 
 export interface CommitFeature {
   enabled: boolean,
@@ -45,13 +54,19 @@ export const MakeCommit: React.FC = () => {
 
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     var allFiles = new Map(tmpAcceptedFiles)
-    acceptedFiles.forEach(f => {
-      if (f.name.endsWith(".config")) {
-        setConfigFile(f);
-      } else {
-        allFiles.set(f.path, f);
-      }
-    })
+
+    if (acceptedFiles.filter(f => f.name === f.path).length > 0) {
+      console.log("please select a folder") // TODO
+    } else {
+
+      acceptedFiles.forEach(f => {
+        if (f.name.endsWith(".config")) {
+          setConfigFile(f);
+        } else {
+          allFiles.set(f.path, f);
+        }
+      })
+    }
     setTmpAcceptedFiles(allFiles);
   }, []);
 
@@ -67,11 +82,8 @@ export const MakeCommit: React.FC = () => {
     if (form.checkValidity() && tmpAcceptedFiles.size !== 0 && configString.length !== 0) {
       CommunicationService.getInstance().makeCommit(appState.repository, commitMessage, configString, choosenFiles).
         then((apiData: RepositoryResponse) => {
-          setAppState((previousState) => ({
-            ...previousState,
-            repository: apiData.data
-          }));
-        });
+          setAppState((previousState) => ({            ...previousState,            repository: apiData.data          }));
+        }, (e : AxiosError) => console.log("error"));
       handleClose();
     }
     setValidated(true);
@@ -85,7 +97,7 @@ export const MakeCommit: React.FC = () => {
         }, 3000);
     });  */
 
-  
+
   let removeAllFiles = () => {
     setTmpAcceptedFiles(new Map<string, File>());
   }
@@ -108,12 +120,12 @@ export const MakeCommit: React.FC = () => {
         <Form validated={validated} onSubmit={handleSubmit}>
           <Modal.Body>
             <Row className="mb-3" {...getRootProps()} >
-              <input {...getInputProps()} />
+              <input {...getInputProps()} directory="" webkitdirectory="" />
               <Col className={"mx-2 d-flex rounded align-items-center align-content-center justify-content-around drop-zone " + (isDragActive ? "drop-zone-active" : "")}                                     >
                 {
                   isDragActive ?
                     <p className="m-0">Drop the files here ...</p> :
-                    <p className="m-0">Drag 'n' drop some files or folders here, or click to select files</p>
+                    <p className="m-0">Drag 'n' drop a folder here, or click to select a folder</p>
                 }
               </Col>
             </Row>
