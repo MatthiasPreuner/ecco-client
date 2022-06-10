@@ -146,7 +146,7 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
                                         tmpManualFeatures[i].enabled = true; // enable self
                                         console.log(tmpManualFeatures);
                                     }
-                                    tmpManualFeatures[i].name = event.target.value.toLocaleUpperCase();
+                                    tmpManualFeatures[i].name = event.target.value;
                                     // if it is empty now
                                     if (event.target.value === '') {
                                         tmpManualFeatures = tmpManualFeatures.filter(feature => feature.name !== '') // remove all empty
