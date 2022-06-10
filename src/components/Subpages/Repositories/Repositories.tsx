@@ -15,6 +15,8 @@ import { CloneRepoModal } from "./Repositories.CloneRepoModal";
 import { RepositoryHeaderModel } from "../../../model/RepositoryModel";
 import { RepositoryHeaderResponse } from "../../../model/AvailableRepositoryResponse";
 import { LoadingButton } from "../../common/LoadingButton";
+import { AxiosError } from "axios";
+import { ErrorResponseToast } from "../../common/ErrorResponseToast";
 
 export const Repositories: React.FC = () => {
 
@@ -23,7 +25,7 @@ export const Repositories: React.FC = () => {
     const [repositoryFilterText, setRepositoryFilterText] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [choosing, setChoosing] = useState<boolean>(false);
-
+    const [errorResponse, setErrorResponse] = useState<AxiosError>();
 
     const navigate = useNavigate();
 
@@ -38,20 +40,25 @@ export const Repositories: React.FC = () => {
     let refresh = () => {
         setLoading(true)
         CommunicationService.getInstance().getAllRepositories().then((apiData: RepositoryHeaderResponse) => {
-            setAppState((previousState) => ({
-                ...previousState,
-                availableRepositories: apiData.data
-            }));
+            setAppState((previousState) => ({ ...previousState, availableRepositories: apiData.data }));
+            setErrorResponse(undefined);
             setLoading(false)
-        }, (e) => setLoading(false)); // TODO add error Toast?
+        }, (e: AxiosError) => {
+            setErrorResponse(e);
+            setLoading(false);
+        });
     }
 
     let chooseRepo = () => {
         setChoosing(true)
         CommunicationService.getInstance().getRepository(selectedRepo).then((apiData: RepositoryResponse) => {
             setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
+            setErrorResponse(undefined);
             setChoosing(false)
-        }, (e) => setChoosing(false));
+        }, (e: AxiosError) => {
+            setErrorResponse(e);
+            setChoosing(false);
+        });
     }
 
     const getCurrentRepositoryExpression = (): JSX.Element[] => {
@@ -97,6 +104,7 @@ export const Repositories: React.FC = () => {
                         <ListGroup className="my-4" style={{ maxHeight: 'calc(100vh - 250px)' }}>
                             {repositories}
                         </ListGroup>
+                        <ErrorResponseToast error={errorResponse} />
                     </Col>
                     <Col className="d-flex flex-column justify-content-between">
                         <ButtonGroup vertical className="w-100 mb-5">
