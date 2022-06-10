@@ -1,11 +1,14 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Button, Modal, Col, Form } from 'react-bootstrap';
+import { Button, Modal, Form } from 'react-bootstrap';
 import { useSharedState } from "../../../states/AppState";
 
 import { CommunicationService } from "../../../services/CommunicationService";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 import { FeatureSelector, FeatureSelectorFeature } from "../../common/FeatureSelector";
+import { AxiosError } from "axios";
+import { ErrorResponseToast } from "../../common/ErrorResponseToast";
+import { LoadingButton } from "../../common/LoadingButton";
 
 export const CreateVariant: React.FC = () => {
 
@@ -16,6 +19,8 @@ export const CreateVariant: React.FC = () => {
   const [validated, setValidated] = useState(false);
   const [initFeatures, setInitFeatures] = useState<FeatureSelectorFeature[]>([])
   const [configString, setConfigString] = useState<string>("")
+  const [errorResponse, setErrorResponse] = useState<AxiosError>();
+  const [creating, setCreating] = useState<boolean>(false);
 
   useEffect(() => {
     let f = appState.repository?.features.map(ft => {
@@ -36,6 +41,8 @@ export const CreateVariant: React.FC = () => {
     setDescription('');
     setShow(false);
     setValidated(false);
+    setCreating(false);
+    setErrorResponse(undefined);
     setConfigString("");
   }
 
@@ -50,14 +57,15 @@ export const CreateVariant: React.FC = () => {
     console.log("valid" + name + nameIsValid())
     console.log(appState.repository.variants.filter(v => v.name === name))
     if (form.checkValidity() === true && nameIsValid()) {
-      console.log("creating")
-      CommunicationService.getInstance().createVariant(appState.repository, name, description, configString).then((apiData: RepositoryResponse) => {
-        setAppState((previousState) => ({
-          ...previousState,
-          repository: apiData.data
-        }));
-      });
-      handleClose();
+      setCreating(true)
+      CommunicationService.getInstance().createVariant(appState.repository, name, description, configString)
+        .then((apiData: RepositoryResponse) => {
+          setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
+          handleClose();
+        }, (e: AxiosError) => {
+          setErrorResponse(e);
+          setCreating(false);
+        })
     }
     setValidated(true);
   };
@@ -96,18 +104,17 @@ export const CreateVariant: React.FC = () => {
             </Form.Group>
             <Form.Group key={3}>
               <Form.Label>Features</Form.Label>
-              <FeatureSelector features={initFeatures} onChange={(enabled, disabled) => setConfigString(enabled)}/>
+              <FeatureSelector features={initFeatures} onChange={(enabled, disabled) => setConfigString(enabled)} />
             </Form.Group>
             <Form.Group className="mt-3" key={4}>
               <Form.Label>Configuration</Form.Label>
               <Form.Control type="text" disabled value={configString} />
             </Form.Group>
+            <ErrorResponseToast error={errorResponse} />
           </Modal.Body>
-          <Modal.Footer>
-            <Col className="d-flex justify-content-between align-items-center">
-              <Button variant="secondary" onClick={handleClose}>Close</Button>
-              <Button variant="primary" type="submit">Create</Button>
-            </Col>
+          <Modal.Footer className="d-flex justify-content-between">
+            <Button variant="secondary" onClick={handleClose}>Close</Button>
+            <LoadingButton loading={creating} variant="primary" type="submit">Create</LoadingButton>
           </Modal.Footer>
         </Form>
       </Modal>
