@@ -12,7 +12,9 @@ export interface AppState {
   /*   artifactTree: ArtefactTreeModel, */
   /*   associations: AssociationInspection[], */
   eccoServiceIsInitialized: boolean,
-  userIsLoggedIn: boolean
+  userIsLoggedIn: boolean,
+  loginToken: any
+
 }
 
 const useValue = () => useState<AppState>({
@@ -21,7 +23,8 @@ const useValue = () => useState<AppState>({
   /*   artifactTree: null, */
   /*    plugins: [], */
   eccoServiceIsInitialized: true,
-  userIsLoggedIn: false
+  userIsLoggedIn: false,
+  loginToken: false
 });
 
 export const {

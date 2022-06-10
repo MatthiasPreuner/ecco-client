@@ -9,6 +9,11 @@ import { RepositoryHeaderModel, RepositoryModel } from "../model/RepositoryModel
 import {AssociationInspection} from "../Domain/Model/Frontend/AssociationInspection";
 import {ArtefactgraphFilter} from "../Domain/Model/Backend/ChartArtefactgraph/ArtefactgraphFilter"; */
 
+/* import axios2 from 'axios';
+axios2.defaults.baseURL = 'http://localhost:8080/api'
+axios2.defaults.headers.common = {'Authorization': `bearer TOKEN`} */
+/* export default axios; */
+
 const axios = require("axios");
 
 export class CommunicationService {
@@ -30,31 +35,33 @@ export class CommunicationService {
     private static communicationServiceInstance: CommunicationService;
 
     private constructor() {
-
+        axios.defaults.baseURL = CommunicationService.BASE_URI
+        axios.defaults.headers.common['Authorization'] = `bearer TOKEN` // TODO
     }
 
     // Repository ======================================================================================
     public getAllRepositories(): Promise<any> {
         return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT + '/all'}`
+            `${CommunicationService.REPOSITORY_ENDPOINT + '/all'}`
         )
     }
 
     public getRepository(repo: RepositoryHeaderModel): Promise<any> {
+        console.log(`${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`)
         return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`
+            `${CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`
         )
     }
 
     public createRepository(name: string): Promise<any> {
         return axios.put(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${name}`
+            `${CommunicationService.REPOSITORY_ENDPOINT}/${name}`
         )
     }
 
     public cloneRepository(repo: RepositoryHeaderModel, name: string): Promise<any> {
         return axios.put(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/clone/${repo.rid}/${name}`
+            `${CommunicationService.REPOSITORY_ENDPOINT}/clone/${repo.rid}/${name}`
         )
     }
 
@@ -65,7 +72,7 @@ export class CommunicationService {
             'Content-Type': 'application/json',
         };
         return axios.put(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/fork/${repo.rid}/${name}`,
+            `${CommunicationService.REPOSITORY_ENDPOINT}/fork/${repo.rid}/${name}`,
             body,
             config
         )
@@ -73,19 +80,23 @@ export class CommunicationService {
 
     public deleteRepository(repo: RepositoryHeaderModel): Promise<any> {
         return axios.delete(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`
+            `${CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`
         )
     }
-
-    // Feature ========================================================================================
+    
+     // Feature ========================================================================================
     public updateFeatureDescription(repository: RepositoryModel, currentFeatureModel: FeatureModel, description: string): Promise<any> {
+
+ /*        Axios.post<any, any, { description: string;}>(url: string, data?: {  description: string;}, config?: AxiosRequestConfig<{ description: string;}>): Promise<any>
+   */
+
         let body = { description: description }
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'application/json',
         };
         return axios.post(
-            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id + "/description"}`,
+            `/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id + "/description"}`,
             body,
             config
         )
@@ -98,7 +109,7 @@ export class CommunicationService {
             'Content-Type': 'application/json',
         };
         return axios.post(
-            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id}/${featureRevision.id + '/description'}`,
+            `/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id}/${featureRevision.id + '/description'}`,
             body,
             config
         )
@@ -112,7 +123,7 @@ export class CommunicationService {
             'Content-Type': 'application/json',
         };
         return axios.post(
-            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/pull`,
+            `/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/pull`,
             body,
             config
         )
@@ -141,7 +152,7 @@ export class CommunicationService {
         console.log(formData)
         console.log(`${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`)
         return axios.post(
-            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`,
+            `/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`,
             formData,
             config
         )
@@ -154,7 +165,7 @@ export class CommunicationService {
             'Content-Type': 'application/json',
         };
         return axios.put(
-            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${name}`,
+            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${name}`,
             body,
             config
         )
@@ -162,7 +173,7 @@ export class CommunicationService {
 
     public deleteVariant(repository: RepositoryModel, variant: VariantModel): Promise<any> {
         return axios.delete(
-            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
+            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
         )
     }
 
@@ -173,7 +184,7 @@ export class CommunicationService {
             'Content-Type': 'application/json',
         };
         return axios.post(
-            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
+            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
             body
         )
     }
@@ -189,7 +200,7 @@ export class CommunicationService {
     // Variants / Features ========================================================================================
     public variantAddFeature(repository: RepositoryModel, variant: VariantModel, feature: FeatureModel): Promise<any> {
         return axios.put(
-            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${feature.id}`,
+            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${feature.id}`,
         )
     }
 
@@ -199,7 +210,7 @@ export class CommunicationService {
             'Content-Type': 'text/plain',
         };
         return axios.post(
-            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${featureName}`,
+            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${featureName}`,
             id,
             config
         )
@@ -207,7 +218,7 @@ export class CommunicationService {
 
     public variantRemoveFeature(repository: RepositoryModel, variant: VariantModel, featureName: string): Promise<any> {
         return axios.delete(
-            `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${featureName}`,
+            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${featureName}`,
         )
     }
 
