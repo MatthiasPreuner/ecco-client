@@ -23,7 +23,13 @@ export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props
   let [inputValue, setInputValue] = useState<string>('');
   let [appState, setAppState] = useSharedState();
 
-  let deleteRepo = () => {
+  let deleteRepo = (event: React.FormEvent<HTMLFormElement>) => {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    // TODO make like createRepoModal
+
     if (inputValue !== "DELETE") return;
 
     CommunicationService.getInstance().deleteRepository(props.repo).then((apiData: RepositoryHeaderResponse) => {
@@ -51,18 +57,18 @@ export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props
         <Modal.Header closeButton>
           <Modal.Title>Delete Repository</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <Form className="w-80">
+        <Form className="w-80" onSubmit={deleteRepo}>
+          <Modal.Body>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Repository '{props.repo?.name}' will be permanently removed!</Form.Label>
               <Form.Control type="text" placeholder="Type 'DELETE' to confirm" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
             </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={onModalDismiss}>Close</Button>
-          <Button variant="primary" onClick={deleteRepo}>Delete Repository</Button>
-        </Modal.Footer>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={onModalDismiss}>Close</Button>
+            <Button variant="primary" type="submit">Delete Repository</Button>
+          </Modal.Footer>
+        </Form>
       </Modal>
     </>
   );
