@@ -32,7 +32,7 @@ export const DeleteVariantModal: React.FC<{ variant: VariantModel }> = (props) =
 
   return (
     <>
-      <Button className="w-100" variant="secondary" disabled={props.variant == null} onClick={handleShow}>
+      <Button className="w-100" variant="secondary" disabled={!props.variant} onClick={handleShow}>
         Remove Variant
       </Button>
 

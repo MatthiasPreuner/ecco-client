@@ -64,7 +64,7 @@ export const AppRouter: React.FC = () => {
                                     })
                                     }
                                     {(appState.availableRepositories.length > 1) && < NavDropdown.Divider />}
-                                    <NavDropdown.Item onClick={() => setExpanded(false)} as={Link} to="repositories">Repository Settings</NavDropdown.Item>
+                                    <NavDropdown.Item onClick={() => setExpanded(false)} as={Link} to="repositories">Repository Overview</NavDropdown.Item>
                                 </NavDropdown>
                             }
                             {appState.userIsLoggedIn ?

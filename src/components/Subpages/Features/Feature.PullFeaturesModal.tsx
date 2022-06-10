@@ -2,11 +2,11 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { Button, Modal, Form } from 'react-bootstrap';
 import { RepositoryHeaderModel, RepositoryModel } from "../../../model/RepositoryModel";
-import { RepositoryHeaderResponse } from "../../../model/AvailableRepositoryResponse";
 import { CommunicationService } from "../../../services/CommunicationService";
 import { useSharedState } from "../../../states/AppState";
 import { FeatureSelector, FeatureSelectorFeature } from "../../common/FeatureSelector";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
+import { AxiosError } from "axios";
 
 export const PullFeaturesModal: React.FC = () => {
 
@@ -16,6 +16,8 @@ export const PullFeaturesModal: React.FC = () => {
   const [repoToPullFrom, setRepoToPullFrom] = useState<RepositoryModel>(null)
   const [configString, setConfigString] = useState<[string, string]>(["", ""])
   const [initFeatures, setInitFeatures] = useState<FeatureSelectorFeature[]>([])
+  const [errorResponse, setErrorResponse] = useState<AxiosError>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleShow = () => {
     setShow(true);
@@ -29,10 +31,9 @@ export const PullFeaturesModal: React.FC = () => {
   }
 
   let openRepo = (repo: RepositoryHeaderModel) => {
-    console.log(repo.name)
     CommunicationService.getInstance().getRepository(repo).then((apiData: RepositoryResponse) => setRepoToPullFrom(apiData.data))
   }
-
+  
   let pullFeatures = (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
     console.log("pull")
@@ -72,7 +73,6 @@ export const PullFeaturesModal: React.FC = () => {
 
   return (
     <>
-      {console.log("validated" + validated)}
       <Button variant="primary" onClick={handleShow} className="w-100" disabled={appState.availableRepositories === null}>
         Pull Features <i className="bi bi-diagram-2-fill"></i>
       </Button>

@@ -23,7 +23,7 @@ export interface FeatureSelectorProps {
 
 export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
 
-    const [configFeatures, setConfigFeatures] = useState<FeatureSelectorFeature[]>([]);
+    const [configFeatures, setConfigFeatures] = useState<FeatureSelectorFeature[]>();
     const [manualFeatures, setManualFeatures] = useState<FeatureSelectorFeature[]>([]);
 
     useEffect(() => {
@@ -49,7 +49,7 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
         tmpManualFeatures.forEach(f => {
             if (f.name !== "") f.enabled = to;
         });
-        
+
         setConfigFeatures(tmpConfigFeatures);
         setManualFeatures(tmpManualFeatures);
     }
@@ -60,28 +60,33 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
         setManualFeatures(tmpManualFeatures);
     }
 
-    const inValid = configFeatures !== null && configFeatures.length > 0 && configFeatures.concat(manualFeatures).filter(f => f.enabled).length < 1;
-    const valid = configFeatures !== null && configFeatures.length > 0 && configFeatures.concat(manualFeatures).filter(f => f.enabled).length > 0;
+    if (configFeatures === undefined) return (
+        <Row><i>Please Select a repository.</i></Row>
+    )
+
+    const hasFeatures = configFeatures?.length > 0 || manualFeatures?.length > 0
+    const inValid = configFeatures && configFeatures.length > 0 && configFeatures.concat(manualFeatures).filter(f => f.enabled).length < 1;
+    const valid = configFeatures && configFeatures.length > 0 && configFeatures.concat(manualFeatures || []).filter(f => f.enabled).length > 0;
 
     return (
         <>
-            <Row key={0} style={{position: 'sticky', top: '0', backgroundColor: '#fff', zIndex: 5}}>
-                <Col xs={9}>
-                    <Form.Group>
-                        <Form.Control isInvalid={inValid} isValid={valid} type="hidden" />
-                        <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                        <Form.Control.Feedback type="invalid">Select at least one feature!</Form.Control.Feedback>
-                    </Form.Group>
-                </Col>
-                <Col className="rct-options">
-                    <button key={"b0"} onClick={() => switchAll(true)} aria-label="Select all" title="Select all" type="button" className="rct-option rct-option-expand-all"><i className="bi bi-plus-square" /></button>
-                    <button key={"b1"} onClick={() => switchAll(false)} aria-label="Deselect all" title="Deselect all" type="button" className="rct-option rct-option-collapse-all"><i className="bi bi-dash-square" /></button>
-                </Col>
-
-             {/*    <Col className="d-flex flex-row-reverse">
-                    <button className="btn" type="button" onClick={() => switchAll(false)}><i className="bi bi-dash-square" /></button>
-                    <button className="btn" type="button" onClick={() => switchAll(true)}><i className="bi bi-plus-square" /></button>
-                </Col> */}
+            <Row key={0} style={{ position: 'sticky', top: '0', backgroundColor: '#fff', zIndex: 5 }}>
+                {hasFeatures ?
+                    <>
+                        <Col xs={9}>
+                            <Form.Group>
+                                <Form.Control isInvalid={inValid} isValid={valid} type="hidden" />
+                                <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">Select at least one feature!</Form.Control.Feedback>
+                            </Form.Group>
+                        </Col>
+                        <Col className="rct-options">
+                            <button key={"b0"} onClick={() => switchAll(true)} aria-label="Select all" title="Select all" type="button" className="rct-option rct-option-expand-all"><i className="bi bi-plus-square" /></button>
+                            <button key={"b1"} onClick={() => switchAll(false)} aria-label="Deselect all" title="Deselect all" type="button" className="rct-option rct-option-collapse-all"><i className="bi bi-dash-square" /></button>
+                        </Col>
+                    </> :
+                    <i>Repository has no features.</i>
+                }
             </Row>
             {configFeatures?.map((ft, i) => (
                 <Row key={i + 1}>
@@ -127,7 +132,7 @@ export const FeatureSelector: React.FC<FeatureSelectorProps> = (props) => {
                                 var tmpManualFeatures = [...manualFeatures]
                                 tmpManualFeatures[i].enabled = !ft.enabled;
                                 setManualFeatures(tmpManualFeatures);
-                            }}/>
+                            }} />
                     </Col>
                     <Col xs={9}>
                         <InputGroup>

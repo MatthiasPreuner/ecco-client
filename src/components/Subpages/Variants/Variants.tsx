@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { CreateVariant } from "./Variants.CreateVariantModal";
 import { useNavigate } from 'react-router-dom';
 
-import { Container, Col, Row, InputGroup, Table, Button, DropdownButton, Dropdown, FormControl, Badge, Stack } from 'react-bootstrap';
+import { Container, Col, Row, InputGroup, Table, Button, DropdownButton, Dropdown, FormControl, Badge, Stack, Spinner } from 'react-bootstrap';
 
 import { VariantModel } from "../../../model/VariantModel";
 import { DeleteVariantModal } from "./Variants.DeleteVariantModal";
@@ -12,6 +12,7 @@ import { FeatureModel } from "../../../model/FeatureModel";
 import { Features } from "./Variants.Feature";
 import { CommunicationService } from "../../../services/CommunicationService";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
+import { LoadingButton } from "../../common/LoadingButton";
 
 import './Variants.scss';
 import { TableInfoRow } from "../../common/TableInfoRow";
@@ -24,6 +25,9 @@ export const Variants: React.FC = () => {
     const [featureFilter, setFeatureFilter] = useState<FeatureModel[]>([]);
     const [editVariant, setEditVariant] = useState<VariantModel>(null);
 
+    const [checkingOut, setCheckingOut] = useState<boolean>(false);
+    const [updatingVariant, setUpdatingVariant] = useState<boolean>(false);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -35,28 +39,16 @@ export const Variants: React.FC = () => {
     }, [appState.repository, appState.userIsLoggedIn, selectedVariant, navigate]);
 
     const updateVariant = () => {
+        setUpdatingVariant(true)
         CommunicationService.getInstance().updateVariant(appState.repository, editVariant).then((apiData: RepositoryResponse) => {
-            setAppState((previousState) => ({
-                ...previousState,
-                repository: apiData.data
-            }));
-        });
-        setEditVariant(null);
+            setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
+            setEditVariant(null);
+            setUpdatingVariant(false);
+        }, (e) => {
+            setEditVariant(null)
+            setUpdatingVariant(false);
+        })
     };
-
-    const changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditVariant((previousState) => ({
-            ...previousState,
-            name: e.target.value
-        }));
-    }
-
-    const changeDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditVariant((previousState) => ({
-            ...previousState,
-            description: e.target.value
-        }));
-    }
 
     let infoMessage: string = "";
     const getCurrentVariantExpression = (): JSX.Element[] => {
@@ -77,37 +69,36 @@ export const Variants: React.FC = () => {
                     <tr onClick={() => editVariant === null && setSelectedVariant(variant)} className={selectedVariant === variant ? "btn-primary" : null} key={i}>
                         {editVariant?.id === variant.id ?
                             <>
-                                <td style={{ width: '20%' }}>
+                                <td style={{ minWidth: '20%' }}>
                                     <InputGroup size='sm' className="w-100">
                                         <FormControl
                                             type="text"
                                             placeholder="Variant Name"
                                             value={editVariant.name}
-                                            onChange={changeName}
+                                            onChange={e => setEditVariant((prev) => ({ ...prev, name: e.target.value }))}
                                         />
                                     </InputGroup>
                                 </td>
-                                <td style={{ width: '80%' }}>
+                                <td style={{ minWidth: '80%' }}>
                                     <Stack gap={1} direction="horizontal" className="float-end w-100">
                                         <InputGroup size='sm' className="w-100">
                                             <FormControl
                                                 type="text"
                                                 placeholder="Variant Description"
                                                 value={editVariant.description}
-                                                onChange={changeDescription}
+                                                onChange={e => setEditVariant((prev) => ({ ...prev, description: e.target.value }))}
                                             />
                                         </InputGroup>
-                                        <Badge key={0} bg="secondary" className='btn' onClick={() => updateVariant()}><i className="bi bi-check-lg"></i></Badge>
-                                        <Badge key={1} bg="secondary" className='btn' onClick={() => setEditVariant(null)}><i className="bi bi-x-lg"></i></Badge>
+                                        <LoadingButton key={0} hidecontentwhileloading loading={updatingVariant} variant="secondary" size="sm" style={{ padding: "0rem 0.25rem" }} onClick={() => updateVariant()}><i className="bi bi-check-lg" /></LoadingButton>
+                                        <Button key={1} disabled={updatingVariant} variant="secondary" size="sm" style={{ padding: "0rem 0.25rem" }} onClick={() => setEditVariant(null)}><i className="bi bi-x-lg" /></Button>
                                     </Stack>
                                 </td>
                             </> :
                             <>
                                 <td>{variant.name}</td>
-                                <td style={{ width: '80%' }}>{variant.description}
+                                <td style={{ minWidth: '80%' }}>{variant.description}
                                     <Stack gap={1} direction="horizontal" className="float-end">
-                                        {editVariant === null &&
-                                            <Badge bg="secondary" className='btn' onClick={() => setEditVariant({ ...variant })}><i className="bi bi-pencil-square"></i></Badge>}
+                                        {editVariant === null && <Button key={1} disabled={updatingVariant} variant="secondary" size="sm" style={{ padding: "0rem 0.25rem" }} onClick={() => setEditVariant({ ...variant })}><i className="bi bi-pencil-square" /></Button>}
                                     </Stack>
                                 </td>
                             </>
@@ -134,7 +125,16 @@ export const Variants: React.FC = () => {
     )
 
     let checkOutVariant = () => {
-        CommunicationService.getInstance().checkOutVariant(appState.repository, selectedVariant);
+        setCheckingOut(true)
+        CommunicationService.getInstance().checkOutVariant(appState.repository, selectedVariant).then((response: any) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'checkout.zip'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+            setCheckingOut(false)
+        }, () => setCheckingOut(false)) // TODO add error response handling
     }
 
     return (
@@ -200,7 +200,7 @@ export const Variants: React.FC = () => {
                         <Row>
                             <Col xs={6} />
                             <Col xs={6}>
-                                <Button className="w-100" onClick={checkOutVariant}>Checkout Variant</Button>
+                                <LoadingButton loading={checkingOut} className="w-100" onClick={checkOutVariant} disabled={!selectedVariant}>Checkout Variant</LoadingButton>
                             </Col>
                         </Row>
                     </Col>
