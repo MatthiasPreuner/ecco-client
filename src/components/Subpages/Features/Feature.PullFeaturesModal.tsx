@@ -7,6 +7,8 @@ import { useSharedState } from "../../../states/AppState";
 import { FeatureSelector, FeatureSelectorFeature } from "../../common/FeatureSelector";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 import { AxiosError } from "axios";
+import { ErrorResponseToast } from "../../common/ErrorResponseToast";
+import { LoadingButton } from "../../common/LoadingButton";
 
 export const PullFeaturesModal: React.FC = () => {
 
@@ -17,44 +19,45 @@ export const PullFeaturesModal: React.FC = () => {
   const [configString, setConfigString] = useState<[string, string]>(["", ""])
   const [initFeatures, setInitFeatures] = useState<FeatureSelectorFeature[]>([])
   const [errorResponse, setErrorResponse] = useState<AxiosError>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [pulling, setPulling] = useState<boolean>(false);
 
   const handleShow = () => {
     setShow(true);
   }
+
   const handleClose = () => {
     // clear form
     setValidated(false);
     setShow(false);
     setRepoToPullFrom(null);
+    setPulling(false);
     setConfigString(["", ""]);
   }
 
   let openRepo = (repo: RepositoryHeaderModel) => {
+    // TODO error response handling + spinner?
     CommunicationService.getInstance().getRepository(repo).then((apiData: RepositoryResponse) => setRepoToPullFrom(apiData.data))
   }
-  
-  let pullFeatures = (event: React.FormEvent<HTMLFormElement>) => {
+
+  let handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
-    console.log("pull")
 
     event.preventDefault();
     event.stopPropagation();
 
-    if (form.checkValidity() === false || repoToPullFrom === null) {
+    if (form.checkValidity() === false || repoToPullFrom === null || configString[0].length === 0) {
 
       setValidated(true);
 
     } else {
-
+      setPulling(true)
       CommunicationService.getInstance().pullFeatures(appState.repository, repoToPullFrom.rid, configString[0]).then((apiData: RepositoryResponse) => {
-        setAppState((previousState) => ({
-          ...previousState,
-          repository: apiData.data
-        }));
+        setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
+        handleClose();
+      }, (e: AxiosError) => {
+        setErrorResponse(e);
+        setPulling(false)
       });
-
-      handleClose();
     }
   };
 
@@ -88,7 +91,7 @@ export const PullFeaturesModal: React.FC = () => {
         <Modal.Header closeButton>
           <Modal.Title>Pull Features</Modal.Title>
         </Modal.Header>
-        <Form className="w-80" validated={validated} onSubmit={pullFeatures}>
+        <Form className="w-80" validated={validated} onSubmit={handleSubmit}>
           <Modal.Body>
             <Form.Group className="mb-3" key={0} controlId="selectRepo">
               <Form.Label>Where do you want to pull features from?</Form.Label>
@@ -110,10 +113,11 @@ export const PullFeaturesModal: React.FC = () => {
               <Form.Label>Configuration</Form.Label>
               <Form.Control as="textarea" required rows={2} type="text" disabled value={configString[0]} />
             </Form.Group>
+            <ErrorResponseToast error={errorResponse} />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Close</Button>
-            <Button variant="primary" type="submit">Pull Features</Button>
+            <LoadingButton loading={pulling} variant="primary" type="submit">Pull Features</LoadingButton>
           </Modal.Footer>
         </Form>
       </Modal>
