@@ -102,6 +102,7 @@ export const FileTreeView: React.FC<IProps> = (props: IProps) => {
             label: fileName,
             icon: getFileIcon(fileName)
         })
+        console.log(idx)
         tmpChecked.push(idx.toString()) // ugly */
     }
 
@@ -135,9 +136,14 @@ export const FileTreeView: React.FC<IProps> = (props: IProps) => {
     }, [props.files]);
 
     useEffect(() => {
+
         if (props.onChange) {
             let files: FileWithPath[] = [];
-            checked.forEach(idx => { files.push(props.files.get(idx)) })
+            Array.from(props.files.values()).forEach((f, idx) => {
+                if (checked.includes(idx.toString())) {
+                    files.push(f);
+                }
+            })
             props.onChange.call(this, files);
         }
     }, [checked]);

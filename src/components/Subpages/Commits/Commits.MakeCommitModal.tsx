@@ -38,6 +38,7 @@ export const MakeCommit: React.FC = () => {
     setShow(false);
     setValidated(false);
     setChoosenFiles(null);
+    setIsCommiting(false)
     removeAllFiles();
   }
   const handleShow = () => setShow(true);
@@ -139,8 +140,8 @@ export const MakeCommit: React.FC = () => {
                         <>
                           <Col xs={9}>
                             <Form.Group>
-                              <Form.Control isInvalid={choosenFiles.length === 0} isValid={choosenFiles.length > 0} type="hidden" />
-                              <Form.Control.Feedback type="valid">{choosenFiles.length} files selected.</Form.Control.Feedback>
+                              <Form.Control isInvalid={choosenFiles?.length === 0} isValid={choosenFiles?.length > 0} type="hidden" />
+                              <Form.Control.Feedback type="valid">{choosenFiles?.length} files selected.</Form.Control.Feedback>
                               <Form.Control.Feedback type="invalid">At least one File needs to be selected!</Form.Control.Feedback>
                             </Form.Group>
                           </Col>

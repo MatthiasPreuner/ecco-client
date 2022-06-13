@@ -47,7 +47,6 @@ export class CommunicationService {
     }
 
     public getRepository(repo: RepositoryHeaderModel): Promise<any> {
-        console.log(`${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`)
         return axios.get(
             `${CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`
         )
@@ -141,15 +140,12 @@ export class CommunicationService {
             formData.append("file", tmpFile, path);
         });
 
-        console.log(formData.getAll("file"))
-
-
         formData.append("message", message)
         formData.append("config", configuration)
         config.headers = {
             'Content-Type': 'multipart/form-data'
         }
-        console.log(formData)
+ 
         console.log(`${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`)
         return axios.post(
             `/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`,
