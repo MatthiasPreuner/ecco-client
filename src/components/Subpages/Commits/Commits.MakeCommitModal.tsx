@@ -10,6 +10,7 @@ import { RepositoryResponse } from "../../../model/RepositoryResponse";
 import { FileTreeView } from "./Commits.MakeCommitModal.FileTreeView";
 import { FeatureColumn } from "./Commits.MakeCommitModal.FeatureColumn";
 import { AxiosError } from "axios";
+import { LoadingButton } from "../../common/LoadingButton";
 
 declare module 'react' {
   interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -51,6 +52,7 @@ export const MakeCommit: React.FC = () => {
   const [configFile, setConfigFile] = useState<FileWithPath>(undefined);
   const [commitMessage, setCommitMessage] = useState<string>('');
   const [choosenFiles, setChoosenFiles] = useState<Array<FileWithPath>>(new Array<FileWithPath>());
+  const [isCommiting, setIsCommiting] = useState<boolean>(false);
 
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     var allFiles = new Map(tmpAcceptedFiles)
@@ -80,27 +82,18 @@ export const MakeCommit: React.FC = () => {
     event.stopPropagation();
 
     if (form.checkValidity() && tmpAcceptedFiles.size !== 0 && configString.length !== 0) {
+      setIsCommiting(true)
       CommunicationService.getInstance().makeCommit(appState.repository, commitMessage, configString, choosenFiles).
         then((apiData: RepositoryResponse) => {
-          setAppState((previousState) => ({            ...previousState,            repository: apiData.data          }));
-        }, (e : AxiosError) => console.log("error"));
-      handleClose();
+          setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
+          setIsCommiting(false);
+          handleClose();
+        }, (e: AxiosError) => { console.log("error"); setIsCommiting(false); });
     }
     setValidated(true);
   };
 
-  /*   then((response: any) => {
-        document.getElementById("zipfilesucessalert").classList.add("show");
-    }).catch().finally(() => {
-        setTimeout(() => {
-            document.getElementById("zipfilesucessalert").classList.remove("show");
-        }, 3000);
-    });  */
-
-
-  let removeAllFiles = () => {
-    setTmpAcceptedFiles(new Map<string, File>());
-  }
+  let removeAllFiles = () => { setTmpAcceptedFiles(new Map<string, File>()); }
 
   return (
     <>
@@ -131,7 +124,7 @@ export const MakeCommit: React.FC = () => {
             </Row>
             <Row style={{ minHeight: "45vh" }}>
               <Col xs={6}>
-                <Row>
+                <Row className="mb-1">
                   <Col xs={8}><h4 className="mb-0">Files</h4></Col>
                   <Col xs={4}>
                     {(tmpAcceptedFiles.size === 0) ?
@@ -139,19 +132,34 @@ export const MakeCommit: React.FC = () => {
                       <Button variant='danger' style={{ width: '100%' }} size='sm' onClick={removeAllFiles} disabled={tmpAcceptedFiles.size < 1}>Remove all files</Button>}
                   </Col>
                 </Row>
-                <Row className="mb-2">
-                  <Form.Group>
-                    <Form.Control isInvalid={tmpAcceptedFiles.size === 0} isValid={tmpAcceptedFiles.size > 0} type="hidden" />
-                    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
-                    <Form.Control.Feedback type="invalid">At least one File needs to be selected!</Form.Control.Feedback>
-                  </Form.Group>
-                </Row>
-                <Row>
-                  <FileTreeView files={tmpAcceptedFiles} onChange={files => setChoosenFiles(files)} />
+                <Row className="ps-0" >
+                  <Col>
+                    <Row key={0} className="feedback-row" style={{ position: 'sticky', top: '0', left: '0', backgroundColor: '#fff', zIndex: 5 }}>
+                      {tmpAcceptedFiles.size > 0 ?
+                        <>
+                          <Col xs={9}>
+                            <Form.Group>
+                              <Form.Control isInvalid={choosenFiles.length === 0} isValid={choosenFiles.length > 0} type="hidden" />
+                              <Form.Control.Feedback type="valid">{choosenFiles.length} files selected.</Form.Control.Feedback>
+                              <Form.Control.Feedback type="invalid">At least one File needs to be selected!</Form.Control.Feedback>
+                            </Form.Group>
+                          </Col>
+                          <Col className="rct-options">
+                            <button key={"b0"} /* onClick={() => switchAll(true)} */ aria-label="Select all" title="Select all" type="button" className="rct-option rct-option-expand-all"><i className="bi bi-plus-square" /></button>
+                            <button key={"b1"} /* onClick={() => switchAll(false)} */ aria-label="Deselect all" title="Deselect all" type="button" className="rct-option rct-option-collapse-all"><i className="bi bi-dash-square" /></button>
+                          </Col>
+                        </> :
+                        <i>Please select a folder.</i>
+                      }
+                    </Row>
+                    <Row style={{ height: '40vh', overflowY: 'scroll', overflowX: 'auto', marginRight: '0px', marginLeft: '0px', position: 'relative' }}>
+                      <FileTreeView files={tmpAcceptedFiles} onChange={files => setChoosenFiles(files)} />
+                    </Row>
+                  </Col>
                 </Row>
               </Col>
               <Col xs={6}>
-                <Row>
+                <Row className="mb-1">
                   <Col xs={8}><h4 className="mb-0">Features</h4></Col>
                   <Col xs={4}>
                     {(configFile == null) ?
@@ -173,7 +181,7 @@ export const MakeCommit: React.FC = () => {
           <Modal.Footer>
             <Col className="d-flex justify-content-between align-items-center">
               <Button variant="secondary" onClick={onModalDismiss}>Close</Button>
-              <Button variant="primary" type="submit">Commit</Button>
+              <LoadingButton loading={isCommiting} variant="primary" type="submit">Commit</LoadingButton>
             </Col>
           </Modal.Footer>
         </Form>

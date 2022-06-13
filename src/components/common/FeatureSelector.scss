@@ -1,3 +1,14 @@
 input.input-new {
     background-color: #fff !important;
 }
+
+.scroll-area {
+    overflow-y: scroll;
+    margin-right: 0px !important;
+    position: relative;
+}
+
+.rct-options-custom{
+    flex: 1 0 !important;
+    -ms-flex: none;
+}

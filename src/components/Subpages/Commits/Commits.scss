@@ -24,3 +24,25 @@
     margin-top: -5px;
     margin-right: 0.1rem;
 }
+
+
+.tree-view-row {
+    height: '40vh';
+    overflow-y: scroll;
+    overflow-x: auto;
+    margin-right: 0px;
+    margin-left: 0px;
+    position: relative;
+}
+
+.feedback-row {
+    position: 'sticky';
+    top: '0';
+    left: '0';
+    background-color: '#fff';
+    z-index: 5;
+}
+
+/* .react-checkbox-tree {
+    padding-left: 0;
+} */

@@ -1,9 +1,20 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import * as React from "react";
+import { FileWithPath } from 'react-dropzone'
+import { useState, useEffect } from "react";
+import { useSharedState } from "../../../states/AppState";
+
+import { Col, Row, Form, Button, InputGroup } from 'react-bootstrap';
+import { SpinButtonGroup } from "../../common/SpinButtonGroup";
+import { FeatureSelector, FeatureSelectorFeature } from "../../common/FeatureSelector";
+
+
+/* import React, { Dispatch, SetStateAction } from 'react'; */
 import { Node } from 'react-checkbox-tree';
 import CheckboxTree from 'react-checkbox-tree';
 
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
-import { FileWithPath } from 'react-dropzone';
+import { preProcessFile } from "typescript";
+
 
 interface IProps {
     files?: Map<String, FileWithPath>, //FileWithPath[],
@@ -33,19 +44,13 @@ let folderIndex: number;
  * source:
  * https://www.npmjs.com/package/react-checkbox-tree
  */
-export class FileTreeView extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
-        super(props);
+export const FileTreeView: React.FC<IProps> = (props: IProps) => {
 
-        this.state = {
-            checked: [],
-            expanded: [],
-            nodes: root,
-            prevFiles: props.files
-        };
-    }
+    const [checked, setChecked] = useState<string[]>([]);
+    const [expanded, setExpanded] = useState<string[]>([]);
+    const [nodes, setNodes] = useState<Node[]>(root);
 
-    static createTree(files: FileWithPath[]): [any, string[]] {
+    const createTree = (files: FileWithPath[]): [any, string[]] => {
 
         folderIndex = -1; // for unique folder values
         let root: Node[] = [{
@@ -64,16 +69,17 @@ export class FileTreeView extends React.Component<IProps, IState> {
             root[0].label = path.substring(0, path.indexOf('/')) // set root label (only needed once)
 
             path = path.substring(path.indexOf('/') + 1) // remove root folder
-            FileTreeView.addPathToNode(root[0], f.name, idx, path, tmpChecked)
+            addPathToNode(root[0], f.name, idx, path, tmpChecked)
         })
-        FileTreeView.sortRecursiveley(root[0]);
+        sortRecursiveley(root[0]);
+        console.log(root)
         return [root, tmpChecked];
     }
 
-    static addPathToNode(node: Node, fileName: string, idx: number, path: string, tmpChecked: string[]) {
+    const addPathToNode = (node: Node, fileName: string, idx: number, path: string, tmpChecked: string[]) => {
         let i = path.indexOf('/');
         if (i == -1) {
-            FileTreeView.addFileToNode(node, fileName, idx, tmpChecked)
+            addFileToNode(node, fileName, idx, tmpChecked)
         } else {
             let folderName: string = path.substring(0, i)
             let childNode: Node = node.children.find(node => node.label === folderName) // check child-node exists
@@ -86,20 +92,20 @@ export class FileTreeView extends React.Component<IProps, IState> {
                 }
                 node.children.push(childNode)
             }
-            FileTreeView.addPathToNode(childNode, fileName, idx, path.substring(i + 1), tmpChecked)
+            addPathToNode(childNode, fileName, idx, path.substring(i + 1), tmpChecked)
         }
     }
 
-    static addFileToNode(node: Node, fileName: string, idx: number, tmpChecked: string[]) {
+    const addFileToNode = (node: Node, fileName: string, idx: number, tmpChecked: string[]) => {
         node.children.push({
             value: idx.toString(),
             label: fileName,
-            icon: this.getFileIcon(fileName)
+            icon: getFileIcon(fileName)
         })
         tmpChecked.push(idx.toString()) // ugly */
     }
 
-    static getFileIcon(fileName: string): React.ReactNode {
+    const getFileIcon = (fileName: string): React.ReactNode => {
         let extension: string = fileName.substring(fileName.lastIndexOf('.') + 1)
 
         if (availableBootstrapIconsFileTypes.includes(extension)) {
@@ -108,64 +114,59 @@ export class FileTreeView extends React.Component<IProps, IState> {
         return <i className="bi bi-file-earmark" />
     }
 
-    static sortRecursiveley(node: Node) {
+    const sortRecursiveley = (node: Node) => {
         node.children.sort((a, b) => {
             if (a.children !== undefined && b.children === undefined) {
-                FileTreeView.sortRecursiveley(a);
+                sortRecursiveley(a);
                 return -1;
             }
             if (b.children !== undefined && a.children === undefined) {
-                FileTreeView.sortRecursiveley(b);
+                sortRecursiveley(b);
                 return 1;
             }
             return a.label.toString().localeCompare(b.label.toString())
         })
     }
 
-    onCheck(checked: string[]) {
-        if (this.props.onChange) {
-            // invoke onChange event
+    useEffect(() => {
+        let [allNodes, checkedNodes] = createTree(Array.from(props.files.values()));
+        setChecked(checkedNodes)
+        setNodes(allNodes)
+    }, [props.files]);
+
+    useEffect(() => {
+        if (props.onChange) {
             let files: FileWithPath[] = [];
-            checked.forEach(idx => { files.push(this.state.prevFiles.get(idx)) })
-            this.props.onChange.call(this, files);
+            checked.forEach(idx => { files.push(props.files.get(idx)) })
+            props.onChange.call(this, files);
         }
-        this.setState({ checked });
+    }, [checked]);
+
+    if (props.files?.size > 0) {
+        return (
+            <CheckboxTree
+                nodes={nodes}
+                checked={checked}
+                expanded={expanded}
+                onCheck={checked => setChecked(checked)}
+                onExpand={expanded => setExpanded(expanded)}
+                icons={{
+                    check: <i className="bi bi-check-square-fill" />,
+                    uncheck: <i className="bi bi-square" />,
+                    halfCheck: <i className="bi bi-check-square" />,
+                    expandClose: <i className="bi bi-caret-right-fill" />,
+                    expandOpen: <i className="bi bi-caret-down-fill" />,
+                    expandAll: <i className="bi bi-plus-square" />,
+                    collapseAll: <i className="bi bi-dash-square" />,
+                    parentClose: <i className="bi bi-folder" />,
+                    parentOpen: <i className="bi bi-folder2-open" />,
+                    leaf: <i className="bi bi-file-earmark" />,
+                }}
+                showExpandAll
+            />
+        );
+    } else {
+        return <></>
     }
 
-    static getDerivedStateFromProps(nextProps: IProps, prevState: any) {
-        if (nextProps.files !== prevState.prevFiles) {
-            let [allNodes, checkedNodes] = FileTreeView.createTree(Array.from(nextProps.files.values()));
-            return ({ ...prevState, nodes: allNodes, checked: checkedNodes, prevFiles: nextProps.files })
-        }
-        return null;
-    }
-
-    render() {
-        if (this.props.files?.size > 0) {
-            return (
-                <CheckboxTree
-                    nodes={this.state.nodes}
-                    checked={this.state.checked}
-                    expanded={this.state.expanded}
-                    onCheck={checked => this.onCheck(checked)}
-                    onExpand={expanded => this.setState({ expanded })}
-                    icons={{
-                        check: <i className="bi bi-check-square-fill" />,
-                        uncheck: <i className="bi bi-square" />,
-                        halfCheck: <i className="bi bi-check-square" />,
-                        expandClose: <i className="bi bi-caret-right-fill" />,
-                        expandOpen: <i className="bi bi-caret-down-fill" />,
-                        expandAll: <i className="bi bi-plus-square" />,
-                        collapseAll: <i className="bi bi-dash-square" />,
-                        parentClose: <i className="bi bi-folder" />,
-                        parentOpen: <i className="bi bi-folder2-open" />,
-                        leaf: <i className="bi bi-file-earmark" />,
-                    }}
-                    showExpandAll
-                />
-            );
-        } else {
-            return <></>
-        }
-    }
 }

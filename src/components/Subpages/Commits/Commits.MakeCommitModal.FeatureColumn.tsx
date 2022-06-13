@@ -76,10 +76,6 @@ export const FeatureColumn: React.FC<FeatureRowProps> = (props: FeatureRowProps)
     }, [props.configFile]);
 
     return (
-        <Row style={{ height: '40vh', overflowY: 'scroll', marginRight: '0px', position: 'relative' }}>
-              <Col>
-            <FeatureSelector features={configFeatures} manualFeatures={manualFeatures} onChange={(enabled, disabled) => props.setConfigString(enabled)} ></FeatureSelector>
-              </Col>
-        </Row>
+        <FeatureSelector maxHeight='40vh' features={configFeatures} manualFeatures={manualFeatures} onChange={(enabled, disabled) => props.setConfigString(enabled)} ></FeatureSelector>
     )
 };
