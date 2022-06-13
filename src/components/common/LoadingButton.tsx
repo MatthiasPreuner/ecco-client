@@ -3,10 +3,12 @@ import { Button, ButtonProps, Spinner } from "react-bootstrap";
 
 export interface ErrorResponseToastProps {
     loading?: boolean,
-    hidecontentwhileloading?: boolean
+    hideContentWhileLoading?: boolean
 }
 
-export const LoadingButton: React.FC<ErrorResponseToastProps & ButtonProps> = (props) => {
+interface IProps extends ErrorResponseToastProps, ButtonProps {};
+
+export const LoadingButton: React.FC<IProps> = (props) => {
     return (
         <Button {...props} disabled={props.loading || props.disabled}>
             {props.loading &&
@@ -17,8 +19,8 @@ export const LoadingButton: React.FC<ErrorResponseToastProps & ButtonProps> = (p
                     role="status"
                     aria-hidden="true"
                 />}
-            {!props.hidecontentwhileloading && props.loading && <>&nbsp;</>}
-            {!(props.hidecontentwhileloading && props.loading) && <>{props.children}</>}
+            {!props.hideContentWhileLoading && props.loading && <>&nbsp;</>}
+            {!(props.hideContentWhileLoading && props.loading) && <>{props.children}</>}
         </Button>
     )
 }

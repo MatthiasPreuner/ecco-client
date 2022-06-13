@@ -5,7 +5,7 @@ import { useSharedState } from "../../../states/AppState";
 import { CommunicationService } from "../../../services/CommunicationService";
 import { useNavigate } from 'react-router-dom';
 
-import { Button, ButtonGroup, Container, Row, Col, ListGroup, InputGroup, FormControl, Spinner } from 'react-bootstrap';
+import { Button, ButtonGroup, Container, Row, Col, ListGroup, InputGroup, FormControl } from 'react-bootstrap';
 
 import { CreateRepoModal } from "./Repositories.CreateRepoModal";
 import { DeleteRepoModal } from "./Repositories.DeleteRepoModal";
@@ -123,7 +123,7 @@ export const Repositories: React.FC = () => {
                                     onClick={chooseRepo}>Select</LoadingButton>
                             </ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical>
-                                <LoadingButton loading={loading} hidecontentwhileloading={true} onClick={refresh}><i className="bi bi-arrow-clockwise" /> </LoadingButton>
+                                <LoadingButton loading={loading} hideContentWhileLoading={true} onClick={refresh}><i className="bi bi-arrow-clockwise" /> </LoadingButton>
                             </ButtonGroup>
                         </ButtonGroup>
                     </Col>

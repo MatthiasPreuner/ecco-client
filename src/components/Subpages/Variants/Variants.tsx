@@ -89,7 +89,7 @@ export const Variants: React.FC = () => {
                                                 onChange={e => setEditVariant((prev) => ({ ...prev, description: e.target.value }))}
                                             />
                                         </InputGroup>
-                                        <LoadingButton key={0} hidecontentwhileloading={true} loading={updatingVariant} variant="secondary" size="sm" style={{ padding: "0rem 0.25rem" }} onClick={() => updateVariant()}><i className="bi bi-check-lg" /></LoadingButton>
+                                        <LoadingButton key={0} hideContentWhileLoading={true} loading={updatingVariant} variant="secondary" size="sm" style={{ padding: "0rem 0.25rem" }} onClick={() => updateVariant()}><i className="bi bi-check-lg" /></LoadingButton>
                                         <Button key={1} disabled={updatingVariant} variant="secondary" size="sm" style={{ padding: "0rem 0.25rem" }} onClick={() => setEditVariant(null)}><i className="bi bi-x-lg" /></Button>
                                     </Stack>
                                 </td>
