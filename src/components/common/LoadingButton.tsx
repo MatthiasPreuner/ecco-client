@@ -1,16 +1,17 @@
 import * as React from "react";
 import { Button, ButtonProps, Spinner } from "react-bootstrap";
 
-export interface ErrorResponseToastProps {
+interface LoadingButtonProps extends ButtonProps {
     loading?: boolean,
     hideContentWhileLoading?: boolean
 }
 
-interface IProps extends ErrorResponseToastProps, ButtonProps {};
+export const LoadingButton: React.FC<LoadingButtonProps> = (props) => {
 
-export const LoadingButton: React.FC<IProps> = (props) => {
+    let { loading, hideContentWhileLoading, ...buttonProps } = props;
+
     return (
-        <Button {...props} disabled={props.loading || props.disabled}>
+        <Button {...buttonProps} disabled={props.loading || props.disabled}>
             {props.loading &&
                 <Spinner
                     as="span"

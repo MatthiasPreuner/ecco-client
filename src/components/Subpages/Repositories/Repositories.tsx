@@ -123,7 +123,7 @@ export const Repositories: React.FC = () => {
                                     onClick={chooseRepo}>Select</LoadingButton>
                             </ButtonGroup>
                             <ButtonGroup className="me-2 mb-2 w-100" vertical>
-                                <LoadingButton loading={loading} hideContentWhileLoading={true} onClick={refresh}><i className="bi bi-arrow-clockwise" /> </LoadingButton>
+                                <LoadingButton loading={loading} hideContentWhileLoading onClick={refresh}><i className="bi bi-arrow-clockwise" /> </LoadingButton>
                             </ButtonGroup>
                         </ButtonGroup>
                     </Col>
