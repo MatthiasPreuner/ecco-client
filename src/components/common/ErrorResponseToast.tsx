@@ -7,7 +7,6 @@ export interface ErrorResponseToastProps {
 }
 
 export const ErrorResponseToast: React.FC<ErrorResponseToastProps> = (props) => {
-    console.log(props.error)
     if (props.error === null || props.error === undefined) {
         return (<></>)
     } else if (props.error.response === undefined) {
