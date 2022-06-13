@@ -45,13 +45,13 @@ export const PullFeaturesModal: React.FC = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (form.checkValidity() === false || repoToPullFrom === null || configString[0].length === 0) {
+    if (form.checkValidity() === false || repoToPullFrom === null || configString[1].length === 0) {
 
       setValidated(true);
 
     } else {
       setPulling(true)
-      CommunicationService.getInstance().pullFeatures(appState.repository, repoToPullFrom.rid, configString[0]).then((apiData: RepositoryResponse) => {
+      CommunicationService.getInstance().pullFeatures(appState.repository, repoToPullFrom.rid, configString[1]).then((apiData: RepositoryResponse) => {
         setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
         handleClose();
       }, (e: AxiosError) => {
@@ -107,7 +107,7 @@ export const PullFeaturesModal: React.FC = () => {
             </Form.Group>
             <Form.Group className="mb-3" key={1}>
               <Form.Label>Features</Form.Label>
-              <FeatureSelector features={initFeatures} disableRevisions onChange={(enabled, disabled) => setConfigString([enabled, disabled])} />
+              <FeatureSelector features={initFeatures} disableRevisions onChange={(selected, deselected) => setConfigString([selected, deselected])} />
             </Form.Group>
             <Form.Group className="mt-3" key={2} >
               <Form.Label>Configuration</Form.Label>
