@@ -13,9 +13,12 @@ import { Features } from "./Variants.Feature";
 import { CommunicationService } from "../../../services/CommunicationService";
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
 import { LoadingButton } from "../../common/LoadingButton";
+import { AxiosError } from "axios";
+import { ErrorResponseToast } from "../../common/ErrorResponseToast";
+import { TableInfoRow } from "../../common/TableInfoRow";
 
 import './Variants.scss';
-import { TableInfoRow } from "../../common/TableInfoRow";
+
 
 export const Variants: React.FC = () => {
 
@@ -24,7 +27,7 @@ export const Variants: React.FC = () => {
     const [variantFilterText, setVariantFilterText] = useState<string>("");
     const [featureFilter, setFeatureFilter] = useState<FeatureModel[]>([]);
     const [editVariant, setEditVariant] = useState<VariantModel>(null);
-
+    const [errorResponse, setErrorResponse] = useState<AxiosError>();
     const [checkingOut, setCheckingOut] = useState<boolean>(false);
     const [updatingVariant, setUpdatingVariant] = useState<boolean>(false);
 
@@ -44,8 +47,10 @@ export const Variants: React.FC = () => {
             setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
             setEditVariant(null);
             setUpdatingVariant(false);
+            setErrorResponse(undefined);
         }, (e) => {
-            setEditVariant(null)
+            setErrorResponse(e);
+            setEditVariant(null);
             setUpdatingVariant(false);
         })
     };
@@ -134,7 +139,11 @@ export const Variants: React.FC = () => {
             document.body.appendChild(link);
             link.click();
             setCheckingOut(false)
-        }, () => setCheckingOut(false)) // TODO add error response handling
+            setErrorResponse(undefined);
+        }, (e) => {
+            setErrorResponse(e);
+            setCheckingOut(false);
+        })
     }
 
     return (
@@ -198,6 +207,7 @@ export const Variants: React.FC = () => {
                             </InputGroup>
                         </Row>
                         <Row>
+                            <ErrorResponseToast error={errorResponse} />
                             <Col xs={6} />
                             <Col xs={6}>
                                 <LoadingButton loading={checkingOut} className="w-100" onClick={checkOutVariant} disabled={!selectedVariant}>Checkout Variant</LoadingButton>
