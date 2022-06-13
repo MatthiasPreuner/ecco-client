@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { CreateVariant } from "./Variants.CreateVariantModal";
 import { useNavigate } from 'react-router-dom';
 
-import { Container, Col, Row, InputGroup, Table, Button, DropdownButton, Dropdown, FormControl, Badge, Stack, Spinner } from 'react-bootstrap';
+import { Container, Col, Row, InputGroup, Table, Button, DropdownButton, Dropdown, FormControl, Stack } from 'react-bootstrap';
 
 import { VariantModel } from "../../../model/VariantModel";
 import { DeleteVariantModal } from "./Variants.DeleteVariantModal";

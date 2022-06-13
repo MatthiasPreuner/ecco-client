@@ -9,7 +9,6 @@ import { RepositoryResponse } from "../../../model/RepositoryResponse";
 import { AxiosError } from "axios";
 import { ErrorResponseToast } from "../../common/ErrorResponseToast";
 import { LoadingButton } from "../../common/LoadingButton";
-import { constants } from "os";
 
 export const DeleteVariantModal: React.FC<{ variant: VariantModel }> = (props) => {
 
