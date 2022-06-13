@@ -118,7 +118,7 @@ export const MakeCommit: React.FC = () => {
               <Col className={"mx-2 d-flex rounded align-items-center align-content-center justify-content-around drop-zone " + (isDragActive ? "drop-zone-active" : "")}                                     >
                 {
                   isDragActive ?
-                    <p className="m-0">Drop the files here ...</p> :
+                    <p className="m-0">Drop the folder here ... it can't be a file</p> :
                     <p className="m-0">Drag 'n' drop a folder here, or click to select a folder</p>
                 }
               </Col>
