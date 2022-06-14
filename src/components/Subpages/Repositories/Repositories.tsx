@@ -63,6 +63,10 @@ export const Repositories: React.FC = () => {
 
     const getCurrentRepositoryExpression = (): JSX.Element[] => {
 
+        if (!appState.availableRepositories) { // still loading
+            return [(<></>)]
+        }
+
         if (appState.availableRepositories.length === 0) {
             return [(<i>There are no Repositories yet.</i>)]
         }
@@ -82,12 +86,12 @@ export const Repositories: React.FC = () => {
     let repositories = getCurrentRepositoryExpression();
 
     return (
-        <Container className="main d-flex pt-4 justify-content-center">
-            <Col>
-                <Row>
+        <Container key={"c0"} className="main d-flex pt-4 justify-content-center">
+            <Col key={"col0"} >
+                <Row key={"r0"}>
                     <h3>Repositories</h3>
                 </Row>
-                <Row>
+                <Row key={"r1"}>
                     <Col xs={10}>
                         <Row>
                             <InputGroup className="mb-3">
@@ -107,14 +111,14 @@ export const Repositories: React.FC = () => {
                         <ErrorResponseToast error={errorResponse} />
                     </Col>
                     <Col className="d-flex flex-column justify-content-between">
-                        <ButtonGroup vertical className="w-100 mb-5">
-                            <ButtonGroup className="me-2 mb-2 w-100" vertical><CreateRepoModal /></ButtonGroup>
-                            <ButtonGroup className="me-2 mb-2 w-100" vertical><CloneRepoModal repo={selectedRepo} /></ButtonGroup>
-                            <ButtonGroup className="me-2 mb-2 w-100" vertical><ForkRepoModal repo={selectedRepo} /></ButtonGroup>
-                            <ButtonGroup className="me-2 mb-2 w-100" vertical><DeleteRepoModal repo={selectedRepo} /></ButtonGroup>
+                        <ButtonGroup key={"bg1"} vertical className="w-100 mb-5">
+                            <ButtonGroup key={"bg1.0"} className="me-2 mb-2 w-100" vertical><CreateRepoModal /></ButtonGroup>
+                            <ButtonGroup key={"bg1.1"} className="me-2 mb-2 w-100" vertical><CloneRepoModal repo={selectedRepo} /></ButtonGroup>
+                            <ButtonGroup key={"bg1.2"} className="me-2 mb-2 w-100" vertical><ForkRepoModal repo={selectedRepo} /></ButtonGroup>
+                            <ButtonGroup key={"bg1.3"} className="me-2 mb-2 w-100" vertical><DeleteRepoModal repo={selectedRepo} /></ButtonGroup>
                         </ButtonGroup>
-                        <ButtonGroup vertical className="w-100">
-                            <ButtonGroup className="me-2 mb-2 w-100" vertical>
+                        <ButtonGroup key={"bg2"} vertical className="w-100">
+                            <ButtonGroup key={"bg2.0"} className="me-2 mb-2 w-100" vertical>
                                 <LoadingButton
                                     loading={choosing}
                                     variant="primary"
@@ -122,7 +126,7 @@ export const Repositories: React.FC = () => {
                                     disabled={selectedRepo === null || selectedRepo.rid === appState.repository?.rid}
                                     onClick={chooseRepo}>Select</LoadingButton>
                             </ButtonGroup>
-                            <ButtonGroup className="me-2 mb-2 w-100" vertical>
+                            <ButtonGroup key={"bg2.1"} className="me-2 mb-2 w-100" vertical>
                                 <LoadingButton loading={loading} hideContentWhileLoading onClick={refresh}><i className="bi bi-arrow-clockwise" /> </LoadingButton>
                             </ButtonGroup>
                         </ButtonGroup>

@@ -103,7 +103,7 @@ export const CreateRepoModal: React.FC = () => {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="primary" onClick={handleShow} disabled={!appState.availableRepositories}>
         Create <i className="bi bi-folder-plus"></i>
       </Button>
 

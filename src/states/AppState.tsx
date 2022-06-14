@@ -19,7 +19,7 @@ export interface AppState {
 
 const useValue = () => useState<AppState>({
   repository: null,
-  availableRepositories: [],
+  availableRepositories: null,
   /*   artifactTree: null, */
   /*    plugins: [], */
   eccoServiceIsInitialized: true,
