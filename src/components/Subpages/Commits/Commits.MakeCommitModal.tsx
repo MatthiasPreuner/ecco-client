@@ -2,12 +2,12 @@ import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
 
 import { useDropzone, FileWithPath } from 'react-dropzone'
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 import { CommunicationService } from "../../../services/CommunicationService";
 
-import { Col, Row, Form, Button, Modal, InputGroup } from 'react-bootstrap';
+import { Col, Row, Form, Button, Modal } from 'react-bootstrap';
 import { RepositoryResponse } from "../../../model/RepositoryResponse";
-import { FileTreeView } from "./Commits.MakeCommitModal.FileTreeView";
+import { FileTreeView, FileTreeViewRef } from "./Commits.MakeCommitModal.FileTreeView";
 import { FeatureColumn } from "./Commits.MakeCommitModal.FeatureColumn";
 import { AxiosError } from "axios";
 import { LoadingButton } from "../../common/LoadingButton";
@@ -33,7 +33,7 @@ export const MakeCommit: React.FC = () => {
   const [validated, setValidated] = useState(false);
 
   const handleClose = () => {
-    setConfigFile(undefined);
+    setConfigFile(null);
     setCommitMessage('');
     setShow(false);
     setValidated(false);
@@ -50,7 +50,7 @@ export const MakeCommit: React.FC = () => {
   const [appState, setAppState] = useSharedState();
 
   const [tmpAcceptedFiles, setTmpAcceptedFiles] = useState<Map<String, FileWithPath>>(new Map<String, FileWithPath>()); // as Map to prevent duplicates, old files will be overwritten
-  const [configFile, setConfigFile] = useState<FileWithPath>(undefined);
+  const [configFile, setConfigFile] = useState<FileWithPath>(null);
   const [commitMessage, setCommitMessage] = useState<string>('');
   const [choosenFiles, setChoosenFiles] = useState<Array<FileWithPath>>(new Array<FileWithPath>());
   const [isCommiting, setIsCommiting] = useState<boolean>(false);
@@ -59,7 +59,7 @@ export const MakeCommit: React.FC = () => {
     var allFiles = new Map(tmpAcceptedFiles)
 
     if (acceptedFiles.filter(f => f.name === f.path).length > 0) {
-      console.log("please select a folder") // TODO
+      console.log("please select a folder")
     } else {
 
       acceptedFiles.forEach(f => {
@@ -95,6 +95,8 @@ export const MakeCommit: React.FC = () => {
   };
 
   let removeAllFiles = () => { setTmpAcceptedFiles(new Map<string, File>()); }
+
+  const treeViewRef = React.useRef<FileTreeViewRef>(null)
 
   return (
     <>
@@ -145,16 +147,20 @@ export const MakeCommit: React.FC = () => {
                               <Form.Control.Feedback type="invalid">At least one File needs to be selected!</Form.Control.Feedback>
                             </Form.Group>
                           </Col>
-                          <Col className="rct-options">
-                            <button key={"b0"} /* onClick={() => switchAll(true)} */ aria-label="Select all" title="Select all" type="button" className="rct-option rct-option-expand-all"><i className="bi bi-plus-square" /></button>
-                            <button key={"b1"} /* onClick={() => switchAll(false)} */ aria-label="Deselect all" title="Deselect all" type="button" className="rct-option rct-option-collapse-all"><i className="bi bi-dash-square" /></button>
+                          <Col className="rct-options rct-options-custom">
+                            <button key={"b0"} onClick={() => treeViewRef.current.expandAll()} aria-label="Expand all" title="Expand all" type="button" className="rct-option rct-option-expand-all"><i className="bi bi-plus-square" /></button>
+                            <button key={"b1"} onClick={() => treeViewRef.current.collapseAll()} aria-label="Collapse all" title="Collapse all" type="button" className="rct-option rct-option-collapse-all"><i className="bi bi-dash-square" /></button>
                           </Col>
                         </> :
                         <i>Please select a folder.</i>
                       }
                     </Row>
                     <Row style={{ height: '40vh', overflowY: 'scroll', overflowX: 'auto', marginRight: '0px', marginLeft: '0px', position: 'relative' }}>
-                      <FileTreeView files={tmpAcceptedFiles} onChange={files => setChoosenFiles(files)} />
+                      <FileTreeView
+                        files={tmpAcceptedFiles}
+                        onChange={files => setChoosenFiles(files)}
+                        ref={treeViewRef}
+                      />
                     </Row>
                   </Col>
                 </Row>
@@ -163,9 +169,9 @@ export const MakeCommit: React.FC = () => {
                 <Row className="mb-1">
                   <Col xs={8}><h4 className="mb-0">Features</h4></Col>
                   <Col xs={4}>
-                    {(configFile == null) ?
+                    {(configFile === null) ?
                       <Button variant='light' style={{ width: '100%' }} size='sm' disabled>.config not found</Button> :
-                      <Button variant='danger' style={{ width: '100%' }} size='sm' onClick={() => setConfigFile(undefined)} disabled={configFile == null}>Remove Config File</Button>}
+                      <Button variant='danger' style={{ width: '100%' }} size='sm' onClick={() => setConfigFile(null)} disabled={configFile === null}>Remove Config File</Button>}
                   </Col>
                 </Row>
                 <FeatureColumn configFile={configFile} setConfigString={setConfigString} />

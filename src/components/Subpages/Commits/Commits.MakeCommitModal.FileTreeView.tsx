@@ -1,32 +1,25 @@
 import * as React from "react";
+import { forwardRef, useImperativeHandle } from 'react';
 import { FileWithPath } from 'react-dropzone'
 import { useState, useEffect } from "react";
-import { useSharedState } from "../../../states/AppState";
-
-import { Col, Row, Form, Button, InputGroup } from 'react-bootstrap';
-import { SpinButtonGroup } from "../../common/SpinButtonGroup";
-import { FeatureSelector, FeatureSelectorFeature } from "../../common/FeatureSelector";
-
 
 /* import React, { Dispatch, SetStateAction } from 'react'; */
 import { Node } from 'react-checkbox-tree';
 import CheckboxTree from 'react-checkbox-tree';
 
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
-import { preProcessFile } from "typescript";
 
 
 interface IProps {
-    files?: Map<String, FileWithPath>, //FileWithPath[],
+    files?: Map<String, FileWithPath>,
     //setChoosenFiles?: Dispatch<SetStateAction<FileWithPath[]>>
-    onChange?: (choosenFiles: FileWithPath[]) => void
+    onChange?: (choosenFiles: FileWithPath[]) => void,
+    ref: React.Ref<FileTreeViewRef>
 }
 
-interface IState {
-    checked: any[];
-    expanded: any[];
-    nodes: any,
-    prevFiles: Map<String, FileWithPath>
+export interface FileTreeViewRef {
+    expandAll(): void;
+    collapseAll(): void;
 }
 
 // see https://icons.getbootstrap.com/
@@ -44,15 +37,21 @@ let folderIndex: number;
  * source:
  * https://www.npmjs.com/package/react-checkbox-tree
  */
-export const FileTreeView: React.FC<IProps> = (props: IProps) => {
+
+/* React.forwardRef<RefType, PropsType>((props, ref) */
+export const FileTreeView: React.FC<IProps> = forwardRef<FileTreeViewRef, IProps>((props, ref) => {
 
     const [checked, setChecked] = useState<string[]>([]);
     const [expanded, setExpanded] = useState<string[]>([]);
     const [nodes, setNodes] = useState<Node[]>(root);
+    const [arrExpandAll, setArrExpandAll] = useState<string[]>([]);
 
     const createTree = (files: FileWithPath[]): [any, string[]] => {
 
+        let tmpExpandAll : string [] = [];
+
         folderIndex = -1; // for unique folder values
+        tmpExpandAll.push(folderIndex.toString())
         let root: Node[] = [{
             value: (folderIndex--).toString(),
             label: 'Root Folder',
@@ -69,22 +68,23 @@ export const FileTreeView: React.FC<IProps> = (props: IProps) => {
             root[0].label = path.substring(0, path.indexOf('/')) // set root label (only needed once)
 
             path = path.substring(path.indexOf('/') + 1) // remove root folder
-            addPathToNode(root[0], f.name, idx, path, tmpChecked)
+            addPathToNode(root[0], f.name, idx, path, tmpChecked, tmpExpandAll)
         })
         sortRecursiveley(root[0]);
-        console.log(root)
+        setArrExpandAll(tmpExpandAll);
         return [root, tmpChecked];
     }
 
-    const addPathToNode = (node: Node, fileName: string, idx: number, path: string, tmpChecked: string[]) => {
+    const addPathToNode = (node: Node, fileName: string, idx: number, path: string, tmpChecked: string[], tmpExpandAll: string[]) => {
         let i = path.indexOf('/');
-        if (i == -1) {
+        if (i === -1) {
             addFileToNode(node, fileName, idx, tmpChecked)
         } else {
             let folderName: string = path.substring(0, i)
             let childNode: Node = node.children.find(node => node.label === folderName) // check child-node exists
 
             if (!childNode) {
+                tmpExpandAll.push(folderIndex.toString())
                 childNode = {
                     value: (folderIndex--).toString(),
                     label: folderName,
@@ -92,7 +92,7 @@ export const FileTreeView: React.FC<IProps> = (props: IProps) => {
                 }
                 node.children.push(childNode)
             }
-            addPathToNode(childNode, fileName, idx, path.substring(i + 1), tmpChecked)
+            addPathToNode(childNode, fileName, idx, path.substring(i + 1), tmpChecked, tmpExpandAll)
         }
     }
 
@@ -102,8 +102,7 @@ export const FileTreeView: React.FC<IProps> = (props: IProps) => {
             label: fileName,
             icon: getFileIcon(fileName)
         })
-        console.log(idx)
-        tmpChecked.push(idx.toString()) // ugly */
+        tmpChecked.push(idx.toString()) // ugly
     }
 
     const getFileIcon = (fileName: string): React.ReactNode => {
@@ -148,6 +147,12 @@ export const FileTreeView: React.FC<IProps> = (props: IProps) => {
         }
     }, [checked]);
 
+
+    useImperativeHandle(ref, () => ({
+        expandAll() { setExpanded(arrExpandAll) },
+        collapseAll() { setExpanded([]) },
+    }));
+
     if (props.files?.size > 0) {
         return (
             <CheckboxTree
@@ -175,4 +180,4 @@ export const FileTreeView: React.FC<IProps> = (props: IProps) => {
         return <></>
     }
 
-}
+});
