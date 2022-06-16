@@ -41,7 +41,7 @@ export const Variants: React.FC = () => {
             setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
             setEditVariant(null);
             setUpdatingVariant(false);
-            setErrorResponse(undefined);
+            setErrorResponse(null);
         }, (e) => {
             setErrorResponse(e);
             setEditVariant(null);
@@ -133,7 +133,7 @@ export const Variants: React.FC = () => {
             document.body.appendChild(link);
             link.click();
             setCheckingOut(false)
-            setErrorResponse(undefined);
+            setErrorResponse(null);
         }, (e) => {
             setErrorResponse(e);
             setCheckingOut(false);

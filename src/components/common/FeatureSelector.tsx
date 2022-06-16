@@ -111,6 +111,9 @@ export const FeatureSelector: React.FC<IProps> = (props) => {
             } else {
                 validity[name as keyof typeof validity] = true;
             }
+            var validationTag = document.getElementById("featureSelector") as HTMLSelectElement;
+            if(validationTag)
+                validationTag.setCustomValidity(fieldValidationErrors[name as keyof typeof fieldValidationErrors]);
         }
 
         setFormState({
@@ -125,11 +128,6 @@ export const FeatureSelector: React.FC<IProps> = (props) => {
             handleValidation();
     }, [configFeatures, manualFeatures]);
 
-    var TESTfield = document.getElementById("TEST") as HTMLFieldSetElement;
-    if(TESTfield)
-        TESTfield.setCustomValidity("wrong");
-
-
     // render
     if (configFeatures === undefined) {
 
@@ -140,7 +138,7 @@ export const FeatureSelector: React.FC<IProps> = (props) => {
         const heightStyle = (props.maxHeight ? { height: props.maxHeight } : {})
         return (
             <>
-                <fieldset id="TEST"></fieldset>
+                <select hidden id="featureSelector"></select>
                 <Row key={0} style={{ position: 'sticky', top: '0', backgroundColor: '#fff', zIndex: 5 }} className="mb-1">
                     {hasFeatures ?
                         <>

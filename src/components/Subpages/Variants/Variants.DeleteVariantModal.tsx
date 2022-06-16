@@ -21,7 +21,7 @@ export const DeleteVariantModal: React.FC<{ variant: VariantModel }> = (props) =
   const handleShow = () => setShow(true);
 
   const handleClose = () => {
-    setErrorResponse(undefined)
+    setErrorResponse(null)
     setRemoving(false)
     setShow(false);
   }

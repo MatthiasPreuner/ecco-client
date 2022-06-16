@@ -72,8 +72,8 @@ export const Login: React.FC = () => {
     const handleSubmit = () => {
         setLoggingIn(true)
         UserService.login(formState.formValues.name, formState.formValues.password).then((api: any) => {
+            setLoggingIn(false) // must be done before setAppState
             setAppState((prevState: AppState) => ({ ...prevState, userIsLoggedIn: true, loggedUserName: api.data.username }));
-            setLoggingIn(false)
         }, (e: AxiosError) => {
             setErrorResponse(e)
             setLoggingIn(false);

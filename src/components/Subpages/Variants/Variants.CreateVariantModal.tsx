@@ -10,10 +10,13 @@ import { AxiosError } from "axios";
 import { ErrorResponseToast } from "../../common/ErrorResponseToast";
 import { LoadingButton } from "../../common/LoadingButton";
 
+
+
 export const CreateVariant: React.FC = () => {
 
   const [show, setShow] = useState(false);
   const [name, setName] = useState<string>('');
+  const [nameInvalid, setNameInvalid] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [appState, setAppState] = useSharedState();
   const [validated, setValidated] = useState(false);
@@ -42,7 +45,7 @@ export const CreateVariant: React.FC = () => {
     setShow(false);
     setValidated(false);
     setCreating(false);
-    setErrorResponse(undefined);
+    setErrorResponse(null);
     setConfigString("");
   }
 
@@ -54,11 +57,7 @@ export const CreateVariant: React.FC = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    console.log("valid" + name + nameIsValid())
-    console.log(appState.repository.variants.filter(v => v.name === name))
-
-
-    if (form.checkValidity() === true && nameIsValid()) {
+    if (form.checkValidity()) {
       setCreating(true)
       CommunicationService.getInstance().createVariant(appState.repository, name, description, configString)
         .then((apiData: RepositoryResponse) => {
@@ -72,7 +71,24 @@ export const CreateVariant: React.FC = () => {
     setValidated(true);
   };
 
-  let nameIsValid = () => name.length > 0 && appState.repository.variants.filter(v => v.name.toLowerCase() === name.toLowerCase()).length < 1;
+  // React.ChangeEvent<FormControlElement>
+  const changeName = (e: any) => {
+
+    let name = e.target.value;
+    let invalid = "";
+    // pattern="[A-Za-z0-9 _.]{1,}"
+    if (name.length === 0) {
+      invalid = "Name must not be empty."
+    } else if (appState.repository.variants.filter(v => v.name.toLowerCase() === name.toLowerCase()).length > 0) {
+      invalid = "A Variant with that Name already exists."
+    } else {
+      invalid = ""
+    }
+
+    e.target.setCustomValidity(invalid)
+    setNameInvalid(invalid)
+    setName(name)
+  }
 
   return (
     <>
@@ -93,12 +109,11 @@ export const CreateVariant: React.FC = () => {
           <Modal.Body>
             <Form.Group className='mb-2' key={1}>
               <Form.Label>Name</Form.Label>
-              <Form.Control type="text" isInvalid={!nameIsValid()} placeholder="Name" value={name} onChange={e => setName(e.target.value)} required pattern="[A-Za-z0-9 _.]{1,}" />
-              {/*  isValid={nameIsValid()}  */}
-              {/*    <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback> */}
-              {name.length < 1 ?
-                <Form.Control.Feedback type="invalid">Name must not be empty!</Form.Control.Feedback> :
-                <Form.Control.Feedback type="invalid">A Variant with that Name already exists!</Form.Control.Feedback>}
+              <Form.Control type="text"
+                placeholder="Name"
+                value={name}
+                onChange={changeName} />
+              <Form.Control.Feedback type="invalid">{nameInvalid}</Form.Control.Feedback>
             </Form.Group>
             <Form.Group className='mb-2' key={2}>
               <Form.Label>Description</Form.Label>

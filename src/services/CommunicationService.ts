@@ -126,7 +126,6 @@ export class CommunicationService {
     }
 
     public pullFeatures(repository: RepositoryModel, fromRId: string, deselectedFeatures: string): Promise<any> {
-        console.log("pull")
         let body = { fromRId: fromRId, deselectedFeatures: deselectedFeatures }
         let config = new RequestConfig();
         config.headers = {
@@ -247,140 +246,10 @@ export class CommunicationService {
         )
     }
 
-    /*   public updateArtifactgraphOnNodeID(nodeID: string, maxChildCount: number) : Promise<any> {
-          let config = new RequestConfig();
-          config.headers = {
-              'Content-Type': 'application/json',
-          };
-          let artifactgraphFilter = new ArtefactgraphFilter(maxChildCount, nodeID);
-          return axios.post(
-              `${CommunicationService.BASE_URI + CommunicationService.ARTIFACT_ENDPOINT + CommunicationService.ARTIFACT_UPDATED_GRAPH_ENDPOINT}`,
-              JSON.stringify(artifactgraphFilter),
-              config
-          )
-      }
-   */
-    /*    public getArtifactgraph(artefactgraphFilter: ArtefactgraphFilter) : Promise<any> {
-           let config = new RequestConfig();
-           config.headers = {
-               'Content-Type': 'application/json',
-           };
-           return axios.post(
-               `${CommunicationService.BASE_URI + CommunicationService.ARTIFACT_ENDPOINT + CommunicationService.ARTIFACT_GRAPH_ENDPOINT}`,
-               JSON.stringify(artefactgraphFilter),
-               config
-           )
-       } */
-
-    public getNumberOfModules(): Promise<any> {
-        return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT + CommunicationService.NUMBER_OF_MODULES_PER_ORDER_IN_ASSOCIATION_ENDPOINT}`
-        )
-    }
-
-    public getNumberOfRevisionsPerFeature(): Promise<any> {
-        return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.FEATURE_ENDPOINT + CommunicationService.NUMBER_OF_REVISIONS_PER_FEATURE_IN_FEATURE_ENDPOINT}`
-        )
-    }
-
-    public getNumberOfArtifactsPerDepth(): Promise<any> {
-        return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT + CommunicationService.NUMBER_OF_ARTIFACTS_PER_DEPTH_IN_ASSOCIATION_ENDPOINT}`
-        )
-    }
-
-    public getNumberOfArtifactsPerAssociation(): Promise<any> {
-        return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT + CommunicationService.NUMBER_OF_ARTIFACTS_PER_ASSOCIATION_IN_ASSOCIATION_ENDPOINT}`
-        )
-    }
-
     public static getInstance() {
         if (!this.communicationServiceInstance) {
             this.communicationServiceInstance = new CommunicationService();
         }
         return this.communicationServiceInstance;
-    }
-
-    public getAssociations(): Promise<any> {
-        return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.ASSOCIATIONS_ENDPOINT}`,
-        )
-    }
-
-    public getFeatureversionsFromFeature(currentFeatureModel: FeatureModel): Promise<any> {
-        let config = new RequestConfig();
-        config.headers = {
-            'Content-Type': 'application/json',
-        };
-        return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.name}/version`,
-            config
-        )
-    }
-
-    public updateFeatureInBackend(updatedFeatureModel: FeatureModel): Promise<any> {
-        let config = new RequestConfig();
-        config.headers = {
-            'Content-Type': 'application/json',
-        };
-        return axios.post(
-            `${CommunicationService.BASE_URI + CommunicationService.FEATURE_ENDPOINT}`,
-            JSON.stringify(updatedFeatureModel),
-            config
-        )
-    }
-
-    public getFeatures(): Promise<any> {
-        return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.FEATURE_ENDPOINT}`
-        );
-    }
-
-    /*     public doOpenCloseRepositoryWithDirectory(baseDirectory: string, openCloseRepositoryOperation: string) : Promise<any> {
-            let config = new RequestConfig();
-            config.headers = {
-                'Content-Type': 'application/json',
-            };
-            let operationContainer = new OperationContainer();
-            operationContainer.repositoryOperation = openCloseRepositoryOperation;
-            operationContainer.baseDirectory = baseDirectory;
-            return axios.post(
-                `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}`,
-                JSON.stringify(operationContainer),
-                config
-            );
-        }
-     */
-    /*     public getArtifactsByAssociation(association: AssociationModel[]) : Promise<any> {
-            let config = new RequestConfig();
-            config.headers = {
-                'Content-Type': 'application/json',
-            };
-            return axios.post(
-                `${CommunicationService.BASE_URI + CommunicationService.ARTIFACT_ENDPOINT}`,
-                JSON.stringify(association),
-                config
-            )
-        } */
-
-    public corsTest(): Promise<any> {
-        let config = new RequestConfig();
-        config.headers = {
-            'Content-Type': 'application/json',
-            'crossdomain': true
-        };
-
-        return axios.post(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}/corstest`,
-            config
-        )
-    }
-
-    public closeRepositoryWithDirectory(): Promise<any> {
-        return axios.get(
-            `${CommunicationService.BASE_URI + CommunicationService.REPOSITORY_ENDPOINT}`
-        );
     }
 }

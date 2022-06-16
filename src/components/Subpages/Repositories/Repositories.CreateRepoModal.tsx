@@ -12,7 +12,7 @@ export const CreateRepoModal: React.FC = () => {
 
   const [show, setShow] = useState(false);
   const [appState, setAppState] = useSharedState();
-  const [errorResponse, setErrorResponse] = useState<AxiosError>();
+  const [errorResponse, setErrorResponse] = useState<AxiosError>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleShow = () => setShow(true);
@@ -20,26 +20,25 @@ export const CreateRepoModal: React.FC = () => {
   const handleClose = () => {
     // clear form
     setFormState(defaultFormState);
-    setErrorResponse(undefined);
+    setErrorResponse(null);
     setLoading(false)
     // hide form
     setShow(false);
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+    const form = event.currentTarget;
+
     event.preventDefault();
     const { formValues, formValidity } = formState;
 
-    if (Object.values(formValidity).every(Boolean)) {
-      // Form is valid
+    if (form.checkValidity()) {
       setLoading(true);
       CommunicationService.getInstance().createRepository(formState.formValues.name).then((apiData: RepositoryHeaderResponse) => {
-        setAppState((previousState) => ({
-          ...previousState,
-          availableRepositories: apiData.data
-        }));
+        setAppState((previousState) => ({ ...previousState, availableRepositories: apiData.data }));
         handleClose();
-      }, (e: AxiosError) => {setErrorResponse(e); setLoading(false)})
+      }, (e: AxiosError) => { setErrorResponse(e); setLoading(false) })
     } else {
       for (let key in formValues) {
         let target = {
@@ -92,6 +91,7 @@ export const CreateRepoModal: React.FC = () => {
       } else {
         validity[name as keyof typeof validity] = true;
       }
+      target.setCustomValidity(fieldValidationErrors[name as keyof typeof fieldValidationErrors])
     }
 
     setFormState({
@@ -121,15 +121,13 @@ export const CreateRepoModal: React.FC = () => {
           <Modal.Body>
             <Form.Group className="mb-3">
               <Form.Label>A new empty repository will be created. Please enter a name:</Form.Label>
-              <input
-                type="text"
+              <Form.Control type="text"
                 name="name"
+                isInvalid={!!formState.formErrors.name}
                 placeholder="Name of the new Repository..."
                 pattern="[A-Za-z0-9_]{1,}"
-                className={`form-control ${formState.formErrors.name ? "is-invalid" : ""}`}
                 value={formState.formValues.name}
-                onChange={handleChange}
-              />
+                onChange={handleChange} />
               <Form.Control.Feedback type="invalid">{formState.formErrors.name}</Form.Control.Feedback>
             </Form.Group>
             <ErrorResponseToast error={errorResponse} />

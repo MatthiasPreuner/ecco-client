@@ -22,7 +22,7 @@ export const CloneRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props)
   const handleClose = () => {
     // clear form
     setFormState(defaultFormState);
-    setErrorResponse(undefined);
+    setErrorResponse(null);
     setLoading(false)
     // hide form
     setShow(false);

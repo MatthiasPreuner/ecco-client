@@ -55,8 +55,8 @@ export const Feature: React.FC = () => {
                             </Col>
                             <Col>
                                 <Row className="mb-3">
-                                    <Col xs={6}></Col>
-                                    <Col xs={6}>
+                                    <Col xs={6} key={'c0'} />
+                                    <Col xs={6} key={'c1'}>
                                         <PullFeaturesModal />
                                     </Col>
                                 </Row>

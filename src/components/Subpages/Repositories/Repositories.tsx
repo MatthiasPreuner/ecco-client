@@ -24,7 +24,7 @@ export const Repositories: React.FC = () => {
     const [repositoryFilterText, setRepositoryFilterText] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [choosing, setChoosing] = useState<boolean>(false);
-    const [errorResponse, setErrorResponse] = useState<AxiosError>();
+    const [errorResponse, setErrorResponse] = useState<AxiosError>(null);
 
     useEffect(() => {
         if (appState.loggedUserName && !appState.availableRepositories) //
@@ -34,9 +34,9 @@ export const Repositories: React.FC = () => {
     let refresh = () => {
         setLoading(true)
         CommunicationService.getInstance().getAllRepositories().then((apiData: RepositoryHeaderResponse) => {
-            setAppState((previousState) => ({ ...previousState, availableRepositories: apiData.data }));
-            setErrorResponse(undefined);
+            setErrorResponse(null);
             setLoading(false)
+            setAppState((previousState) => ({ ...previousState, availableRepositories: apiData.data }));
         }, (e: AxiosError) => {
             setErrorResponse(e);
             setLoading(false);
@@ -47,7 +47,7 @@ export const Repositories: React.FC = () => {
         setChoosing(true)
         CommunicationService.getInstance().getRepository(selectedRepo).then((apiData: RepositoryResponse) => {
             setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
-            setErrorResponse(undefined);
+            setErrorResponse(null);
             setChoosing(false)
         }, (e: AxiosError) => {
             setErrorResponse(e);

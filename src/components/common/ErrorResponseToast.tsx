@@ -9,7 +9,7 @@ export interface ErrorResponseToastProps {
 export const ErrorResponseToast: React.FC<ErrorResponseToastProps> = (props) => {
     if (!props.error) {
         return (<></>)
-    } else if (props.error.response === undefined) {
+    } else if (!props.error.response) {
         // usually Network Error
         return (
             <Toast bg='warning' className="w-100">
