@@ -35,24 +35,12 @@
     -ms-user-select: none;
     user-select: none;
 
-/*     scrollbar-width: thin;
-    scrollbar-color: grey orange; */
-  /*   scrollbar-width: 25px; */
-
 }
 
-/* scrollbar {
-    -moz-appearance: none !important;
-      background: orange !important;
-      width: 5px;
-      scrollbar-color: grey orange;
-  } */
-
-/* ::-webkit-scrollbar{
-    width: 5px;
-  }
-   */
-
+// fixing nav dropdown scrollbar bug (firefox)
+.dropdown-item{
+    padding-right: 2rem !important;
+}
 
 .main {
     height: calc(100vh - 1rem - 40px);
