@@ -46,9 +46,9 @@ export const Repositories: React.FC = () => {
     let chooseRepo = () => {
         setChoosing(true)
         CommunicationService.getInstance().getRepository(selectedRepo).then((apiData: RepositoryResponse) => {
-            setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
             setErrorResponse(null);
             setChoosing(false)
+            setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
         }, (e: AxiosError) => {
             setErrorResponse(e);
             setChoosing(false);
@@ -73,7 +73,7 @@ export const Repositories: React.FC = () => {
 
         return filteredRepositories.map((repository: RepositoryHeaderModel, i) => {
             return (
-                <ListGroup.Item key={'l' + i} action active={repository === selectedRepo} onClick={() => setSelectedRepo(repository)}>{repository.rid === appState.repository?.rid && <i className="bi bi-dot"></i>} {repository.name}</ListGroup.Item>
+                <ListGroup.Item key={i} action active={repository === selectedRepo} onClick={() => setSelectedRepo(repository)}>{repository.rid === appState.repository?.rid && <i className="bi bi-dot"></i>} {repository.name}</ListGroup.Item>
             );
         })
     }

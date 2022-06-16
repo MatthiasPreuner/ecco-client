@@ -139,7 +139,7 @@ export const FeatureSelector: React.FC<IProps> = (props) => {
         return (
             <>
                 <select hidden id="featureSelector"></select>
-                <Row key={0} style={{ position: 'sticky', top: '0', backgroundColor: '#fff', zIndex: 5 }} className="mb-1">
+                <Row style={{ position: 'sticky', top: '0', backgroundColor: '#fff', zIndex: 5 }} className="mb-1">
                     {hasFeatures ?
                         <>
                             <Col xs={9}>
@@ -162,7 +162,7 @@ export const FeatureSelector: React.FC<IProps> = (props) => {
                 <Row style={heightStyle} className="scroll-area">
                     <Col >
                         {configFeatures?.map((ft, i) => (
-                            <Row key={i + 1} className="mt-1">
+                            <Row key={i} className="mt-1">
                                 <Col xs={10}>
                                     <Form.Check id={i.toString()} className='my-1'>
                                         <Form.Check.Input
