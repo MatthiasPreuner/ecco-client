@@ -1,10 +1,9 @@
 import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
-import { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
 
 import { CommitModel } from "../../../model/CommitModel";
-import { Container, Col, Row, Table, Button, ListGroup, Card, Badge } from 'react-bootstrap';
+import { Container, Col, Row, Table, ListGroup, Card, Badge } from 'react-bootstrap';
 import { MakeCommit } from "./Commits.MakeCommitModal";
 import { CompareCommits } from "./Commits.CompareCommitsModal";
 
@@ -17,13 +16,6 @@ export const Commits: React.FC = () => {
     const [compareCommit, setCompareCommit] = useState<CommitModel>(null);
     const [selectedCommit, setSelectedCommit] = useState<CommitModel>(null);
 
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!appState.userIsLoggedIn || appState.repository === null) {
-            navigate(`/`)
-        }
-    }, []);
 
     function printDate(date: Date): string {
         return [date.getDay(), date.getMonth(), date.getFullYear()].join('.') + ' ' +

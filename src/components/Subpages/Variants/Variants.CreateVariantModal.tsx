@@ -56,6 +56,8 @@ export const CreateVariant: React.FC = () => {
 
     console.log("valid" + name + nameIsValid())
     console.log(appState.repository.variants.filter(v => v.name === name))
+
+
     if (form.checkValidity() === true && nameIsValid()) {
       setCreating(true)
       CommunicationService.getInstance().createVariant(appState.repository, name, description, configString)

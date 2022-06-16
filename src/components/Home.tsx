@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useSharedState } from "../states/AppState";
 
-import { Login } from "./Home.Login";
 import { Repositories } from "./Subpages/Repositories/Repositories";
 import { Container } from 'react-bootstrap';
 import { Overview } from "./Home.Overview";
@@ -14,9 +13,7 @@ export const Home: React.FC = () => {
 
     return (
         <Container className="vh-100 d-flex align-items-center justify-content-center">
-            {!appState.userIsLoggedIn && <Login />}
-            {appState.userIsLoggedIn && appState.repository == null && <Repositories />}
-            {appState.userIsLoggedIn && appState.repository !== null && <Overview />}
+            {appState.repository ? <Overview /> : <Repositories />}
         </Container>
     );
 }

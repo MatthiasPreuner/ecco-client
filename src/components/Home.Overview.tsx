@@ -1,11 +1,11 @@
 import * as React from "react";
-//import { useEffect } from "react";
 import { AppState, useSharedState } from "../states/AppState";
 import { useNavigate } from 'react-router-dom';
 
-import { Card, Row, Button, Container, CardGroup, Col } from 'react-bootstrap';
+import { Card, Row, Button, Container, Col } from 'react-bootstrap';
 
-//import { CommunicationService } from "../services/CommunicationService";
+import { UserService } from "../services/UserService";
+
 
 export const Overview: React.FC = () => {
 
@@ -13,7 +13,8 @@ export const Overview: React.FC = () => {
     const navigate = useNavigate();
 
     let logout = () => {
-        setAppState((prevState: AppState) => ({ ...prevState, userIsLoggedIn: false }));
+        UserService.logout();
+        setAppState((prevState: AppState) => ({ ...prevState, loggedUserName: null, repository: null, availableRepositories: null }));
     }
 
     let cards = new Map<string, string>([

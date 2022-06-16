@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useSharedState } from "../../../states/AppState";
 import { CommunicationService } from "../../../services/CommunicationService";
-import { useNavigate } from 'react-router-dom';
 
 import { Button, ButtonGroup, Container, Row, Col, ListGroup, InputGroup, FormControl } from 'react-bootstrap';
 
@@ -27,15 +26,10 @@ export const Repositories: React.FC = () => {
     const [choosing, setChoosing] = useState<boolean>(false);
     const [errorResponse, setErrorResponse] = useState<AxiosError>();
 
-    const navigate = useNavigate();
-
     useEffect(() => {
-        if (!appState.userIsLoggedIn) {
-            navigate(`/`)
-        } else {
-            refresh();
-        }
-    }, [appState.userIsLoggedIn]);
+        if (appState.loggedUserName && !appState.availableRepositories) //
+            refresh()
+    }, [appState.availableRepositories]);
 
     let refresh = () => {
         setLoading(true)
@@ -79,7 +73,7 @@ export const Repositories: React.FC = () => {
 
         return filteredRepositories.map((repository: RepositoryHeaderModel, i) => {
             return (
-                <ListGroup.Item key={i} action active={repository === selectedRepo} onClick={() => setSelectedRepo(repository)}>{repository.rid === appState.repository?.rid && <i className="bi bi-dot"></i>} {repository.name}</ListGroup.Item>
+                <ListGroup.Item key={'l' + i} action active={repository === selectedRepo} onClick={() => setSelectedRepo(repository)}>{repository.rid === appState.repository?.rid && <i className="bi bi-dot"></i>} {repository.name}</ListGroup.Item>
             );
         })
     }
@@ -92,7 +86,7 @@ export const Repositories: React.FC = () => {
                     <h3>Repositories</h3>
                 </Row>
                 <Row key={"r1"}>
-                    <Col xs={10}>
+                    <Col xs={10} key={'c0'}>
                         <Row>
                             <InputGroup className="mb-3">
                                 <InputGroup.Text><i className="bi bi-funnel-fill"></i></InputGroup.Text>
@@ -109,8 +103,8 @@ export const Repositories: React.FC = () => {
                             {repositories}
                         </ListGroup>
                         <ErrorResponseToast error={errorResponse} />
-                    </Col>
-                    <Col className="d-flex flex-column justify-content-between">
+                    </Col >
+                    <Col className="d-flex flex-column justify-content-between" key={'c1'}>
                         <ButtonGroup key={"bg1"} vertical className="w-100 mb-5">
                             <ButtonGroup key={"bg1.0"} className="me-2 mb-2 w-100" vertical><CreateRepoModal /></ButtonGroup>
                             <ButtonGroup key={"bg1.1"} className="me-2 mb-2 w-100" vertical><CloneRepoModal repo={selectedRepo} /></ButtonGroup>

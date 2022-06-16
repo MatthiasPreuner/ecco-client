@@ -1,32 +1,24 @@
-/* import { OperationContainer } from "../Domain/Model/Frontend/OperationContainer";  */
 import { RequestConfig } from "../model/RequestConfig";
 import { FeatureModel } from "../model/FeatureModel";
 import { FeatureRevisionModel } from "../model/FeatureRevisionModel";
 import { VariantModel } from "../model/VariantModel";
 import { FileWithPath } from "react-dropzone";
 import { RepositoryHeaderModel, RepositoryModel } from "../model/RepositoryModel";
-/* import {AssociationModel} from "../Domain/Model/Backend/AssociationModel";
-import {AssociationInspection} from "../Domain/Model/Frontend/AssociationInspection";
-import {ArtefactgraphFilter} from "../Domain/Model/Backend/ChartArtefactgraph/ArtefactgraphFilter"; */
 
-/* import axios2 from 'axios';
-axios2.defaults.baseURL = 'http://localhost:8080/api'
-axios2.defaults.headers.common = {'Authorization': `bearer TOKEN`} */
-/* export default axios; */
 
 const axios = require("axios");
 
 export class CommunicationService {
 
     private static readonly BASE_URI = "http://localhost:8080/api";
+    private static readonly LOGIN_URI = "http://localhost:8080/login";
+
     private static readonly FEATURE_ENDPOINT = "/feature";
+    private static readonly COMMIT_ENDPOINT = "/commit";
     private static readonly VARIANT_ENDPOINT = "/variant";
-    /* private static readonly ARTIFACT_ENDPOINT = "/artefact";
-    private static readonly ARTIFACT_GRAPH_ENDPOINT = "/graph";
-    private static readonly ARTIFACT_UPDATED_GRAPH_ENDPOINT = "/updatedgraph"; */
     private static readonly REPOSITORY_ENDPOINT = "/repository";
     private static readonly ASSOCIATIONS_ENDPOINT = "/associations";
-    private static readonly COMMIT_ENDPOINT = "/commit";
+
     private static readonly NUMBER_OF_ARTIFACTS_PER_ASSOCIATION_IN_ASSOCIATION_ENDPOINT = "/numberofartifacts";
     private static readonly NUMBER_OF_ARTIFACTS_PER_DEPTH_IN_ASSOCIATION_ENDPOINT = "/artifactsperdepth";
     private static readonly NUMBER_OF_REVISIONS_PER_FEATURE_IN_FEATURE_ENDPOINT = "/numberofrevisions";
@@ -36,7 +28,30 @@ export class CommunicationService {
 
     private constructor() {
         axios.defaults.baseURL = CommunicationService.BASE_URI
-        axios.defaults.headers.common['Authorization'] = `bearer TOKEN` // TODO
+    }
+
+    // Authentication ==================================================================================
+    public login(username: string, password: string): Promise<any> {
+        return axios.post(
+            CommunicationService.LOGIN_URI,
+            JSON.stringify({ username, password }),
+            {
+                headers: { "Content-Type": "application/json" },
+            }
+        )
+    }
+
+    public setBearerToken(token: string) {
+        axios.defaults.headers.common['Authorization'] = `bearer ${token}`
+    }
+
+    public logout() {
+        axios.defaults.headers.common['Authorization'] = ``
+    }
+
+    public checkAuthorized(token: string): Promise<any> {
+        axios.defaults.headers.common['Authorization'] = `bearer ${token}`
+        return axios.get(`${CommunicationService.REPOSITORY_ENDPOINT + '/isAuthorized'}`)
     }
 
     // Repository ======================================================================================
@@ -82,13 +97,9 @@ export class CommunicationService {
             `${CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`
         )
     }
-    
-     // Feature ========================================================================================
+
+    // Feature ========================================================================================
     public updateFeatureDescription(repository: RepositoryModel, currentFeatureModel: FeatureModel, description: string): Promise<any> {
-
- /*        Axios.post<any, any, { description: string;}>(url: string, data?: {  description: string;}, config?: AxiosRequestConfig<{ description: string;}>): Promise<any>
-   */
-
         let body = { description: description }
         let config = new RequestConfig();
         config.headers = {
@@ -129,7 +140,7 @@ export class CommunicationService {
     }
 
     // Commits ========================================================================================
-    public makeCommit = (repository: RepositoryModel, message: string, configuration: string, acceptedFiles: FileWithPath[]) => {
+    public makeCommit = (repository: RepositoryModel, message: string, configuration: string, username: string, acceptedFiles: FileWithPath[]) => {
 
         let formData = new FormData();
         let config = new RequestConfig();
@@ -142,10 +153,11 @@ export class CommunicationService {
 
         formData.append("message", message)
         formData.append("config", configuration)
+        formData.append("username", username)
         config.headers = {
             'Content-Type': 'multipart/form-data'
         }
- 
+
         console.log(`${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`)
         return axios.post(
             `/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`,

@@ -84,7 +84,7 @@ export const MakeCommit: React.FC = () => {
 
     if (form.checkValidity() && tmpAcceptedFiles.size !== 0 && configString.length !== 0) {
       setIsCommiting(true)
-      CommunicationService.getInstance().makeCommit(appState.repository, commitMessage, configString, choosenFiles).
+      CommunicationService.getInstance().makeCommit(appState.repository, commitMessage, configString, appState.loggedUserName, choosenFiles).
         then((apiData: RepositoryResponse) => {
           setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
           setIsCommiting(false);

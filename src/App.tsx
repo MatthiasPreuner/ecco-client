@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter } from "react-router-dom";
 import { SharedStateProvider } from "./states/AppState";
 import { AppRouter } from "./AppRouter";
 
@@ -8,7 +9,9 @@ export default class App extends React.Component {
   render() {
     return (
       <SharedStateProvider>
-        <AppRouter />
+        <BrowserRouter>
+          <AppRouter />
+        </BrowserRouter>
       </SharedStateProvider>
     );
   }

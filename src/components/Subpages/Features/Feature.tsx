@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
 
 import { Container, Col, Row, InputGroup, FormControl, Button, ListGroup } from 'react-bootstrap';
 
@@ -10,12 +9,10 @@ import { FeatureDetail } from "./Feature.Detail";
 import { PullFeaturesModal } from "./Feature.PullFeaturesModal";
 
 export const Feature: React.FC = () => {
-
+   
     const [appState, setAppState] = useSharedState();
     const [featureFilterText, setFeatureFilterText] = useState<string>("");
     const [tmpCurrentFeature, setTmpCurrentFeature] = useState<FeatureModel>(null);
-
-    const navigate = useNavigate();
 
     const getCurrentFeatureExpression = (): JSX.Element[] => {
         return appState.repository?.features.map((feature: FeatureModel, i) => {
@@ -31,11 +28,8 @@ export const Feature: React.FC = () => {
     let features = getCurrentFeatureExpression();
 
     useEffect(() => {
-        if (!appState.userIsLoggedIn || appState.repository === null) {
-            navigate(`/`)
-        } else {
+        if (appState.repository)
             setTmpCurrentFeature(appState.repository.features.find(f => f.id === tmpCurrentFeature?.id)) // update, when new repository is received after changing smtg
-        }
     }, [appState.repository]);
 
     return (

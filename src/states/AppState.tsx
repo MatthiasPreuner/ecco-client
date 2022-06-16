@@ -11,8 +11,9 @@ export interface AppState {
   /*     plugins: ReducedArtifactPlugin[] */
   /*   artifactTree: ArtefactTreeModel, */
   /*   associations: AssociationInspection[], */
-  eccoServiceIsInitialized: boolean,
-  userIsLoggedIn: boolean,
+  /* eccoServiceIsInitialized: boolean, */
+  loggedUserName: string,
+/*   userIsLoggedIn: boolean, */
   loginToken: any
 
 }
@@ -22,8 +23,9 @@ const useValue = () => useState<AppState>({
   availableRepositories: null,
   /*   artifactTree: null, */
   /*    plugins: [], */
-  eccoServiceIsInitialized: true,
-  userIsLoggedIn: false,
+  /* eccoServiceIsInitialized: true, */
+  loggedUserName: null,
+/*   userIsLoggedIn: false, */
   loginToken: false
 });
 

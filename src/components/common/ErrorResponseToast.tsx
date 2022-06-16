@@ -13,7 +13,7 @@ export const ErrorResponseToast: React.FC<ErrorResponseToastProps> = (props) => 
         // usually Network Error
         return (
             <Toast bg='warning' className="w-100">
-                <Toast.Body >Network Error</Toast.Body>
+                <Toast.Body >Could not connect to Ecco server</Toast.Body>
             </Toast>
         )
     } else if (props.error.response.data._embedded && props.error.response.data._embedded.errors) { // specified by API

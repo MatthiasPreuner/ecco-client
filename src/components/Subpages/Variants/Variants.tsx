@@ -2,7 +2,6 @@ import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
 import { useState, useEffect } from "react";
 import { CreateVariant } from "./Variants.CreateVariantModal";
-import { useNavigate } from 'react-router-dom';
 
 import { Container, Col, Row, InputGroup, Table, Button, DropdownButton, Dropdown, FormControl, Stack } from 'react-bootstrap';
 
@@ -31,15 +30,10 @@ export const Variants: React.FC = () => {
     const [checkingOut, setCheckingOut] = useState<boolean>(false);
     const [updatingVariant, setUpdatingVariant] = useState<boolean>(false);
 
-    const navigate = useNavigate();
-
     useEffect(() => {
-        if (!appState.userIsLoggedIn || appState.repository === null) {
-            navigate(`/`)
-        } else {
+        if (appState.repository)
             setSelectedVariant(appState.repository.variants.find(v => v.id === selectedVariant?.id)) // update, when new repository is received after changing smtg
-        }
-    }, [appState.repository, appState.userIsLoggedIn, selectedVariant, navigate]);
+    }, [appState.repository, selectedVariant]);
 
     const updateVariant = () => {
         setUpdatingVariant(true)

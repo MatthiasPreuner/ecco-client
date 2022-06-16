@@ -1,5 +1,6 @@
 @import "~bootstrap/scss/bootstrap";
 @import "custom.scss";
+
 .App {
     text-align: center;
 }
@@ -33,7 +34,25 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+
+/*     scrollbar-width: thin;
+    scrollbar-color: grey orange; */
+  /*   scrollbar-width: 25px; */
+
 }
+
+/* scrollbar {
+    -moz-appearance: none !important;
+      background: orange !important;
+      width: 5px;
+      scrollbar-color: grey orange;
+  } */
+
+/* ::-webkit-scrollbar{
+    width: 5px;
+  }
+   */
+
 
 .main {
     height: calc(100vh - 1rem - 40px);
@@ -52,7 +71,6 @@
 table.table-hover tbody tr {
     cursor: pointer;
 }
-
 
 /* table with fixed header
  * https://www.w3docs.com/snippets/html/how-to-create-a-table-with-a-fixed-header-and-scrollable-body.html */
@@ -125,6 +143,7 @@ table.table-hover tbody tr {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
