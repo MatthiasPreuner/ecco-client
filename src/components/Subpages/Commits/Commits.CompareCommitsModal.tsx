@@ -51,6 +51,7 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
   const compareRows = compare();
 
   let parseCondition = (condition: string) => {
+    console.log(condition.replaceAll("!", '¬'))
     return condition.replaceAll('d^0', '').split(' AND ').map(subcondstr => {
 
       let m = new Map<string, number[]>();
@@ -71,6 +72,14 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
     })
   }
 
+  let parseCondition2 = (condition: string): string => {
+    return condition.replaceAll("!", '¬')
+      .replaceAll("AND", '<b>&</b>')
+      .replaceAll("OR", '<b>|</b>')
+      .replaceAll("[", "")
+      .replaceAll("]", '</sup>')
+      .replaceAll('^', '<sup>')
+  }
 
   return (
     <>
@@ -109,7 +118,10 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
                 {compareRows.map((r, i) => {
                   return (
                     <tr key={i}>
-                      <td>
+                      <td dangerouslySetInnerHTML={{ __html: parseCondition2(r.condition) }} />
+                    {/*   <td>
+
+
                         <div className="d-flex flex-wrap px-0" style={{ minHeight: '46px' }}>
                           {parseCondition(r.condition).map((map, idx) =>
                             <>
@@ -119,9 +131,9 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
                                 </div>
                               )}
                             </>
-                          )}
+                          )}  
                         </div>
-                      </td>
+                      </td> */}
                       <td style={{ textAlign: "center" }}>{r.c0 && <i className="bi bi-check-lg"></i>}</td>
                       <td style={{ textAlign: "center" }}>{r.c1 && <i className="bi bi-check-lg"></i>}</td>
                     </tr>
