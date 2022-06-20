@@ -79,8 +79,8 @@ export const CreateVariant: React.FC = () => {
     // pattern="[A-Za-z0-9 _.]{1,}"
     if (name.length === 0) {
       invalid = "Name must not be empty."
-    } else if (appState.repository.variants.filter(v => v.name.toLowerCase() === name.toLowerCase()).length > 0) {
-      invalid = "A Variant with that Name already exists."
+    /* } else if (appState.repository.variants.filter(v => v.name.toLowerCase() === name.toLowerCase()).length > 0) {
+      invalid = "A Variant with that Name already exists." */
     } else {
       invalid = ""
     }

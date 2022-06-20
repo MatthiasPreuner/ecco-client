@@ -59,7 +59,7 @@ export const AppRouter: React.FC = () => {
                                         )
                                     })
                                     }
-                                    {(appState.availableRepositories.length > 0) && < NavDropdown.Divider />}
+                                    {(appState.availableRepositories.length > 1) && < NavDropdown.Divider />}
                                     <NavDropdown.Item onClick={() => setExpanded(false)} as={Link} to="repositories">Repository Overview</NavDropdown.Item>
                                 </NavDropdown>
                                 <Nav.Link onClick={() => setExpanded(false)} data-bs-target=".navbar-collapse.show" as={Link} to="features" disabled={appState.repository === null}>Features</Nav.Link>
@@ -70,8 +70,8 @@ export const AppRouter: React.FC = () => {
                         {appState.loggedUserName &&
                             <Nav>
                                 <NavDropdown title={"User: " + appState.loggedUserName} id="basic-nav-dropdown">
-                                    <NavDropdown.Item onClick={() => setExpanded(false)} as={Link} to="">Account TODO</NavDropdown.Item>
-                                    <NavDropdown.Divider />
+                                  {/*   <NavDropdown.Item onClick={() => setExpanded(false)} as={Link} to="">Account TODO</NavDropdown.Item>
+                                    <NavDropdown.Divider /> */}
                                     <NavDropdown.Item as={Link} to="/" onClick={logout}>Logout</NavDropdown.Item>
                                 </NavDropdown>
                             </Nav>

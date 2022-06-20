@@ -79,7 +79,7 @@ export const Commits: React.FC = () => {
                                     </ListGroup>
                                 </Card>
                             </Col>
-                            <Col xs={3} className="mr-auto mb-3">
+                         {/*    <Col xs={3} className="mr-auto mb-3">
                                 <h5>Associations</h5>
                             </Col>
                             <Col xs={3} className="mr-auto mb-3">
@@ -87,7 +87,7 @@ export const Commits: React.FC = () => {
                             </Col>
                             <Col xs={3} className="mr-auto mb-3">
                                 <h5>Image?</h5>
-                            </Col>
+                            </Col> */}
                         </>
                     }
                 </Row>

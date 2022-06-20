@@ -28,12 +28,10 @@ export const DeleteRepoModal: React.FC<{ repo: RepositoryHeaderModel }> = (props
     event.preventDefault();
     event.stopPropagation();
 
-    // TODO make like createRepoModal
-
     if (inputValue !== "DELETE") return;
 
     CommunicationService.getInstance().deleteRepository(props.repo).then((apiData: RepositoryHeaderResponse) => {
-      if (props.repo === appState.repository) {
+      if (props.repo.rid === appState.repository?.rid) {
         setAppState((previousState) => ({ ...previousState, availableRepositories: apiData.data, repository: null }));
       } else {
         setAppState((previousState) => ({ ...previousState, availableRepositories: apiData.data }));

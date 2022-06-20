@@ -157,7 +157,6 @@ export class CommunicationService {
             'Content-Type': 'multipart/form-data'
         }
 
-        console.log(`${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`)
         return axios.post(
             `/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`,
             formData,

@@ -18,7 +18,7 @@ export const PullFeaturesModal: React.FC = () => {
   const [repoToPullFrom, setRepoToPullFrom] = useState<RepositoryModel>(null)
   const [configString, setConfigString] = useState<[string, string]>(["", ""])
   const [initFeatures, setInitFeatures] = useState<FeatureSelectorFeature[]>([])
-  const [errorResponse, setErrorResponse] = useState<AxiosError>();
+  const [errorResponse, setErrorResponse] = useState<AxiosError>(null);
   const [pulling, setPulling] = useState<boolean>(false);
 
   const handleShow = () => {
@@ -29,6 +29,7 @@ export const PullFeaturesModal: React.FC = () => {
     // clear form
     setValidated(false);
     setShow(false);
+    setErrorResponse(null);
     setRepoToPullFrom(null);
     setPulling(false);
     setConfigString(["", ""]);

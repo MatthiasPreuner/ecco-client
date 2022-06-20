@@ -11,6 +11,7 @@ import { FileTreeView, FileTreeViewRef } from "./Commits.MakeCommitModal.FileTre
 import { FeatureColumn } from "./Commits.MakeCommitModal.FeatureColumn";
 import { AxiosError } from "axios";
 import { LoadingButton } from "../../common/LoadingButton";
+import { ErrorResponseToast } from "../../common/ErrorResponseToast";
 
 declare module 'react' {
   interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -54,6 +55,7 @@ export const MakeCommit: React.FC = () => {
   const [commitMessage, setCommitMessage] = useState<string>('');
   const [choosenFiles, setChoosenFiles] = useState<Array<FileWithPath>>(new Array<FileWithPath>());
   const [isCommiting, setIsCommiting] = useState<boolean>(false);
+  const [errorResponse, setErrorResponse] = useState<AxiosError>(null);
 
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     var allFiles = new Map(tmpAcceptedFiles)
@@ -89,7 +91,7 @@ export const MakeCommit: React.FC = () => {
           setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
           setIsCommiting(false);
           handleClose();
-        }, (e: AxiosError) => { console.log("error"); setIsCommiting(false); });
+        }, (e: AxiosError) => { setErrorResponse(e); setIsCommiting(false); });
     }
     setValidated(true);
   };
@@ -184,6 +186,7 @@ export const MakeCommit: React.FC = () => {
             <Form.Group>
               <Form.Control as="textarea" required rows={1} type="text" placeholder="Commit Message" value={commitMessage} onChange={e => setCommitMessage(e.target.value)} />
             </Form.Group>
+            <ErrorResponseToast error={errorResponse} />
           </Modal.Body>
           <Modal.Footer>
             <Col className="d-flex justify-content-between align-items-center">

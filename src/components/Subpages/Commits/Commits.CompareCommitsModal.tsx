@@ -76,8 +76,8 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
     return condition.replaceAll("!", '¬')
       .replaceAll("AND", '<b>&</b>')
       .replaceAll("OR", '<b>|</b>')
-      .replaceAll("[", "")
-      .replaceAll("]", '</sup>')
+      .replaceAll(",d", '</sup>, d')
+      .replaceAll("]", '</sup>]')
       .replaceAll('^', '<sup>')
   }
 
