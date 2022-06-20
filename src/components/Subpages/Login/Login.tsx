@@ -55,19 +55,19 @@ export const Login: React.FC = () => {
         });
     };
 
-    const checkAuthorized = () => {
+  /*   const checkAuthorized = () => {
         UserService.checkAuthorized().then((api: any) => {
             setAppState((prevState: AppState) => ({ ...prevState, userIsLoggedIn: true, loggedUserName: api.data.username }));
         }, (e: AxiosError) => {
             // just wait for logging in
         })
-    };
+    }; */
 
-    useEffect(() => {
+/*     useEffect(() => {
         if (!appState.loggedUserName) {
             checkAuthorized();
         }
-    }, [appState.loggedUserName]);
+    }, [appState.loggedUserName]); */
 
     const handleSubmit = () => {
         setLoggingIn(true)

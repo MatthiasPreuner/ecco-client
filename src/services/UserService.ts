@@ -22,7 +22,7 @@ export class UserService {
         return promise2
     }
 
-    public static checkAuthorized(): Promise<any> {
+/*     public static checkAuthorized(): Promise<any> {
 
         const cookies = new Cookies();
         let oldToken = cookies.get(UserService.BEARER_TOKEN);
@@ -37,7 +37,7 @@ export class UserService {
             CommunicationService.getInstance().logout() // clear token
         })
         return promise2
-    };
+    }; */
 
     public static logout() {
         const cookies = new Cookies();
