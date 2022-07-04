@@ -49,11 +49,6 @@ export class CommunicationService {
         axios.defaults.headers.common['Authorization'] = ``
     }
 
-    public checkAuthorized(token: string): Promise<any> {
-        axios.defaults.headers.common['Authorization'] = `bearer ${token}`
-        return axios.get(`${CommunicationService.REPOSITORY_ENDPOINT + '/isAuthorized'}`)
-    }
-
     // Repository ======================================================================================
     public getAllRepositories(): Promise<any> {
         return axios.get(

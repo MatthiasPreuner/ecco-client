@@ -13,7 +13,6 @@ import { Variants } from "./components/Subpages/Variants/Variants";
 import { RepositoryHeaderModel } from "./model/RepositoryModel";
 import { CommunicationService } from "./services/CommunicationService";
 import { RepositoryResponse } from "./model/RepositoryResponse";
-import { UserService } from "./services/UserService";
 import { Login } from "./components/Subpages/Login/Login";
 
 
@@ -28,11 +27,11 @@ export const AppRouter: React.FC = () => {
         if (!appState.loggedUserName)
             navigate(`/login`)
         else
-            navigate(`/`) // TODO checkauthorized here??
+            navigate(`/`)
     }, [appState.loggedUserName]);
 
     let logout = () => {
-        UserService.logout();
+        CommunicationService.getInstance().logout();
         setAppState((prevState: AppState) => ({ ...prevState, loggedUserName: null, repository: null, availableRepositories: null }));
     }
 

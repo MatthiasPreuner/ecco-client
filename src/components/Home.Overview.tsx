@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Card, Row, Button, Container, Col } from 'react-bootstrap';
 
-import { UserService } from "../services/UserService";
+import { CommunicationService } from "../services/CommunicationService";
 
 
 export const Overview: React.FC = () => {
@@ -13,7 +13,7 @@ export const Overview: React.FC = () => {
     const navigate = useNavigate();
 
     let logout = () => {
-        UserService.logout();
+        CommunicationService.getInstance().logout();
         setAppState((prevState: AppState) => ({ ...prevState, loggedUserName: null, repository: null, availableRepositories: null }));
     }
 

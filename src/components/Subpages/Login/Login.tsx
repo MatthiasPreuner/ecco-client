@@ -6,10 +6,7 @@ import { AxiosError } from "axios";
 
 import { ErrorResponseToast } from "../../common/ErrorResponseToast";
 import { LoadingButton } from "../../common/LoadingButton";
-import { UserService } from "../../../services/UserService";
-
-
-const BEARER_TOKEN: string = "bearertoken";
+import { CommunicationService } from "../../../services/CommunicationService";
 
 export const Login: React.FC = () => {
 
@@ -55,23 +52,10 @@ export const Login: React.FC = () => {
         });
     };
 
-  /*   const checkAuthorized = () => {
-        UserService.checkAuthorized().then((api: any) => {
-            setAppState((prevState: AppState) => ({ ...prevState, userIsLoggedIn: true, loggedUserName: api.data.username }));
-        }, (e: AxiosError) => {
-            // just wait for logging in
-        })
-    }; */
-
-/*     useEffect(() => {
-        if (!appState.loggedUserName) {
-            checkAuthorized();
-        }
-    }, [appState.loggedUserName]); */
-
     const handleSubmit = () => {
         setLoggingIn(true)
-        UserService.login(formState.formValues.name, formState.formValues.password).then((api: any) => {
+        CommunicationService.getInstance().login(formState.formValues.name, formState.formValues.password).then((api: any) => {
+            CommunicationService.getInstance().setBearerToken(api.data.access_token)
             setLoggingIn(false) // must be done before setAppState
             setAppState((prevState: AppState) => ({ ...prevState, userIsLoggedIn: true, loggedUserName: api.data.username }));
         }, (e: AxiosError) => {
@@ -82,7 +66,7 @@ export const Login: React.FC = () => {
 
     return (
         <Container className="vh-100 d-flex align-items-center justify-content-center">
-            <Form className="w-80" /* onSubmit={handleSubmit} */>
+            <Form className="w-80" onSubmit={handleSubmit}>
                 <legend>EccoHub Login</legend>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Control
@@ -101,7 +85,7 @@ export const Login: React.FC = () => {
                         onChange={handleChange} />
                 </Form.Group>
                 <ErrorResponseToast error={errorResponse} />
-                <LoadingButton className="w-100 mt-5" loading={loggingIn} variant="primary" type="button" onClick={handleSubmit}>Sign in</LoadingButton>
+                <LoadingButton className="w-100 mt-5" loading={loggingIn} variant="primary" type="submit" /* onClick={handleSubmit} */>Sign in</LoadingButton>
             </Form>
         </Container>
     );
