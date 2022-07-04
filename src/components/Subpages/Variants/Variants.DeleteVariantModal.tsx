@@ -27,7 +27,7 @@ export const DeleteVariantModal: React.FC<{ variant: VariantModel }> = (props) =
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    console.log("rm")
+
     event.preventDefault();
     setRemoving(true);
 

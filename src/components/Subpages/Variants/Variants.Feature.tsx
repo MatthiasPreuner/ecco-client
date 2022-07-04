@@ -35,7 +35,6 @@ export const Features: React.FC<{ variant: VariantModel }> = (props) => {
     }
 
     let variantUpdateFeature = (variant: VariantModel, featureName: string, revision: string) => {
-        console.log("update")
         CommunicationService.getInstance().variantUpdateFeature(appState.repository, variant, featureName, revision)
             .then((apiData: RepositoryResponse) => {
                 setAppState((previousState) => ({

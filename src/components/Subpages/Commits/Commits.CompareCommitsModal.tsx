@@ -28,7 +28,7 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
   }
 
   const compare = () => {
-    // props.commits.sort((a,b) => a.date-b.date) needs date comparision
+
     let result: CompareRow[] = [];
 
     props.commits[0]?.associations.forEach(a => {
@@ -50,29 +50,7 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
 
   const compareRows = compare();
 
-  let parseCondition = (condition: string) => {
-    console.log(condition.replaceAll("!", '¬'))
-    return condition.replaceAll('d^0', '').split(' AND ').map(subcondstr => {
-
-      let m = new Map<string, number[]>();
-      subcondstr.split(',').forEach(str => {
-
-        let split = str.replace(/[[\]()]/g, '').split('.')
-
-        let f = split[0];
-        let r = parseInt(split[1]);
-
-        if (m.has(f)) {
-          m.get(f).push(r)
-        } else {
-          m.set(f, [r])
-        }
-      })
-      return m
-    })
-  }
-
-  let parseCondition2 = (condition: string): string => {
+  let parseCondition = (condition: string): string => {
     return condition.replaceAll("!", '¬')
       .replaceAll("AND", '<b>&</b>')
       .replaceAll("OR", '<b>|</b>')
@@ -118,22 +96,7 @@ export const CompareCommits: React.FC<{ commits: CommitModel[] }> = (props) => {
                 {compareRows.map((r, i) => {
                   return (
                     <tr key={i}>
-                      <td dangerouslySetInnerHTML={{ __html: parseCondition2(r.condition) }} />
-                    {/*   <td>
-
-
-                        <div className="d-flex flex-wrap px-0" style={{ minHeight: '46px' }}>
-                          {parseCondition(r.condition).map((map, idx) =>
-                            <>
-                              {Array.from(map).map((map, idx) =>
-                                <div key={idx} className="association-container" >
-                                  {map[0]} {map[1].sort((a, b) => a - b).map(v => <Badge className="association-badge">{v}</Badge>)}
-                                </div>
-                              )}
-                            </>
-                          )}  
-                        </div>
-                      </td> */}
+                      <td dangerouslySetInnerHTML={{ __html: parseCondition(r.condition) }} />
                       <td style={{ textAlign: "center" }}>{r.c0 && <i className="bi bi-check-lg"></i>}</td>
                       <td style={{ textAlign: "center" }}>{r.c1 && <i className="bi bi-check-lg"></i>}</td>
                     </tr>
