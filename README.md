@@ -2,12 +2,12 @@
 
 This is the React Front-End for the Ecco-System  
 
-The Back-End can be found [here](https://github.com/Dorkat0/ecco).  
+The Back-End can be found [here (currently development branch)](https://github.com/Dorkat0/ecco/tree/develop).  
 
 ## Technical Details  
 React + Typescript  
 [Bootstrap 5](https://www.npmjs.com/package/react-bootstrap)  
-[Bootstrap Icons](https://icons.getbootstrap.com/)
+[Bootstrap Icons](https://icons.getbootstrap.com/)  
 [Axios (HTTP-Client)](https://www.npmjs.com/package/react-axios)  
 
 
