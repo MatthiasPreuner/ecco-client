@@ -9,16 +9,20 @@ React + Typescript
 [Bootstrap 5](https://www.npmjs.com/package/react-bootstrap)  
 [Bootstrap Icons](https://icons.getbootstrap.com/)
 [Axios (HTTP-Client)](https://www.npmjs.com/package/react-axios)  
-(echarts, jquery)  
 
 
 ## How to get started
+
+Download and install [Node.js](https://nodejs.org/en/download/)  
+
+Open the project in an IDE (i.e. VS Code).\
+Open a terminal and install dependencies:
 
 ### `npm install`
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the project directory run:
 
 ### `npm start`
 
