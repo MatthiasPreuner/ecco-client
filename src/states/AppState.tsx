@@ -1,31 +1,19 @@
 import { useState } from "react";
 import { createContainer } from "react-tracked";
 
-/* import { ReducedArtifactPlugin } from "../Domain/Model/Backend/ReducedArtifactPlugin";
-import { ArtefactTreeModel } from "../Domain/Model/Backend/ArtefactTreeModel"; */
 import { RepositoryHeaderModel, RepositoryModel } from "../model/RepositoryModel";
 
 export interface AppState {
   repository: RepositoryModel,
   availableRepositories: RepositoryHeaderModel[],
-  /*     plugins: ReducedArtifactPlugin[] */
-  /*   artifactTree: ArtefactTreeModel, */
-  /*   associations: AssociationInspection[], */
-  /* eccoServiceIsInitialized: boolean, */
   loggedUserName: string,
-/*   userIsLoggedIn: boolean, */
   loginToken: any
-
 }
 
 const useValue = () => useState<AppState>({
   repository: null,
   availableRepositories: null,
-  /*   artifactTree: null, */
-  /*    plugins: [], */
-  /* eccoServiceIsInitialized: true, */
   loggedUserName: null,
-/*   userIsLoggedIn: false, */
   loginToken: false
 });
 

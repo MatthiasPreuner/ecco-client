@@ -27,7 +27,7 @@ export const Repositories: React.FC = () => {
     const [errorResponse, setErrorResponse] = useState<AxiosError>(null);
 
     useEffect(() => {
-        if (appState.loggedUserName && !appState.availableRepositories) //
+        if (!appState.availableRepositories) //
             refresh()
     }, [appState.availableRepositories]);
 
@@ -73,21 +73,21 @@ export const Repositories: React.FC = () => {
 
         return filteredRepositories.map((repository: RepositoryHeaderModel, i) => {
             return (
-                <ListGroup.Item key={i} action active={repository === selectedRepo} onClick={() => setSelectedRepo(repository)}>{repository.rid === appState.repository?.rid && <i className="bi bi-dot"></i>} {repository.name}</ListGroup.Item>
+                <ListGroup.Item key={i} action active={repository === selectedRepo} onClick={() => setSelectedRepo(repository)}>{repository.rid === appState.repository?.rid && <i className="bi bi-dot"/>} {repository.name}</ListGroup.Item>
             );
         })
     }
     let repositories = getCurrentRepositoryExpression();
 
     return (
-        <Container key={"c0"} className="main d-flex pt-4 justify-content-center">
-            <Col key={"col0"} >
-                <Row key={"r0"}>
+        <Container className="main d-flex pt-4 justify-content-center">
+            <Col >
+                <Row key={0}>
                     <h3>Repositories</h3>
                 </Row>
-                <Row key={"r1"}>
-                    <Col xs={10} key={'c0'}>
-                        <Row>
+                <Row key={1}>
+                    <Col xs={10} key={0}>
+                        <Row key={0}>
                             <InputGroup className="mb-3">
                                 <InputGroup.Text><i className="bi bi-funnel-fill"></i></InputGroup.Text>
                                 <FormControl
@@ -99,20 +99,20 @@ export const Repositories: React.FC = () => {
                             </InputGroup>
                         </Row>
 
-                        <ListGroup className="my-4" style={{ maxHeight: 'calc(100vh - 250px)' }}>
+                        <ListGroup className="my-4" style={{ maxHeight: 'calc(100vh - 250px)' }} key={1}>
                             {repositories}
                         </ListGroup>
                         <ErrorResponseToast error={errorResponse} />
                     </Col >
-                    <Col className="d-flex flex-column justify-content-between" key={'c1'}>
-                        <ButtonGroup key={"bg1"} vertical className="w-100 mb-5">
-                            <ButtonGroup key={"bg1.0"} className="me-2 mb-2 w-100" vertical><CreateRepoModal /></ButtonGroup>
-                            <ButtonGroup key={"bg1.1"} className="me-2 mb-2 w-100" vertical><CloneRepoModal repo={selectedRepo} /></ButtonGroup>
-                            <ButtonGroup key={"bg1.2"} className="me-2 mb-2 w-100" vertical><ForkRepoModal repo={selectedRepo} /></ButtonGroup>
-                            <ButtonGroup key={"bg1.3"} className="me-2 mb-2 w-100" vertical><DeleteRepoModal repo={selectedRepo} /></ButtonGroup>
+                    <Col className="d-flex flex-column justify-content-between" key={1}>
+                        <ButtonGroup key={0} vertical className="w-100 mb-5">
+                            <ButtonGroup key={0} className="me-2 mb-2 w-100" vertical><CreateRepoModal /></ButtonGroup>
+                            <ButtonGroup key={1} className="me-2 mb-2 w-100" vertical><CloneRepoModal repo={selectedRepo} /></ButtonGroup>
+                            <ButtonGroup key={2} className="me-2 mb-2 w-100" vertical><ForkRepoModal repo={selectedRepo} /></ButtonGroup>
+                            <ButtonGroup key={3} className="me-2 mb-2 w-100" vertical><DeleteRepoModal repo={selectedRepo} /></ButtonGroup>
                         </ButtonGroup>
-                        <ButtonGroup key={"bg2"} vertical className="w-100">
-                            <ButtonGroup key={"bg2.0"} className="me-2 mb-2 w-100" vertical>
+                        <ButtonGroup key={1} vertical className="w-100">
+                            <ButtonGroup key={0} className="me-2 mb-2 w-100" vertical>
                                 <LoadingButton
                                     loading={choosing}
                                     variant="primary"
@@ -120,7 +120,7 @@ export const Repositories: React.FC = () => {
                                     disabled={selectedRepo === null || selectedRepo.rid === appState.repository?.rid}
                                     onClick={chooseRepo}>Select</LoadingButton>
                             </ButtonGroup>
-                            <ButtonGroup key={"bg2.1"} className="me-2 mb-2 w-100" vertical>
+                            <ButtonGroup key={1} className="me-2 mb-2 w-100" vertical>
                                 <LoadingButton loading={loading} hideContentWhileLoading onClick={refresh}><i className="bi bi-arrow-clockwise" /> </LoadingButton>
                             </ButtonGroup>
                         </ButtonGroup>

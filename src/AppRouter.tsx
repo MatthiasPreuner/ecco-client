@@ -22,12 +22,13 @@ export const AppRouter: React.FC = () => {
     const [expanded, setExpanded] = useState(false);
 
     const navigate = useNavigate();
-
+    
     useEffect(() => {
-        if (!appState.loggedUserName)
+        if (!appState.loggedUserName) {
             navigate(`/login`)
-        else
-            navigate(`/`)
+        } else {
+            navigate(`/repositories`)
+        }
     }, [appState.loggedUserName]);
 
     let logout = () => {
@@ -46,7 +47,7 @@ export const AppRouter: React.FC = () => {
         <>
             <Navbar bg="light" expand="lg" fixed="top" expanded={expanded}>
                 <Container>
-                    <Navbar.Brand href="/">EccoHub</Navbar.Brand>
+                    <Navbar.Brand type="button" onClick={() => navigate(`/home`)}>EccoHub</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(expanded ? false : true)} />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
@@ -69,9 +70,10 @@ export const AppRouter: React.FC = () => {
                         {appState.loggedUserName &&
                             <Nav>
                                 <NavDropdown title={"User: " + appState.loggedUserName} id="basic-nav-dropdown">
-                                  {/*   <NavDropdown.Item onClick={() => setExpanded(false)} as={Link} to="">Account TODO</NavDropdown.Item>
+                                    {/* not implemented
+                                    <NavDropdown.Item onClick={() => setExpanded(false)} as={Link} to="">Account Settings</NavDropdown.Item>
                                     <NavDropdown.Divider /> */}
-                                    <NavDropdown.Item as={Link} to="/" onClick={logout}>Logout</NavDropdown.Item>
+                                    <NavDropdown.Item as={Link} to="/login" onClick={logout}>Logout</NavDropdown.Item>
                                 </NavDropdown>
                             </Nav>
                         }
@@ -79,7 +81,7 @@ export const AppRouter: React.FC = () => {
                 </Container>
             </Navbar>
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/features" element={<Feature />} />
                 <Route path="/repositories" element={<Repositories />} />
