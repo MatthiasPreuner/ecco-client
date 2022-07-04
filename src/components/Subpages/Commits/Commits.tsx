@@ -16,12 +16,6 @@ export const Commits: React.FC = () => {
     const [compareCommit, setCompareCommit] = useState<CommitModel>(null);
     const [selectedCommit, setSelectedCommit] = useState<CommitModel>(null);
 
-
-    function printDate(date: Date): string {
-        return [date.getDay(), date.getMonth(), date.getFullYear()].join('.') + ' ' +
-            [date.getHours(), date.getMinutes(), date.getSeconds()].join(':');;
-    }
-
     let selectCommit = (event: React.MouseEvent, commit: CommitModel) => {
         setCompareCommit(event.ctrlKey && commit !== selectedCommit ? selectedCommit : null);
         setSelectedCommit(commit);
@@ -47,7 +41,7 @@ export const Commits: React.FC = () => {
                                 {appState.repository?.commits.map((commit, i) => {
                                     return (
                                         <tr onClick={(e) => selectCommit(e, commit)} className={selectedCommit === commit || compareCommit === commit ? "btn-primary" : null} key={i}>
-                                            <td style={{ minWidth: '70%' }}>{commit.commitMessage}</td>{/* TODO max string length */}
+                                            <td style={{ minWidth: '70%' }}>{commit.commitMessage}</td>
                                             <td style={{ minWidth: '15%' }}>{commit.username}</td>
                                             <td style={{ minWidth: '15%' }}>{commit.date}</td>
                                         </tr>
