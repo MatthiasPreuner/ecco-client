@@ -36,8 +36,11 @@ export const PullFeaturesModal: React.FC = () => {
   }
 
   let openRepo = (repo: RepositoryHeaderModel) => {
-    // TODO error response handling + spinner?
-    CommunicationService.getInstance().getRepository(repo).then((apiData: RepositoryResponse) => setRepoToPullFrom(apiData.data))
+    CommunicationService.getInstance().getRepository(repo).then((apiData: RepositoryResponse) => {
+      setRepoToPullFrom(apiData.data)
+    }, (e: AxiosError) => {
+      setErrorResponse(e);
+    });
   }
 
   let handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -98,10 +101,10 @@ export const PullFeaturesModal: React.FC = () => {
               <Form.Label>Where do you want to pull features from?</Form.Label>
               <Form.Select isInvalid={repoToPullFrom === null}>
                 {repoToPullFrom == null &&
-                  <option value={0}>Select repository</option>
+                  <option value={0} key={0}>Select repository</option>
                 }
                 {appState.availableRepositories.filter(r => r.rid !== appState.repository.rid).map((repo, idx) =>
-                  (<option onClick={e => openRepo(repo)} value={idx + 1}>{repo.name}</option>)
+                  (<option key={idx + 1} onClick={e => openRepo(repo)} value={idx + 1}>{repo.name}</option>)
                 )}
                 <Form.Control.Feedback type="invalid">Select at valid Repository!</Form.Control.Feedback>
               </Form.Select>
