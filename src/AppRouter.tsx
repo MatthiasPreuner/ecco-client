@@ -22,7 +22,7 @@ export const AppRouter: React.FC = () => {
     const [expanded, setExpanded] = useState(false);
 
     const navigate = useNavigate();
-    
+
     useEffect(() => {
         if (!appState.loggedUserName) {
             navigate(`/login`)
@@ -81,6 +81,7 @@ export const AppRouter: React.FC = () => {
                 </Container>
             </Navbar>
             <Routes>
+                <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/features" element={<Feature />} />
