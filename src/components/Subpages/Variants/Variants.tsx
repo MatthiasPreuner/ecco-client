@@ -54,7 +54,7 @@ export const Variants: React.FC = () => {
     const getCurrentVariantExpression = (): JSX.Element[] => {
 
         var filteredCommitVariants = showCommitVariants ? appState.repository?.variants : appState.repository?.variants.filter(v => !v.name.includes("Commit"))
-        var filteredByFeatures = filteredCommitVariants.filter(vari => featureFilter.map(f => f.name).every(e => vari.configuration.featureRevisions.map(r => r.featureName).includes(e)));
+        var filteredByFeatures = filteredCommitVariants?.filter(vari => featureFilter.map(f => f.name).every(e => vari.configuration.featureRevisions.map(r => r.featureName).includes(e)));
         var filteredByFeaturesAndText = filteredByFeatures?.filter(variant => (variant.name?.toLowerCase().includes(variantFilterText.toLowerCase()) || variant.description?.toLowerCase().includes(variantFilterText.toLowerCase())))
 
         if (appState.repository?.features.length === 0) {
