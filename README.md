@@ -1,8 +1,8 @@
 # EccoHub Browser Client
 
-This is the React Front-End for the Ecco-System  
+This is the React Front-End for the Ecco-System.  
 
-The Back-End can be found [here (currently development branch)](https://github.com/Dorkat0/ecco/tree/develop).  
+The Back-End can be found [here](https://github.com/Dorkat0/ecco/tree/release_1.0).  
 
 ## Technical Details  
 React + Typescript  
@@ -13,7 +13,7 @@ React + Typescript
 
 ## How to get started
 
-Download and install [Node.js](https://nodejs.org/en/download/)  
+Download and install [Node.js](https://nodejs.org/en/download/).   
 
 Open the project in an IDE (i.e. VS Code).\
 Open a terminal and install dependencies:
