@@ -58,7 +58,7 @@ export class CommunicationService {
 
     public getRepository(repo: RepositoryHeaderModel): Promise<any> {
         return axios.get(
-            `${CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`
+            `${CommunicationService.REPOSITORY_ENDPOINT}/${repo.repositoryHandlerId}`
         )
     }
 
@@ -70,7 +70,7 @@ export class CommunicationService {
 
     public cloneRepository(repo: RepositoryHeaderModel, name: string): Promise<any> {
         return axios.put(
-            `${CommunicationService.REPOSITORY_ENDPOINT}/clone/${repo.rid}/${name}`
+            `${CommunicationService.REPOSITORY_ENDPOINT}/clone/${repo.repositoryHandlerId}/${name}`
         )
     }
 
@@ -81,7 +81,7 @@ export class CommunicationService {
             'Content-Type': 'application/json',
         };
         return axios.put(
-            `${CommunicationService.REPOSITORY_ENDPOINT}/fork/${repo.rid}/${name}`,
+            `${CommunicationService.REPOSITORY_ENDPOINT}/fork/${repo.repositoryHandlerId}/${name}`,
             body,
             config
         )
@@ -89,7 +89,7 @@ export class CommunicationService {
 
     public deleteRepository(repo: RepositoryHeaderModel): Promise<any> {
         return axios.delete(
-            `${CommunicationService.REPOSITORY_ENDPOINT}/${repo.rid}`
+            `${CommunicationService.REPOSITORY_ENDPOINT}/${repo.repositoryHandlerId}`
         )
     }
 
@@ -101,7 +101,7 @@ export class CommunicationService {
             'Content-Type': 'application/json',
         };
         return axios.post(
-            `/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id + "/description"}`,
+            `/${repository.repositoryHandlerId + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id + "/description"}`,
             body,
             config
         )
@@ -114,7 +114,7 @@ export class CommunicationService {
             'Content-Type': 'application/json',
         };
         return axios.post(
-            `/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id}/${featureRevision.id + '/description'}`,
+            `/${repository.repositoryHandlerId + CommunicationService.FEATURE_ENDPOINT}/${currentFeatureModel.id}/${featureRevision.id + '/description'}`,
             body,
             config
         )
@@ -127,7 +127,7 @@ export class CommunicationService {
             'Content-Type': 'application/json',
         };
         return axios.post(
-            `/${repository.rid + CommunicationService.FEATURE_ENDPOINT}/pull`,
+            `/${repository.repositoryHandlerId + CommunicationService.FEATURE_ENDPOINT}/pull`,
             body,
             config
         )
@@ -153,7 +153,7 @@ export class CommunicationService {
         }
 
         return axios.post(
-            `/${repository.rid + CommunicationService.COMMIT_ENDPOINT}/add`,
+            `/${repository.repositoryHandlerId + CommunicationService.COMMIT_ENDPOINT}/add`,
             formData,
             config
         )
@@ -166,7 +166,7 @@ export class CommunicationService {
             'Content-Type': 'application/json',
         };
         return axios.put(
-            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${name}`,
+            `/${repository.repositoryHandlerId + CommunicationService.VARIANT_ENDPOINT}/${name}`,
             body,
             config
         )
@@ -174,7 +174,7 @@ export class CommunicationService {
 
     public deleteVariant(repository: RepositoryModel, variant: VariantModel): Promise<any> {
         return axios.delete(
-            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
+            `/${repository.repositoryHandlerId + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
         )
     }
 
@@ -185,14 +185,14 @@ export class CommunicationService {
             'Content-Type': 'application/json',
         };
         return axios.post(
-            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
+            `/${repository.repositoryHandlerId + CommunicationService.VARIANT_ENDPOINT}/${variant.id}`,
             body
         )
     }
 
     public checkOutVariant(repository: RepositoryModel, variant: VariantModel): Promise<any> {
         return axios({
-            url: `${CommunicationService.BASE_URI}/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/checkout`,
+            url: `${CommunicationService.BASE_URI}/${repository.repositoryHandlerId + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/checkout`,
             method: 'GET',
             responseType: 'blob', // important
         })
@@ -201,7 +201,7 @@ export class CommunicationService {
     // Variants / Features ========================================================================================
     public variantAddFeature(repository: RepositoryModel, variant: VariantModel, feature: FeatureModel): Promise<any> {
         return axios.put(
-            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${feature.id}`,
+            `/${repository.repositoryHandlerId + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${feature.id}`,
         )
     }
 
@@ -211,7 +211,7 @@ export class CommunicationService {
             'Content-Type': 'text/plain',
         };
         return axios.post(
-            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${featureName}`,
+            `/${repository.repositoryHandlerId + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${featureName}`,
             id,
             config
         )
@@ -219,7 +219,7 @@ export class CommunicationService {
 
     public variantRemoveFeature(repository: RepositoryModel, variant: VariantModel, featureName: string): Promise<any> {
         return axios.delete(
-            `/${repository.rid + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${featureName}`,
+            `/${repository.repositoryHandlerId + CommunicationService.VARIANT_ENDPOINT}/${variant.id}/${featureName}`,
         )
     }
 

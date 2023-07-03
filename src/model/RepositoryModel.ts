@@ -4,7 +4,7 @@ import { VariantModel } from "./VariantModel";
 
 
 export interface RepositoryHeaderModel {
-    rid: string
+    repositoryHandlerId: string
     name: string,
 }
 

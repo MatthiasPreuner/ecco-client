@@ -55,7 +55,7 @@ export const PullFeaturesModal: React.FC = () => {
 
     } else {
       setPulling(true)
-      CommunicationService.getInstance().pullFeatures(appState.repository, repoToPullFrom.rid, configString[1]).then((apiData: RepositoryResponse) => {
+      CommunicationService.getInstance().pullFeatures(appState.repository, repoToPullFrom.repositoryHandlerId, configString[1]).then((apiData: RepositoryResponse) => {
         setAppState((previousState) => ({ ...previousState, repository: apiData.data }));
         handleClose();
       }, (e: AxiosError) => {
@@ -103,7 +103,7 @@ export const PullFeaturesModal: React.FC = () => {
                 {repoToPullFrom == null &&
                   <option value={0} key={0}>Select repository</option>
                 }
-                {appState.availableRepositories.filter(r => r.rid !== appState.repository.rid).map((repo, idx) =>
+                {appState.availableRepositories.filter(r => r.repositoryHandlerId !== appState.repository.repositoryHandlerId).map((repo, idx) =>
                   (<option key={idx + 1} onClick={e => openRepo(repo)} value={idx + 1}>{repo.name}</option>)
                 )}
                 <Form.Control.Feedback type="invalid">Select at valid Repository!</Form.Control.Feedback>

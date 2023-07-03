@@ -73,7 +73,7 @@ export const Repositories: React.FC = () => {
 
         return filteredRepositories.map((repository: RepositoryHeaderModel, i) => {
             return (
-                <ListGroup.Item key={i} action active={repository === selectedRepo} onClick={() => setSelectedRepo(repository)}>{repository.rid === appState.repository?.rid && <i className="bi bi-dot"/>} {repository.name}</ListGroup.Item>
+                <ListGroup.Item key={i} action active={repository === selectedRepo} onClick={() => setSelectedRepo(repository)}>{repository.repositoryHandlerId === appState.repository?.repositoryHandlerId && <i className="bi bi-dot"/>} {repository.name}</ListGroup.Item>
             );
         })
     }
@@ -117,7 +117,7 @@ export const Repositories: React.FC = () => {
                                     loading={choosing}
                                     variant="primary"
                                     type="submit"
-                                    disabled={selectedRepo === null || selectedRepo.rid === appState.repository?.rid}
+                                    disabled={selectedRepo === null || selectedRepo.repositoryHandlerId === appState.repository?.repositoryHandlerId}
                                     onClick={chooseRepo}>Select</LoadingButton>
                             </ButtonGroup>
                             <ButtonGroup key={1} className="me-2 mb-2 w-100" vertical>
