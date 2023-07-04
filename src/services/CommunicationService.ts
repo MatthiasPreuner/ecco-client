@@ -120,8 +120,8 @@ export class CommunicationService {
         )
     }
 
-    public pullFeatures(repository: RepositoryModel, fromRId: string, deselectedFeatures: string): Promise<any> {
-        let body = { fromRId: fromRId, deselectedFeatures: deselectedFeatures }
+    public pullFeatures(repository: RepositoryModel, fromRepositoryHandlerId: string, deselectedFeatures: string): Promise<any> {
+        let body = { fromRepositoryHandlerId: fromRepositoryHandlerId, deselectedFeatures: deselectedFeatures }
         let config = new RequestConfig();
         config.headers = {
             'Content-Type': 'application/json',
