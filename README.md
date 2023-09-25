@@ -18,7 +18,7 @@ Download and install [Node.js](https://nodejs.org/en/download/)
 Open the project in an IDE (i.e. VS Code).\
 Open a terminal and install dependencies:
 
-### `npm install`
+### `npm ci`
 
 ## Available Scripts
 
