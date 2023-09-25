@@ -10,8 +10,8 @@ const axios = require("axios");
 
 export class CommunicationService {
 
-    private static readonly BASE_URI = "http://localhost:8080/api";
-    private static readonly LOGIN_URI = "http://localhost:8080/login";
+    private static readonly BASE_URI = "http://localhost:8081/api";
+    private static readonly LOGIN_URI = "http://localhost:8081/login";
 
     private static readonly FEATURE_ENDPOINT = "/feature";
     private static readonly COMMIT_ENDPOINT = "/commit";
