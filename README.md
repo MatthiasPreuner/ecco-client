@@ -31,3 +31,16 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
+
+Create the API key and Client ID and add them in the code for the commits:
+https://console.cloud.google.com/
+
+In this page: https://developers.google.com/oauthplayground/
+1. Authorize the Drive API v3:
+    - https://www.googleapis.com/auth/drive
+    - https://www.googleapis.com/auth/drive.file
+2. Create the token and add it in the code for checking out the variant
+
+Upon variant checkout, the folder is saved both locally and on the drive.
+
+When generating the credentials(API key and Client ID), grant access to the Google Drive the localhost:port. Subsequently, the project must be accessed through that port in order to retain access.

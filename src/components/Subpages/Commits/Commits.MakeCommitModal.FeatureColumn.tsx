@@ -31,6 +31,7 @@ export const FeatureColumn: React.FC<FeatureRowProps> = (props: FeatureRowProps)
 
     reader.onload = function (progressEvent) {
 
+
         var featuresFromConfig: FeatureSelectorFeature[] = [];
         var configText: string = progressEvent.target.result.toString();
 
