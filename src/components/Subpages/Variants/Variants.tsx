@@ -2,10 +2,8 @@ import * as React from "react";
 import { useSharedState } from "../../../states/AppState";
 import { useState, useEffect } from "react";
 import { CreateVariant } from "./Variants.CreateVariantModal";
-import { GoogleLogin } from 'react-google-login';
 
 import { Container, Col, Row, InputGroup, Table, Button, DropdownButton, Dropdown, Form, FormControl, Stack } from 'react-bootstrap';
-import axios from "axios";
 import { VariantModel } from "../../../model/VariantModel";
 import { DeleteVariantModal } from "./Variants.DeleteVariantModal";
 import { FeatureModel } from "../../../model/FeatureModel";
@@ -125,36 +123,6 @@ export const Variants: React.FC = () => {
     let featureFilterDropdown = appState.repository?.features.filter(
         f => featureFilter.indexOf(f) === -1
     )
-
-    async function uploadBlobToGoogleDrive(blob: Blob, fileName: string): Promise<void> {
-
-        const accessToken = '';
-    
-        const metadata = {
-            name: fileName, 
-            mimeType: 'application/zip', 
-        };
-        
-        const formData = new FormData();
-        formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-        formData.append('file', blob);
-    
-        try {
-            const response = await axios.post(
-                'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        'Content-Type': 'application/octet-stream',
-                    },
-                }
-            );
-            alert('File uploaded successfully on google drive');
-        } catch (error) {
-            console.error('Error uploading file:', error);
-        }
-    }
     
     let checkOutVariant = () => {
         setCheckingOut(true)
@@ -166,8 +134,15 @@ export const Variants: React.FC = () => {
             document.body.appendChild(link);
             const blobFile = new Blob([response.data]); 
             const desiredFileName = 'Checkout.zip'; 
+            const accessToken = '';
     
-            uploadBlobToGoogleDrive(blobFile, desiredFileName);
+            CommunicationService.uploadFileToGoogleDrive(blobFile, desiredFileName, accessToken)
+                .then((response) => {
+                    alert('File uploaded successfully on Google Drive');
+                })
+                .catch((error) => {
+                    console.error('Error uploading file:', error);
+                });
             link.click();
             setCheckingOut(false)
             setErrorResponse(null);
