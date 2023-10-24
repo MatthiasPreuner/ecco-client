@@ -32,14 +32,14 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-Create the API key and Client ID and add them in the code for the commits:
+Create the API key and Client ID and add them in the code for the commits(src/components/Subpages/Commits/Commits.MakeCommitModal.tsx):
 https://console.cloud.google.com/
 
 In this page: https://developers.google.com/oauthplayground/
 1. Authorize the Drive API v3:
     - https://www.googleapis.com/auth/drive
     - https://www.googleapis.com/auth/drive.file
-2. Create the token and add it in the code for checking out the variant
+2. Create the token and add it in the code for checking out the variant (src/components/Subpages/Variants/Variant.tsx)
 
 Upon variant checkout, the folder is saved both locally and on the drive.
 
