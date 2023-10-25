@@ -1,52 +1,57 @@
+.picker-dialog {
+  z-index: 1056 !important;
+}
 // make-commit-modal drop-zone ----------------
 .drop-zone {
-    height: 100px;
-    border: 1px solid #d8d8d8;
-    background-color: #ececec;
+  height: 100px;
+  border: 1px solid #d8d8d8;
+  background-color: #ececec;
 }
 
 .drop-zone-active {
-    border: 2px solid black;
-    border-style: dashed !important
+  border: 2px solid black;
+  border-style: dashed !important;
 }
 
 .association-container {
-    text-align: center;
-    height: 38px;
-    border-radius: 0.25rem;
-    border: 1px solid #ced4da;
-    padding: 4px 4px 4px 8px;
-    margin-right: 0.1rem;
-    margin-bottom: 0.1rem;
+  text-align: center;
+  height: 38px;
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+  padding: 4px 4px 4px 8px;
+  margin-right: 0.1rem;
+  margin-bottom: 0.1rem;
 }
 
 .association-badge {
-    margin-top: -5px;
-    margin-right: 0.1rem;
+  margin-top: -5px;
+  margin-right: 0.1rem;
 }
 
-
 .tree-view-row {
-    height: '40vh';
-    overflow-y: scroll;
-    overflow-x: auto;
-    margin-right: 0px;
-    margin-left: 0px;
-    position: relative;
+  height: "40vh";
+  overflow-y: scroll;
+  overflow-x: auto;
+  margin-right: 0px;
+  margin-left: 0px;
+  position: relative;
 }
 
 .feedback-row {
-    position: 'sticky';
-    top: '0';
-    left: '0';
-    background-color: '#fff';
-    z-index: 5;
+  position: "sticky";
+  top: "0";
+  left: "0";
+  background-color: "#fff";
+  z-index: 5;
 }
 
-.react-checkbox-tree>.rct-options {
-    visibility: hidden;
+.react-checkbox-tree > .rct-options {
+  visibility: hidden;
 }
 
 /* .react-checkbox-tree {
     padding-left: 0;
 } */
+.drive{
+  background-color: blue;
+}

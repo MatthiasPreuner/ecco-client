@@ -24,6 +24,8 @@ export class CommunicationService {
     private static readonly NUMBER_OF_REVISIONS_PER_FEATURE_IN_FEATURE_ENDPOINT = "/numberofrevisions";
     private static readonly NUMBER_OF_MODULES_PER_ORDER_IN_ASSOCIATION_ENDPOINT = "/modulesperorder";
 
+    private static readonly GOOGLE_DRIVE_URL = 'https://www.googleapis.com/upload/drive/v3/files';
+
     private static communicationServiceInstance: CommunicationService;
 
     private constructor() {
@@ -245,5 +247,32 @@ export class CommunicationService {
             this.communicationServiceInstance = new CommunicationService();
         }
         return this.communicationServiceInstance;
+    }
+
+    public static async uploadFileToGoogleDrive(blob: Blob, fileName: string, accessToken: string): Promise<void> {
+        const metadata = {
+            name: fileName,
+            mimeType: 'application/zip',
+        };
+
+        const formData = new FormData();
+        formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+        formData.append('file', blob);
+
+        try {
+            const response = await axios.post(
+                `${CommunicationService.GOOGLE_DRIVE_URL}?uploadType=multipart`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        'Content-Type': 'application/octet-stream',
+                    },
+                }
+            );
+            return response;
+        } catch (error) {
+            throw error;
+        }
     }
 }
