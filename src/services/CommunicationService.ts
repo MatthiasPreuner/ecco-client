@@ -10,8 +10,8 @@ const axios = require("axios");
 
 export class CommunicationService {
 
-    private static readonly BASE_URI = "http://localhost:8081/api";
-    private static readonly LOGIN_URI = "http://localhost:8081/login";
+    private static readonly BASE_URI = process.env.REACT_APP_BACKEND_PATH + "/api";
+    private static readonly LOGIN_URI = process.env.REACT_APP_BACKEND_PATH  + "/login";
 
     private static readonly FEATURE_ENDPOINT = "/feature";
     private static readonly COMMIT_ENDPOINT = "/commit";
