@@ -84,7 +84,7 @@ export const Login: React.FC = () => {
                         onChange={handleChange} />
                 </Form.Group>
                 <ErrorResponseToast error={errorResponse} />
-                <LoadingButton className="w-100 mt-5" loading={loggingIn} variant="primary" type="button" onClick={handleSubmit} >Sign in</LoadingButton>
+                <LoadingButton className="w-100 mt-5" loading={loggingIn} variant="primary" id = "signin" type="button" onClick={handleSubmit} >Sign in</LoadingButton>
             </Form>
         </Container>
     );

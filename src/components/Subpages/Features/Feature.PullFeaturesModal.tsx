@@ -77,6 +77,8 @@ export const PullFeaturesModal: React.FC = () => {
     });
     setInitFeatures(f);
   }, [repoToPullFrom]);
+  
+  let repoOptions = appState.availableRepositories.filter(r => r.repositoryHandlerId !== appState.repository.repositoryHandlerId);
 
   return (
     <>
@@ -98,13 +100,13 @@ export const PullFeaturesModal: React.FC = () => {
         <Form className="w-80" validated={validated} onSubmit={handleSubmit}>
           <Modal.Body>
             <Form.Group className="mb-3" key={0} controlId="selectRepo">
-              <Form.Label>Where do you want to pull features from?</Form.Label>
-              <Form.Select isInvalid={repoToPullFrom === null}>
+              <Form.Label>Where do you want to pull features from?</Form.Label>             
+              <Form.Select isInvalid={repoToPullFrom === null} onChange={e => openRepo(repoOptions[parseInt(e.target.value)])}>
                 {repoToPullFrom == null &&
                   <option value={0} key={0}>Select repository</option>
                 }
-                {appState.availableRepositories.filter(r => r.repositoryHandlerId !== appState.repository.repositoryHandlerId).map((repo, idx) =>
-                  (<option key={idx + 1} onClick={e => openRepo(repo)} value={idx + 1}>{repo.name}</option>)
+                {repoOptions.map((repo, idx) =>
+                  (<option key={idx + 1} value={idx + 1}>{repo.name}</option>)
                 )}
                 <Form.Control.Feedback type="invalid">Select at valid Repository!</Form.Control.Feedback>
               </Form.Select>
