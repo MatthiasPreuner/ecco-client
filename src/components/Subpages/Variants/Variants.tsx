@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { CreateVariant } from "./Variants.CreateVariantModal";
 
 import { Container, Col, Row, InputGroup, Table, Button, DropdownButton, Dropdown, Form, FormControl, Stack } from 'react-bootstrap';
-
 import { VariantModel } from "../../../model/VariantModel";
 import { DeleteVariantModal } from "./Variants.DeleteVariantModal";
 import { FeatureModel } from "../../../model/FeatureModel";
@@ -124,15 +123,26 @@ export const Variants: React.FC = () => {
     let featureFilterDropdown = appState.repository?.features.filter(
         f => featureFilter.indexOf(f) === -1
     )
-
+    
     let checkOutVariant = () => {
         setCheckingOut(true)
         CommunicationService.getInstance().checkOutVariant(appState.repository, selectedVariant).then((response: any) => {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'checkout.zip'); //or any other extension
+            link.setAttribute('download', 'checkout.zip'); 
             document.body.appendChild(link);
+            const blobFile = new Blob([response.data]); 
+            const desiredFileName = 'Checkout.zip'; 
+            const accessToken = '';
+    
+            CommunicationService.uploadFileToGoogleDrive(blobFile, desiredFileName, accessToken)
+                .then((response) => {
+                    alert('File uploaded successfully on Google Drive');
+                })
+                .catch((error) => {
+                    console.error('Error uploading file:', error);
+                });
             link.click();
             setCheckingOut(false)
             setErrorResponse(null);
