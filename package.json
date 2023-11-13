@@ -7,7 +7,7 @@
         "start": "react-scripts -r @cypress/instrument-cra start",
         "startEccoClient": "npm start test --coverage",
         "cypressOpen": "npx cypress open",
-        "cypressRun": "npx cypress run --spec \"cypress/e2e/Testsuite.cy.js\" --reporter mochawesome",
+        "cypressRun": "npx cypress run --browser firefox --spec \"cypress/e2e/Testsuite.cy.js\" --reporter mochawesome",
         "parallelRunOpen": "npm-run-all -p startEccoClient cypressOpen",
         "parallelRun": "npm-run-all -p startEccoClient cypressRun",
         "startReact": "react-scripts start",
