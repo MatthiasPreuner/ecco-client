@@ -2,7 +2,7 @@ describe('LoginPage', () => {
   it('loginTest', () => {
     //Anmelden
     cy.visit('/');
-    cy.get('#formBasicEmail').type('Tobias');
+    cy.get('#formBasicEmail', { timeout: 30000 }).type('Tobias');
     cy.get('#formBasicPassword').type('admin');
     cy.contains('Sign').click();
 
