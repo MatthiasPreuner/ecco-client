@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "main": "index.js",
     "reporter": "mochawesome",
+    "homepage": ".",
     "scripts": {
         "start": "react-scripts -r @cypress/instrument-cra start",
         "startEccoClient": "npm start test --coverage",
