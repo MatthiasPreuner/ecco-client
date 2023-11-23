@@ -9,7 +9,7 @@ export default class App extends React.Component {
   render() {
     return (
       <SharedStateProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
           <AppRouter />
         </BrowserRouter>
       </SharedStateProvider>
