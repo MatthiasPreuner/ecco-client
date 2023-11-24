@@ -7,7 +7,7 @@
         "start": "react-scripts -r @cypress/instrument-cra start",
         "startEccoClient": "npm start test",
         "cypressOpen": "npx cypress open",
-        "cypressRun": "npx cypress run",
+        "cypressRun": "npx cypress run --browser chrome",
         "parallelRunOpen": "npm-run-all -p startEccoClient cypressOpen",
         "parallelRun": "npm-run-all -r -p startEccoClient cypressRun",
         "runCypress": "start-server-and-test start http://127.0.0.1:8080 cypressRun",
