@@ -101,7 +101,7 @@ export const PullFeaturesModal: React.FC = () => {
           <Modal.Body>
             <Form.Group className="mb-3" key={0} controlId="selectRepo">
               <Form.Label>Where do you want to pull features from?</Form.Label>             
-              <Form.Select isInvalid={repoToPullFrom === null} onChange={e => openRepo(repoOptions[parseInt(e.target.value)])}>
+              <Form.Select isInvalid={repoToPullFrom === null} onChange={e => openRepo(repoOptions[parseInt(e.target.value)-1])}>
                 {repoToPullFrom == null &&
                   <option value={0} key={0}>Select repository</option>
                 }
