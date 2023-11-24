@@ -305,7 +305,7 @@ describe('FeaturePage', () => {
       cy.wait(1000);
       cy.get('#selectRepo').select(0);
       cy.get('#selectRepo').select('ImageVariants');
-      cy.wait(1000);
+      cy.wait(5000);
       cy.contains('person').click();
       cy.get('.modal-footer > .btn-primary');
   
