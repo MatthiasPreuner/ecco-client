@@ -51,7 +51,10 @@ export const Login: React.FC = () => {
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (event : React.FormEvent<HTMLFormElement>) => {
+        
+        event.preventDefault();
+
         setLoggingIn(true)
         CommunicationService.getInstance().login(formState.formValues.name, formState.formValues.password).then((api: any) => {
             CommunicationService.getInstance().setBearerToken(api.data.access_token)
@@ -65,7 +68,7 @@ export const Login: React.FC = () => {
 
     return (
         <Container className="vh-100 d-flex align-items-center justify-content-center">
-            <Form className="w-80">
+            <Form className="w-80" onSubmit={handleSubmit}>
                 <legend>EccoHub Login</legend>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Control
@@ -84,7 +87,7 @@ export const Login: React.FC = () => {
                         onChange={handleChange} />
                 </Form.Group>
                 <ErrorResponseToast error={errorResponse} />
-                <LoadingButton className="w-100 mt-5" loading={loggingIn} variant="primary" id = "signin" type="button" onClick={handleSubmit} >Sign in</LoadingButton>
+                <LoadingButton className="w-100 mt-5" loading={loggingIn} variant="primary" id = "signin" type="submit">Sign in</LoadingButton>
             </Form>
         </Container>
     );
