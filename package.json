@@ -2,15 +2,15 @@
     "name": "ecco-client",
     "version": "0.1.0",
     "main": "index.js",
-    "reporter": "mochawesome",
     "homepage": ".",
     "scripts": {
         "start": "react-scripts -r @cypress/instrument-cra start",
-        "startEccoClient": "npm start test --coverage",
+        "startEccoClient": "npm start test",
         "cypressOpen": "npx cypress open",
-        "cypressRun": "npx cypress run --browser chrome --spec \"cypress/e2e/Testsuite.cy.js\" --reporter mochawesome",
+        "cypressRun": "npx cypress run",
         "parallelRunOpen": "npm-run-all -p startEccoClient cypressOpen",
-        "parallelRun": "npm-run-all -p startEccoClient cypressRun",
+        "parallelRun": "npm-run-all -r -p startEccoClient cypressRun",
+        "runCypress": "start-server-and-test start http://127.0.0.1:8080 cypressRun",
         "startReact": "react-scripts start",
         "buildReact": "react-scripts build",
         "testReact": "react-scripts test",
@@ -30,22 +30,22 @@
         "axios": "^0.26.1",
         "bootstrap": "^5.3.0",
         "bootstrap-icons": "^1.10.5",
-        "cypress-puppeteer-plugin": "^1.0.1",
-        "dropzone": "^6.0.0-beta.2",
         "buffer": "^6.0.3",
         "crypto-browserify": "^3.12.0",
+        "cypress-puppeteer-plugin": "^1.0.1",
+        "dropzone": "^6.0.0-beta.2",
         "echarts": "^5.3.0",
         "fs-extra": "10.1.0",
-        "istanbul-lib-coverage": "^2.0.5",
         "google-auth-library": "^8.9.0",
         "googleapis": "^118.0.0",
+        "istanbul-lib-coverage": "^2.0.5",
         "jquery": "^3.6.0",
-        "nyc": "^15.1.0",
-        "puppeteer": "^20.4.0",
         "jszip": "^3.10.1",
         "net": "^1.0.2",
+        "nyc": "^15.1.0",
         "path-browserify": "^1.0.1",
         "process": "^0.11.10",
+        "puppeteer": "^20.4.0",
         "react": "^17.0.2",
         "react-bootstrap": "^2.8.0",
         "react-checkbox-tree": "^1.8.0",
@@ -59,9 +59,9 @@
         "stream": "0.0.2",
         "tls": "0.0.1",
         "typescript": "^4.9.5",
+        "unzipper": "^0.10.14",
         "url": "^0.11.1",
         "util": "^0.12.5",
-        "unzipper": "^0.10.14",
         "web-vitals": "^2.1.4"
     },
     "devDependencies": {
@@ -78,7 +78,7 @@
         "mochawesome-merge": "^4.3.0",
         "mochawesome-report-generator": "^6.2.0",
         "npm-run-all": "^4.1.5",
-        "start-server-and-test": "^2.0.0"
+        "start-server-and-test": "^2.0.3"
     },
     "eslintConfig": {
         "extends": [
@@ -101,6 +101,5 @@
     "directories": {
         "test": "test"
     },
-    
     "description": "Web client for Ecco"
 }
